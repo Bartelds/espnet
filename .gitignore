@@ -53,6 +53,8 @@ egs*/*/*/.cache*
 egs*/*/*/pretrained_models*
 egs*/fisher_callhome_spanish/*/local/mapping*
 egs2/test/*
+egs2/ml_superb/asr1/hub/*
+egs2/ml_superb/asr1/*txt
 
 # tools related
 tools/chainer

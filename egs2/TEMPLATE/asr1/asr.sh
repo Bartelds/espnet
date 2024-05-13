@@ -38,8 +38,8 @@ num_nodes=1          # The number of nodes.
 nj=32                # The number of parallel jobs.
 inference_nj=32      # The number of parallel jobs in decoding.
 gpu_inference=false  # Whether to perform gpu decoding.
-dumpdir=dump         # Directory to dump features.
-expdir=exp           # Directory to save experiments.
+dumpdir=/nlp/scr/ananjan/asrdro/dump         # Directory to dump features.
+expdir=/nlp/scr/ananjan/asrdro/exp           # Directory to save experiments.
 python=python3       # Specify python to execute espnet commands.
 
 # Data preparation related
@@ -100,6 +100,7 @@ asr_exp=       # Specify the directory path for ASR experiment.
                # If this option is specified, asr_tag is ignored.
 asr_stats_dir= # Specify the directory path for ASR statistics.
 asr_config=    # Config for asr model training.
+batch_type=language # Previous value: sequence
 asr_args=      # Arguments for asr model training, e.g., "--max_epoch 10".
                # Note that it will overwrite args in asr config.
 pretrained_model=              # Pretrained model to load
@@ -1440,6 +1441,7 @@ if [ ${stage} -le 11 ] && [ ${stop_stage} -ge 11 ] && ! [[ " ${skip_stages} " =~
             --ignore_init_mismatch ${ignore_init_mismatch} \
             --fold_length "${_fold_length}" \
             --output_dir "${asr_exp}" \
+            --batch_type "${batch_type}" \
             ${_opts} ${asr_args}
 
 fi

@@ -1404,6 +1404,7 @@ class AbsTask(ABC):
                     mode="train",
                 )
             else:
+                # [AN] Iterator built here
                 train_iter_factory = cls.build_iter_factory(
                     args=args,
                     distributed_option=distributed_option,
@@ -1653,6 +1654,7 @@ class AbsTask(ABC):
         cls, args: argparse.Namespace, iter_options: IteratorOptions, mode: str
     ) -> AbsIterFactory:
 
+        # This is the iterator used
         dataset = ESPnetDataset(
             iter_options.data_path_and_name_and_type,
             float_dtype=args.train_dtype,
@@ -1717,6 +1719,9 @@ class AbsTask(ABC):
                     )
             batches = [batch[rank::world_size] for batch in batches]
 
+        # never shuffle within batches with LanguageBatchSampler
+        if iter_options.batch_type == 'language':
+            args.shuffle_within_batch = False
         return SequenceIterFactory(
             dataset=dataset,
             batches=batches,
