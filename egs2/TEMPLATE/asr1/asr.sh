@@ -100,7 +100,7 @@ asr_exp=       # Specify the directory path for ASR experiment.
                # If this option is specified, asr_tag is ignored.
 asr_stats_dir= # Specify the directory path for ASR statistics.
 asr_config=    # Config for asr model training.
-batch_type=language # Previous value: sequence
+batch_type=sorted # Previous value: sorted
 asr_args=      # Arguments for asr model training, e.g., "--max_epoch 10".
                # Note that it will overwrite args in asr config.
 pretrained_model=              # Pretrained model to load
