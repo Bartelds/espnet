@@ -13,26 +13,39 @@ train-asr-dro-baseline:
 COMMON_ARGS=\
 	--duration 10min \
 	--lid true \
-	--only_lid false
+	--only_lid false \
+	--dumpdir outputs/dump \
+	--expdir outputs/exp
 
-asr-dro-preprocess:
+PREPROCESS_ARGS=\
+	--asr_config conf/train_asr.yaml
+
+XLSR_ARGS=\
+	--asr_config conf/train_asr_xlsr.yaml
+
+activate-venv:
+	source /nlp/scr/moussa/git/asr-dro/espnet/tools/activate_python.sh
+
+	
+preprocess:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
-		--asr_config conf/train_asr.yaml \
+		$(PREPROCESS_ARGS) \
 		--stop_stage 10
 
 train-baseline:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
-		--asr_config conf/train_xlsr.yaml \
+		$(XLSR_ARGS) \
+		--ctc-conf CTC \
 		--stage 11
 
 train-dro:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
-		--asr_config conf/train_xlsr.yaml \
-		--stage 11 \
-		--use-dro true
+		$(XLSR_ARGS) \
+		--ctc_conf DROCTC \
+		--stage 11
 
 
 submit-target-to-cluster:
