@@ -14,9 +14,10 @@ decoder: none
 
 model_conf:
     ctc_weight: 1.0
-    
+
 ctc_conf:
-    ctc_type: builtin
+    ctc_type: droctc
+    dro_group_count: 121
 
 unused_parameters: true
 

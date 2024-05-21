@@ -124,6 +124,7 @@ model_choices = ClassChoices(
         espnet=ESPnetASRModel,
         maskctc=MaskCTCModel,
         pit_espnet=PITESPnetModel,
+        dro_ctc=ESPnetASRModel
     ),
     type_check=AbsESPnetModel,
     default="espnet",

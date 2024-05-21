@@ -1,3 +1,5 @@
+.ONESHELL:
+
 include cluster_info.mk
 # SLURM_CLUSTER_ACCOUNT_NAME=cluster-account-name
 # SLURM_CLUSTER_PARTITION_NAME=cluster-partition-name
@@ -23,8 +25,11 @@ PREPROCESS_ARGS=\
 XLSR_ARGS=\
 	--asr_config conf/train_asr_xlsr.yaml
 
+XLSR_DRO_ARGS=\
+	--asr_config conf/train_asr_xlsr_dro.yaml
+
 activate-venv:
-	source /nlp/scr/moussa/git/asr-dro/espnet/tools/activate_python.sh
+	../../../tools/activate_python.sh 
 
 	
 preprocess:
@@ -37,14 +42,12 @@ train-baseline:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
 		$(XLSR_ARGS) \
-		--ctc-conf CTC \
 		--stage 11
 
 train-dro:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
-		$(XLSR_ARGS) \
-		--ctc_conf DROCTC \
+		$(XLSR_DRO_ARGS) \
 		--stage 11
 
 
