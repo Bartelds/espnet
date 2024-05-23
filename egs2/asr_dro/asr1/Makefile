@@ -12,10 +12,14 @@ include cluster_info.mk
 # 	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
 
 
+# DUMP_DIR=/nlp/scr/ananjan/asrdro/dump
+# EXP_DIR=/nlp/scr/ananjan/asrdro/exp_subset
+# ASR_STATS_DIR=/nlp/scr/ananjan/asrdro/exp_subset
+
 DATA_SUBSET=1h
-DUMP_DIR=/nlp/scr/ananjan/asrdro/dump
-EXP_DIR=/nlp/scr/ananjan/asrdro/exp_subset
-ASR_STATS_DIR=/nlp/scr/ananjan/asrdro/exp_subset
+DUMP_DIR=outputs/dump
+EXP_DIR=outputs/exp_subset
+ASR_STATS_DIR=outputs/exp_subset
 
 COMMON_ARGS=\
 	--duration $(DATA_SUBSET) \
@@ -36,11 +40,14 @@ XLSR_ARGS=\
 MMS_ARGS=\
 	--asr_config conf/train_asr_mms.yaml
 
+MMS_DRO_ARGS=\
+	--asr_config conf/train_asr_mms_dro.yaml
+
 XLSR_DRO_ARGS=\
 	--asr_config conf/train_asr_xlsr_dro.yaml
 
 activate-venv:
-	../../../tools/activate_python.sh 
+	source ../../../tools/activate_python.sh 
 
 preprocess:
 	./run_multi.sh \
@@ -75,12 +82,17 @@ train-mms:
 		$(MMS_ARGS) \
 		--stage 11
 
-train-dro:
+train-xlsr-dro:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
 		$(XLSR_DRO_ARGS) \
 		--stage 11
 
+train-mms-dro:
+	./run_multi.sh \
+		$(COMMON_ARGS) \
+		$(MMS_DRO_ARGS) \
+		--stage 11
 
 submit-target-to-cluster:
 	echo "#!/bin/bash" > slurm_job.sh
