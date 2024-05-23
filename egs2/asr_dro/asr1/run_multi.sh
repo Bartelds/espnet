@@ -21,6 +21,10 @@ lid=false # whether to add joint LID task in multiligual ASR
 inference_config=conf/decode_asr.yaml
 asr_config=conf/tuning/train_asr_fbank_${duration}.yaml
 
+dumpdir=
+expdir=
+batch_type=
+
 . utils/parse_options.sh || exit 1
 
 # Common configs for ML-SUPERB
@@ -68,4 +72,7 @@ local_data_opts+=" --multilingual true --nlsyms_txt ${nlsyms_txt}"
     --test_sets "${test_set}" \
     --asr_tag "${asr_tag}" \
     --asr_stats_dir exp/asr_stats_multilingual_${duration} \
-    --local_score_opts "${lid} ${only_lid} normal"
+    --local_score_opts "${lid} ${only_lid} normal" \
+    --dumpdir "${dumpdir}" \
+    --expdir "${expdir}" \
+    --batch_type "${batch_type}"

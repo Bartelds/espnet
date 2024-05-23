@@ -4,6 +4,7 @@ from typing import Optional
 import torch
 import torch.nn.functional as F
 from typeguard import typechecked
+from .dro_ctc import DROCTCLoss
 
 
 class CTC(torch.nn.Module):
@@ -26,6 +27,8 @@ class CTC(torch.nn.Module):
         encoder_output_size: int,
         dropout_rate: float = 0.0,
         ctc_type: str = "builtin",
+        dro_group_count: int = 0,
+        dro_step_size: float = 0.01,
         reduce: bool = True,
         ignore_nan_grad: Optional[bool] = None,
         zero_infinity: bool = True,
@@ -67,13 +70,24 @@ class CTC(torch.nn.Module):
                 brctc_risk_strategy, brctc_group_strategy, brctc_risk_factor
             )
 
+        elif self.ctc_type == "droctc":
+            self.ctc_loss = DROCTCLoss(
+                reduction="none", 
+                zero_infinity=zero_infinity, 
+                dro_group_count=dro_group_count,
+                dro_step_size=dro_step_size
+            )
+
         else:
             raise ValueError(f'ctc_type must be "builtin" or "gtnctc": {self.ctc_type}')
 
         self.reduce = reduce
 
     def loss_fn(self, th_pred, th_target, th_ilen, th_olen) -> torch.Tensor:
-        if self.ctc_type == "builtin" or self.ctc_type == "brctc":
+        print("in loss_fn")
+        print("th_target.shape", th_target.shape)
+
+        if self.ctc_type == "builtin" or self.ctc_type == "brctc" or self.ctc_type == 'droctc':
             th_pred = th_pred.log_softmax(2)
             loss = self.ctc_loss(th_pred, th_target, th_ilen, th_olen)
             if self.ctc_type == "builtin":
@@ -162,7 +176,7 @@ class CTC(torch.nn.Module):
         # hs_pad: (B, L, NProj) -> ys_hat: (B, L, Nvocab)
         ys_hat = self.ctc_lo(F.dropout(hs_pad, p=self.dropout_rate))
 
-        if self.ctc_type == "brctc":
+        if self.ctc_type == "brctc" or self.ctc_type == "droctc":
             loss = self.loss_fn(ys_hat, ys_pad, hlens, ys_lens).to(
                 device=hs_pad.device, dtype=hs_pad.dtype
             )

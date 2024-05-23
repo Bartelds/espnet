@@ -29,6 +29,7 @@ class LanguageBatchSampler(AbsSampler):
         drop_last: bool = True,
         utt2category_file: Optional[str] = None,
     ):
+        print("utt2category_file", utt2category_file)
         assert batch_size > 0
         self.batch_size = batch_size
         self.key_file = key_file
@@ -93,6 +94,12 @@ class LanguageBatchSampler(AbsSampler):
                 end = start + decrement
                 cat_iterators[lang] -= decrement
                 self.batch_list.append(category_keys[start:end])
+
+        self.debug_prints()
+
+    def debug_prints(self):
+        print(f"batch_size={self.batch_size}")
+        print(f"self.batch_list={self.batch_list[:12]}")
 
     def __repr__(self):
         return (

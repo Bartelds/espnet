@@ -15,6 +15,11 @@ decoder: none
 model_conf:
     ctc_weight: 1.0
 
+ctc_conf:
+    ctc_type: droctc
+    dro_group_count: 141
+    dro_step_size: 0.01
+
 unused_parameters: true
 
 frontend: s3prl
