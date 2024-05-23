@@ -12,13 +12,17 @@ include cluster_info.mk
 # 	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
 
 
+DATA_SUBSET=10min
+DUMP_DIR=outputs/dump
+
 COMMON_ARGS=\
-	--duration 10min \
+	--duration $(DATA_SUBSET) \
 	--lid true \
 	--only_lid false \
-	--dumpdir outputs/dump \
+	--dumpdir $(DUMP_DIR) \
 	--expdir outputs/exp \
 	--batch_type language
+
 
 PREPROCESS_ARGS=\
 	--asr_config conf/train_asr.yaml
@@ -32,12 +36,26 @@ XLSR_DRO_ARGS=\
 activate-venv:
 	../../../tools/activate_python.sh 
 
-	
 preprocess:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
 		$(PREPROCESS_ARGS) \
 		--stop_stage 10
+
+
+preprocess-groups:
+	python scripts/dro_scripts/create_groups.py  \
+		--utt2spk-file $(DUMP_DIR)/dev_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/dev_$(DATA_SUBSET)_lid/utt2category 
+
+	python scripts/dro_scripts/create_groups.py  \
+		--utt2spk-file $(DUMP_DIR)/train_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/train_$(DATA_SUBSET)_lid/utt2category 
+
+	python scripts/dro_scripts/create_groups.py  \
+		--utt2spk-file $(DUMP_DIR)/test_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/test_$(DATA_SUBSET)_lid/utt2category 
+
 
 train-baseline:
 	./run_multi.sh \
