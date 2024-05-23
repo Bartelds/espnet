@@ -93,13 +93,19 @@ class LanguageBatchSampler(AbsSampler):
                 decrement = min(batch_size, cat_iterators[lang])
                 end = start + decrement
                 cat_iterators[lang] -= decrement
-                self.batch_list.append(category_keys[start:end])
+
+                curr_ex = category_keys[start:end]
+                if decrement < batch_size:
+                    # pad out batch
+                    curr_ex += [category_keys[start] for _ in range(batch_size - decrement)]
+
+                self.batch_list.append(curr_ex)
 
         self.debug_prints()
 
     def debug_prints(self):
         print(f"batch_size={self.batch_size}")
-        print(f"self.batch_list={self.batch_list[:12]}")
+        print(f"self.batch_list={self.batch_list[:20]}")
 
     def __repr__(self):
         return (
