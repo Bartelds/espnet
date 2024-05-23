@@ -123,8 +123,7 @@ model_choices = ClassChoices(
     classes=dict(
         espnet=ESPnetASRModel,
         maskctc=MaskCTCModel,
-        pit_espnet=PITESPnetModel,
-        dro_ctc=ESPnetASRModel
+        pit_espnet=PITESPnetModel
     ),
     type_check=AbsESPnetModel,
     default="espnet",

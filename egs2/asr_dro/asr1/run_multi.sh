@@ -23,6 +23,7 @@ asr_config=conf/tuning/train_asr_fbank_${duration}.yaml
 
 dumpdir=
 expdir=
+batch_type=
 
 . utils/parse_options.sh || exit 1
 
@@ -73,4 +74,5 @@ local_data_opts+=" --multilingual true --nlsyms_txt ${nlsyms_txt}"
     --asr_stats_dir exp/asr_stats_multilingual_${duration} \
     --local_score_opts "${lid} ${only_lid} normal" \
     --dumpdir "${dumpdir}" \
-    --expdir "${expdir}"
+    --expdir "${expdir}" \
+    --batch_type "${batch_type}"

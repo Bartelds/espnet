@@ -6,10 +6,10 @@ include cluster_info.mk
 # SLURM_CLUSTER_EXCLUDE_NODES=node1,node2,node3
 
 
-train-asr-dro-baseline:
-	/nlp/scr/moussa/git/asr-dro/espnet/tools/activate_python.sh
-	cd /nlp/scr/moussa/git/asr-dro/espnet/egs2/asr_dro/asr1
-	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
+# train-asr-dro-baseline:
+# 	/nlp/scr/moussa/git/asr-dro/espnet/tools/activate_python.sh
+# 	cd /nlp/scr/moussa/git/asr-dro/espnet/egs2/asr_dro/asr1
+# 	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
 
 
 COMMON_ARGS=\
@@ -17,7 +17,8 @@ COMMON_ARGS=\
 	--lid true \
 	--only_lid false \
 	--dumpdir outputs/dump \
-	--expdir outputs/exp
+	--expdir outputs/exp \
+	--batch_type language
 
 PREPROCESS_ARGS=\
 	--asr_config conf/train_asr.yaml
