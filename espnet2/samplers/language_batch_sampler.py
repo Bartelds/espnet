@@ -26,7 +26,7 @@ class LanguageBatchSampler(AbsSampler):
         self,
         batch_size: int,
         key_file: str,
-        drop_last: bool = False,
+        drop_last: bool = True,
         utt2category_file: Optional[str] = None,
     ):
         assert batch_size > 0
@@ -55,7 +55,7 @@ class LanguageBatchSampler(AbsSampler):
             for k, v in utt2category.items():
                 category2utt.setdefault(v, []).append(k)
         else:
-            category2utt["default_category"] = keys
+            raise Exception(f"utt2category File not Provided!")
 
         self.batch_list = []
         # Maintain iterators for all categories

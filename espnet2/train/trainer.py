@@ -565,6 +565,7 @@ class Trainer:
                     break
 
             batch["utt_id"] = utt_id
+            print(utt_id)
 
             batch = to_device(batch, "cuda" if ngpu > 0 else "cpu")
             if no_forward_run:
