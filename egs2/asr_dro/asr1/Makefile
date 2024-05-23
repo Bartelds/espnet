@@ -12,15 +12,18 @@ include cluster_info.mk
 # 	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
 
 
-DATA_SUBSET=10min
-DUMP_DIR=outputs/dump
+DATA_SUBSET=1h
+DUMP_DIR=/nlp/scr/ananjan/asrdro/dump
+EXP_DIR=/nlp/scr/ananjan/asrdro/exp_subset
+ASR_STATS_DIR=/nlp/scr/ananjan/asrdro/exp_subset
 
 COMMON_ARGS=\
 	--duration $(DATA_SUBSET) \
 	--lid true \
 	--only_lid false \
 	--dumpdir $(DUMP_DIR) \
-	--expdir outputs/exp \
+	--expdir $(EXP_DIR) \
+	--asr_stats_dir $(ASR_STATS_DIR) \
 	--batch_type language
 
 
@@ -29,6 +32,9 @@ PREPROCESS_ARGS=\
 
 XLSR_ARGS=\
 	--asr_config conf/train_asr_xlsr.yaml
+
+MMS_ARGS=\
+	--asr_config conf/train_asr_mms.yaml
 
 XLSR_DRO_ARGS=\
 	--asr_config conf/train_asr_xlsr_dro.yaml
@@ -45,22 +51,28 @@ preprocess:
 
 preprocess-groups:
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/dev_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/dev_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/train_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/train_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/test_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/test_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2category 
 
 
-train-baseline:
+train-xlsr:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
 		$(XLSR_ARGS) \
+		--stage 11
+
+train-mms:
+	./run_multi.sh \
+		$(COMMON_ARGS) \
+		$(MMS_ARGS) \
 		--stage 11
 
 train-dro:

@@ -244,6 +244,11 @@ if __name__ == "__main__":
     for dataset in DATA:
         langs = os.listdir(os.path.join(args.source, dataset))
         for lang in langs:
+            
+            # Skip all languages other than the required ones (sorry Moussa)
+            if lang not in ["ina", "mkd", "lao", "nan", "aze", "isl"]:
+                continue
+
             reserve_flag = False
             if lang in RESERVE_LANG:
                 reserve_flag = True  # skip reserve lange for zero-shot
