@@ -97,12 +97,13 @@ train-mms-dro:
 submit-target-to-cluster:
 	echo "#!/bin/bash" > slurm_job.sh
 	echo "cd `pwd`" >> slurm_job.sh
+	echo "source ../../../tools/activate_python.sh" >> slurm_job.sh
 	echo "make $(TARGET)" >> slurm_job.sh
 	sbatch \
 			--time=120:00:00 \
 			--cpus-per-task=64 \
-			--gres=gpu:4 \
-			--mem 128G \
+			--gres=gpu:1 \
+			--mem 64G \
 			--account $(SLURM_CLUSTER_ACCOUNT_NAME) \
 			--partition $(SLURM_CLUSTER_PARTITION_NAME) \
 			--job-name $(TARGET) \
