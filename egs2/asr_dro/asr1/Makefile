@@ -45,16 +45,16 @@ preprocess:
 
 preprocess-groups:
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/dev_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/dev_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/train_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/train_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/test_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/test_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2category 
 
 
 train-baseline:

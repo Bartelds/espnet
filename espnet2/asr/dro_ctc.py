@@ -50,8 +50,8 @@ class DROCTCLoss(torch.nn.Module):
             group_mean_loss = torch.mean(group_losses)
             self.dro_q[q_ix] *= torch.exp(group_mean_loss * self.dro_step_size)
         
-        print(batch_lang_ids)
-        print(batch_lang_q_indices)
+        # print(batch_lang_ids)
+        # print(batch_lang_q_indices)
         # normalize q
         self.normalize_dro_q()
 
