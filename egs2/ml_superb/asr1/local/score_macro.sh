@@ -48,7 +48,7 @@ install_sctk() {
 check_sclite
 
 # Default values
-exp_dir="/nlp/scr/ananjan/asrdro/exp/asr_train_xlsr_multilingual_1h/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained"
+exp_dir="/nlp/scr/ananjan/asrdro/exp_subset/asr_train_asr_xlsr_dro_multilingual_1h/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained"
 
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
