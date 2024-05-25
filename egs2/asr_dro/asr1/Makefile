@@ -12,14 +12,14 @@ include cluster_info.mk
 # 	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
 
 
-# DUMP_DIR=/nlp/scr/ananjan/asrdro/dump
-# EXP_DIR=/nlp/scr/ananjan/asrdro/exp_subset
-# ASR_STATS_DIR=/nlp/scr/ananjan/asrdro/exp_subset
+DUMP_DIR=/nlp/scr/ananjan/asrdro/dump
+EXP_DIR=/nlp/scr/ananjan/asrdro/exp_subset
+ASR_STATS_DIR=/nlp/scr/ananjan/asrdro/exp_subset
 
 DATA_SUBSET=1h
-DUMP_DIR=outputs/dump
-EXP_DIR=outputs/exp_subset
-ASR_STATS_DIR=outputs/exp_subset
+# DUMP_DIR=outputs/dump
+# EXP_DIR=outputs/exp_subset
+# ASR_STATS_DIR=outputs/exp_subset
 
 COMMON_ARGS=\
 	--duration $(DATA_SUBSET) \

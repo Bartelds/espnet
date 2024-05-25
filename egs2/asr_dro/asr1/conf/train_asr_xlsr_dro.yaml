@@ -18,7 +18,7 @@ model_conf:
 ctc_conf:
     ctc_type: droctc
     dro_group_count: 6
-    dro_step_size: 0.01
+    dro_step_size: 0.001
 
 unused_parameters: true
 

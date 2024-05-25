@@ -6,8 +6,7 @@ import torch.nn as nn
 import torch.nn.functional as F
 from typeguard import typechecked
 from torch import Tensor
-
-
+import pdb 
 
 class DROCTCLoss(torch.nn.Module):
     def __init__(self, blank=0, reduction='mean', zero_infinity=False, dro_group_count=0, dro_step_size=0.01):
@@ -49,12 +48,17 @@ class DROCTCLoss(torch.nn.Module):
 
             group_mean_loss = torch.mean(group_losses)
             self.dro_q[q_ix] *= torch.exp(group_mean_loss * self.dro_step_size)
+            print(q_ix)
+            print(group_mean_loss)
 
         self.normalize_dro_q()
         dro_losses = torch.stack([
-            losses[ix] * self.dro_q[batch_lang_q_indices[ix]]
+            losses[ix] * self.dro_q[batch_lang_q_indices[ix]] * self.dro_group_count
             for ix in range(losses.shape[0])
         ])
+        print(dro_losses)
+        print(self.dro_q)
+        pdb.set_trace()
         return dro_losses
 
 
