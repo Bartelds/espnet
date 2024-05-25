@@ -1,3 +1,39 @@
+# ASR DRO
+Steps to reproduce
+## Preprocess Data
+```
+make preprocess
+make preprocess-groups
+```
+
+## Train Baseline Systems
+```
+make train-xlsr
+make train-mms
+```
+
+
+## Train DRO Systems
+```
+make train-xlsr-dro
+make train-mms-dro
+```
+
+
+# Other utilities
+## Submit jobs to cluster (see also cluster_info.mk)
+```
+make submit-target-to-cluster TARGET=train-xlsr-dro
+```
+
+## Inspect cluster jobs
+```
+make show-jobs
+```
+
+
+
+
 # Multilingual SUPERB (ML-SUPERB) benchmark
 
 ## Basic Information
