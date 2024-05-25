@@ -29,6 +29,7 @@ class CTC(torch.nn.Module):
         ctc_type: str = "builtin",
         dro_group_count: int = 0,
         dro_step_size: float = 0.01,
+        implementation: str = "ananjan",
         reduce: bool = True,
         ignore_nan_grad: Optional[bool] = None,
         zero_infinity: bool = True,
@@ -75,7 +76,8 @@ class CTC(torch.nn.Module):
                 reduction="none", 
                 zero_infinity=zero_infinity, 
                 dro_group_count=dro_group_count,
-                dro_step_size=dro_step_size
+                dro_step_size=dro_step_size,
+                implementation=implementation
             )
 
         else:

@@ -14,9 +14,12 @@ decoder: none
 
 model_conf:
     ctc_weight: 1.0
-    
+
 ctc_conf:
-    ctc_type: builtin
+    ctc_type: droctc
+    dro_group_count: 6
+    dro_step_size: 0.001
+    implementation: moussa
 
 unused_parameters: true
 
@@ -66,5 +69,5 @@ specaug_conf:
     num_time_mask: 10
 
 
-num_iters_per_epoch: 200 # number of iterations per epoch
+num_iters_per_epoch: 1000 # number of iterations per epoch
 max_epoch: 30

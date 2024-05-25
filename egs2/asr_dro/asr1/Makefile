@@ -44,7 +44,10 @@ MMS_DRO_ARGS=\
 	--asr_config conf/train_asr_mms_dro.yaml
 
 XLSR_DRO_ARGS=\
-	--asr_config conf/train_asr_xlsr_dro.yaml
+	--asr_config conf/train_asr_xlsr_dro_moussa.yaml
+
+XLSR_DRO_ANANJAN_ARGS=\
+	--asr_config conf/train_asr_xlsr_dro_ananjan.yaml
 
 activate-venv:
 	source ../../../tools/activate_python.sh 
@@ -86,6 +89,12 @@ train-xlsr-dro:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
 		$(XLSR_DRO_ARGS) \
+		--stage 11
+
+train-xlsr-dro2:
+	./run_multi.sh \
+		$(COMMON_ARGS) \
+		$(XLSR_DRO_ANANJAN_ARGS) \
 		--stage 11
 
 train-mms-dro:

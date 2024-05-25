@@ -67,6 +67,8 @@ class LanguageBatchSampler(AbsSampler):
 
         def get_nonempty(it, s):
             # get next index for which iterator value is not 0
+            if len(it) == 1:
+                return s
             it_keys = list(it.keys())
             if it[it_keys[s]] != 0:
                 return s
@@ -103,7 +105,7 @@ class LanguageBatchSampler(AbsSampler):
 
     def debug_prints(self):
         print(f"batch_size={self.batch_size}")
-        print(f"self.batch_list={self.batch_list[:20]}")
+        print(f"self.batch_list={self.batch_list}")
 
     def __repr__(self):
         return (
