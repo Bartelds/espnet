@@ -48,6 +48,17 @@ class DROCTCLoss(torch.nn.Module):
                 line = line.strip().split()
                 self.utt2category[line[0]] = line[1]
 
+        # Also load mappings for test and dev
+        with open(str(file.parent) + '/dev_1h_lid/utt2category', 'r') as f:
+            for line in f:
+                line = line.strip().split()
+                self.utt2category[line[0]] = line[1]
+
+        with open(str(file.parent) + '/test_1h_lid/utt2category', 'r') as f:
+            for line in f:
+                line = line.strip().split()
+                self.utt2category[line[0]] = line[1]
+
     def forward(self, log_probs: Tensor, targets: Tensor, input_lengths: Tensor, target_lengths: Tensor, utt_id: List[str]) -> Tensor:
         log_probs = torch.transpose(log_probs, 0, 1)
 

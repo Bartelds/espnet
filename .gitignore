@@ -57,6 +57,7 @@ egs2/ml_superb/asr1/hub/*
 egs2/ml_superb/asr1/*txt
 egs2/asr_dro/asr1/hub/*
 egs2/asr_dro/asr1/*txt
+egs2/asr_dro/asr1/conf/train_asr_xlsr_duration.yaml
 
 # tools related
 tools/chainer
