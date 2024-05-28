@@ -29,7 +29,11 @@ class CTC(torch.nn.Module):
         ctc_type: str = "builtin",
         dro_group_count: int = 0,
         dro_step_size: float = 0.01,
-        implementation: str = "ananjan",
+        dro_q_epsilon: float = 1e-10,
+        warmup_steps: int = 0,
+        use_running_mean: bool = False,
+        running_mean_window: int = -1,
+        group_size_init: bool = False,
         reduce: bool = True,
         ignore_nan_grad: Optional[bool] = None,
         zero_infinity: bool = True,
@@ -77,7 +81,11 @@ class CTC(torch.nn.Module):
                 zero_infinity=zero_infinity, 
                 dro_group_count=dro_group_count,
                 dro_step_size=dro_step_size,
-                implementation=implementation
+                dro_q_epsilon=dro_q_epsilon,
+                warmup_steps=warmup_steps,
+                use_running_mean=use_running_mean,
+                running_mean_window=running_mean_window,
+                group_size_init=group_size_init
             )
 
         else:
@@ -85,10 +93,13 @@ class CTC(torch.nn.Module):
 
         self.reduce = reduce
 
-    def loss_fn(self, th_pred, th_target, th_ilen, th_olen) -> torch.Tensor:
+    def loss_fn(self, th_pred, th_target, th_ilen, th_olen, utt_id=None) -> torch.Tensor:
         if self.ctc_type == "builtin" or self.ctc_type == "brctc" or self.ctc_type == 'droctc':
             th_pred = th_pred.log_softmax(2)
-            loss = self.ctc_loss(th_pred, th_target, th_ilen, th_olen)
+            if self.ctc_type == 'droctc':
+                loss = self.ctc_loss(th_pred, th_target, th_ilen, th_olen, utt_id)
+            else:
+                loss = self.ctc_loss(th_pred, th_target, th_ilen, th_olen)
             if self.ctc_type == "builtin":
                 size = th_pred.size(1)
             else:
@@ -163,7 +174,7 @@ class CTC(torch.nn.Module):
         else:
             raise NotImplementedError
 
-    def forward(self, hs_pad, hlens, ys_pad, ys_lens):
+    def forward(self, hs_pad, hlens, ys_pad, ys_lens, utt_id=None):
         """Calculate CTC loss.
 
         Args:
@@ -175,8 +186,13 @@ class CTC(torch.nn.Module):
         # hs_pad: (B, L, NProj) -> ys_hat: (B, L, Nvocab)
         ys_hat = self.ctc_lo(F.dropout(hs_pad, p=self.dropout_rate))
 
-        if self.ctc_type == "brctc" or self.ctc_type == "droctc":
+        if self.ctc_type == "brctc":
             loss = self.loss_fn(ys_hat, ys_pad, hlens, ys_lens).to(
+                device=hs_pad.device, dtype=hs_pad.dtype
+            )
+            return loss
+        elif self.ctc_type == "droctc":
+            loss = self.loss_fn(ys_hat, ys_pad, hlens, ys_lens, utt_id).to(
                 device=hs_pad.device, dtype=hs_pad.dtype
             )
             return loss

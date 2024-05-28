@@ -1,62 +1,83 @@
 import logging
-from typing import Iterator, Optional, Tuple
+from typing import Iterator, Optional, Tuple, Union, List
 
 from typeguard import typechecked
 
-from espnet2.fileio.read_text import read_2columns_text
+from espnet2.fileio.read_text import read_2columns_text, load_num_sequence_text
 from espnet2.samplers.abs_sampler import AbsSampler
 import random
 
 random.seed(42)
 
-class LanguageBatchSampler(AbsSampler):
-    """BatchSampler with constant batch-size.
+class DurationLanguageBatchSampler(AbsSampler):
+    """BatchSampler.
 
     This class ensures that each batch only contains
     examples from one language/category. It cycles 
-    through languages over the course of training.
+    through languages over the course of training. This class
+    returns duration-equalized batches
 
-    Args:
-        batch_size:
-        key_file:
     """
 
     @typechecked
     def __init__(
         self,
         batch_size: int,
-        key_file: str,
+        shape_files: Union[Tuple[str, ...], List[str]],
         drop_last: bool = True,
         utt2category_file: Optional[str] = None,
     ):
         print("utt2category_file", utt2category_file)
         assert batch_size > 0
         self.batch_size = batch_size
-        self.key_file = key_file
         self.drop_last = drop_last
+        self.shape_files = shape_files
 
         # utt2shape:
         #    uttA <anything is o.k>
         #    uttB <anything is o.k>
-        utt2any = read_2columns_text(key_file)
-        if len(utt2any) == 0:
-            logging.warning(f"{key_file} is empty")
-        # In this case the, the first column in only used
-        keys = list(utt2any)
-        if len(keys) == 0:
-            raise RuntimeError(f"0 lines found: {key_file}")
+
+        utt2shapes = [
+            load_num_sequence_text(s, loader_type="csv_int") for s in shape_files
+        ]
+        
+        first_utt2shape = utt2shapes[0]
+        for s, d in zip(shape_files, utt2shapes):
+            if set(d) != set(first_utt2shape):
+                raise RuntimeError(
+                    f"keys are mismatched between {s} != {shape_files[0]}"
+                )
+        
+        # first_utt2shape maps files to their audio length
+        keys = list(first_utt2shape.keys())
 
         category2utt = {}
         if utt2category_file is not None:
             utt2category = read_2columns_text(utt2category_file)
             if set(utt2category) != set(keys):
                 raise RuntimeError(
-                    f"keys are mismatched between {utt2category_file} != {key_file}"
+                    f"keys are mismatched between {utt2category_file}"
                 )
             for k, v in utt2category.items():
                 category2utt.setdefault(v, []).append(k)
         else:
             raise Exception(f"utt2category File not Provided!")
+        
+        # sort utterances by length for each category
+        for category in category2utt:
+            category2utt[category] = sorted(category2utt[category], key=lambda k:first_utt2shape[k])
+
+        category2len = {}
+        for category in category2utt:
+            lens = [first_utt2shape[_][0] for _ in category2utt[category]]
+            category2len[category] = sum(lens)
+
+        # try and match the batch_size of the longest audio language, like packing
+        target_dur = max([
+            (category2len[category]/len(category2utt[category]))*self.batch_size
+        ])
+
+        category2numbatches = {_:0 for _ in category2len}
 
         self.batch_list = []
         # Maintain iterators for all categories
@@ -79,7 +100,6 @@ class LanguageBatchSampler(AbsSampler):
                     return s
             return k
 
-        category2numbatches = {_:0 for _ in category2utt}
         cat_iterators = {d:len(category2utt[d]) for d in category2utt}
         cats = list(category2utt.keys())
         while not check_complete(cat_iterators):
@@ -87,24 +107,26 @@ class LanguageBatchSampler(AbsSampler):
             lang = cats[get_nonempty(cat_iterators, lang_index)]
             category_keys = category2utt[lang]
             # Apply max(, 1) to avoid 0-batches
-            if self.drop_last and cat_iterators[lang] < batch_size:
-                    # drop incomplete batches
-                    cat_iterators[lang] = 0
-            else:
-                # it at end -> selecting entries from the start
-                start = len(category_keys) - cat_iterators[lang]
-                decrement = min(batch_size, cat_iterators[lang])
-                end = start + decrement
-                cat_iterators[lang] -= decrement
+            # if self.drop_last and cat_iterators[lang] < self.batch_size:
+            #         # drop incomplete batches
+            #         cat_iterators[lang] = 0
+            # else:
+            # it at end -> selecting entries from the start
+            start = len(category_keys) - cat_iterators[lang]
+            decrement = 0
+            curr_dur = 0
+            curr_ex = []
+            while curr_dur < target_dur and decrement < cat_iterators[lang]:
+                curr_dur += first_utt2shape[category_keys[start + decrement]][0]
+                curr_ex.append(category_keys[start + decrement])
+                decrement += 1
 
-                curr_ex = category_keys[start:end]
-                if decrement < batch_size:
-                    # pad out batch
-                    curr_ex += [category_keys[start] for _ in range(batch_size - decrement)]
-
-                category2numbatches[lang] += 1
-                self.batch_list.append(curr_ex)
+            cat_iterators[lang] -= decrement
+            self.batch_list.append(curr_ex)
+            category2numbatches[lang] += 1
         
+        # print(self.batch_list)
+        # required to init Group DRO
         self.category2numbatches = category2numbatches
 
     def debug_prints(self):
@@ -116,7 +138,6 @@ class LanguageBatchSampler(AbsSampler):
             f"{self.__class__.__name__}("
             f"N-batch={len(self)}, "
             f"batch_size={self.batch_size}, "
-            f"key_file={self.key_file}, "
         )
 
     def __len__(self):

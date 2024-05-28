@@ -18,8 +18,12 @@ model_conf:
 ctc_conf:
     ctc_type: droctc
     dro_group_count: 6
-    dro_step_size: 0.001
-    implementation: moussa
+    dro_step_size: 0.1
+    dro_q_epsilon: 0.001
+    warmup_steps: 0
+    use_running_mean: True
+    running_mean_window: 50
+    group_size_init: True
 
 unused_parameters: true
 

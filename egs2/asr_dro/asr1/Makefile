@@ -28,7 +28,7 @@ COMMON_ARGS=\
 	--dumpdir $(DUMP_DIR) \
 	--expdir $(EXP_DIR) \
 	--asr_stats_dir $(ASR_STATS_DIR) \
-	--batch_type language
+	--batch_type duration_language
 
 
 PREPROCESS_ARGS=\
@@ -44,10 +44,10 @@ MMS_DRO_ARGS=\
 	--asr_config conf/train_asr_mms_dro.yaml
 
 XLSR_DRO_ARGS=\
-	--asr_config conf/train_asr_xlsr_dro_moussa.yaml
+	--asr_config conf/train_asr_xlsr_dro_orig.yaml
 
-XLSR_DRO_ANANJAN_ARGS=\
-	--asr_config conf/train_asr_xlsr_dro_ananjan.yaml
+XLSR_DRO2_ARGS=\
+	--asr_config conf/train_asr_xlsr_dro_mod.yaml
 
 activate-venv:
 	source ../../../tools/activate_python.sh 
@@ -94,7 +94,7 @@ train-xlsr-dro:
 train-xlsr-dro2:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
-		$(XLSR_DRO_ANANJAN_ARGS) \
+		$(XLSR_DRO2_ARGS) \
 		--stage 11
 
 train-mms-dro:

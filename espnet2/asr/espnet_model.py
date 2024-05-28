@@ -218,6 +218,7 @@ class ESPnetASRModel(AbsESPnetModel):
             text_lengths: (Batch,)
             kwargs: "utt_id" is among the input.
         """
+        utt_id = kwargs.get("utt_id", None)
         assert text_lengths.dim() == 1, text_lengths.shape
         # Check that batch_size is unified
         assert (
@@ -248,7 +249,7 @@ class ESPnetASRModel(AbsESPnetModel):
         # 1. CTC branch
         if self.ctc_weight != 0.0:
             loss_ctc, cer_ctc = self._calc_ctc_loss(
-                encoder_out, encoder_out_lens, text, text_lengths
+                encoder_out, encoder_out_lens, text, text_lengths, utt_id=utt_id
             )
 
             # Collect CTC branch stats
@@ -277,6 +278,7 @@ class ESPnetASRModel(AbsESPnetModel):
                                 encoder_out_lens,
                                 aux_data_tensor,
                                 aux_data_lengths,
+                                utt_id=utt_id
                             )
                         else:
                             raise Exception(
@@ -284,7 +286,7 @@ class ESPnetASRModel(AbsESPnetModel):
                             )
                 if loss_ic is None:
                     loss_ic, cer_ic = self._calc_ctc_loss(
-                        intermediate_out, encoder_out_lens, text, text_lengths
+                        intermediate_out, encoder_out_lens, text, text_lengths, utt_id=utt_id
                     )
                 loss_interctc = loss_interctc + loss_ic
 
@@ -581,9 +583,10 @@ class ESPnetASRModel(AbsESPnetModel):
         encoder_out_lens: torch.Tensor,
         ys_pad: torch.Tensor,
         ys_pad_lens: torch.Tensor,
+        utt_id: List[str] = None
     ):
         # Calc CTC loss
-        loss_ctc = self.ctc(encoder_out, encoder_out_lens, ys_pad, ys_pad_lens)
+        loss_ctc = self.ctc(encoder_out, encoder_out_lens, ys_pad, ys_pad_lens, utt_id=utt_id)
 
         # Calc CER using CTC
         cer_ctc = None

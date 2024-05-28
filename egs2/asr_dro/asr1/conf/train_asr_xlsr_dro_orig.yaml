@@ -18,8 +18,12 @@ model_conf:
 ctc_conf:
     ctc_type: droctc
     dro_group_count: 6
-    dro_step_size: 0.1
-    implementation: ananjan
+    dro_step_size: 0.001
+    dro_q_epsilon: 1.e-10
+    warmup_steps: 0
+    use_running_mean: False
+    running_mean_window: -1
+    group_size_init: False
 
 unused_parameters: true
 
