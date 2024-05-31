@@ -1,20 +1,7 @@
 .ONESHELL:
 
 include cluster_info.mk
-# SLURM_CLUSTER_ACCOUNT_NAME=cluster-account-name
-# SLURM_CLUSTER_PARTITION_NAME=cluster-partition-name
-# SLURM_CLUSTER_EXCLUDE_NODES=node1,node2,node3
-
-
-# train-asr-dro-baseline:
-# 	/nlp/scr/moussa/git/asr-dro/espnet/tools/activate_python.sh
-# 	cd /nlp/scr/moussa/git/asr-dro/espnet/egs2/asr_dro/asr1
-# 	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
-
 DATA_SUBSET=1h
-# DUMP_DIR=outputs/dump
-# EXP_DIR=outputs/exp_subset
-# ASR_STATS_DIR=outputs/exp_subset
 
 COMMON_ARGS=\
 	--duration $(DATA_SUBSET) \
@@ -23,37 +10,43 @@ COMMON_ARGS=\
 	--dumpdir $(DUMP_DIR) \
 	--expdir $(EXP_DIR) \
 	--asr_stats_dir $(ASR_STATS_DIR) \
-	--asr_tag $(ASR_TAG) \
-	--batch_type language
 
+COMMON_TRAIN_ARGS=\
+	$(COMMON_ARGS) \
+	--stage 11 \
+	--asr_tag $@
+##
+# Loss Functions
+###
+LOSS_CTC_ARGS=\
+	--asr_config conf/exp_001/train_asr_xlsr.yaml
 
+LOSS_CTC_DRO_ARGS=\
+	--asr_config conf/exp_001/train_asr_xlsr_dro.yaml
+
+LOSS_CTC_DRO_RM_ARGS=\
+	--asr_config conf/exp_001/train_asr_xlsr_dro_rm.yaml
+
+##
+# Batch Sampling Methods
+###
+SCEB_PARAMS=\
+	--batch_type language 
+
+ALEB_PARAMS=\
+	--batch_type duration_language 
+
+##
+# Preprocessing
+###
 PREPROCESS_ARGS=\
-	--asr_config conf/train_asr.yaml
-
-XLSR_ARGS=\
-	--asr_config conf/train_asr_xlsr.yaml
-
-MMS_ARGS=\
-	--asr_config conf/train_asr_mms.yaml
-
-MMS_DRO_ARGS=\
-	--asr_config conf/train_asr_mms_dro.yaml
-
-XLSR_DRO_ARGS=\
-	--asr_config conf/train_asr_xlsr_dro_orig.yaml
-
-XLSR_DRO2_ARGS=\
-	--asr_config conf/train_asr_xlsr_dro_mod.yaml
-
-activate-venv:
-	source ../../../tools/activate_python.sh 
+	--asr_config conf/exp_001/train_asr_xlsr.yaml
 
 preprocess:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
 		$(PREPROCESS_ARGS) \
 		--stop_stage 10
-
 
 preprocess-groups:
 	python scripts/dro_scripts/create_groups.py  \
@@ -69,51 +62,56 @@ preprocess-groups:
 		--out-utt2category-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2category 
 
 
-train-xlsr:
-	./run_multi.sh \
-		$(COMMON_ARGS) \
-		$(XLSR_ARGS) \
-		--stage 11
 
-train-mms:
-	./run_multi.sh \
-		$(COMMON_ARGS) \
-		$(MMS_ARGS) \
-		--stage 11
+##
+# Training for 6 experimental conditions
+###
+train-xslr-ctc-aleb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(ALEB_PARAMS)
 
-train-xlsr-dro:
-	./run_multi.sh \
-		$(COMMON_ARGS) \
-		$(XLSR_DRO_ARGS) \
-		--stage 11
+train-xslr-ctc-dro-aleb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(ALEB_PARAMS)
 
-train-xlsr-dro2:
-	./run_multi.sh \
-		$(COMMON_ARGS) \
-		$(XLSR_DRO2_ARGS) \
-		--stage 11
+train-xslr-ctc-dro-rm-aleb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_RM_ARGS) $(ALEB_PARAMS)
 
-train-mms-dro:
-	./run_multi.sh \
-		$(COMMON_ARGS) \
-		$(MMS_DRO_ARGS) \
-		--stage 11
+train-xslr-ctc-sceb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(SCEB_PARAMS)
 
-# eval commands
+train-xslr-ctc-dro-sceb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(SCEB_PARAMS)
 
-# make train-xslr-ctc-aeb
-# make train-xslr-ctc-dro-aeb
-# make train-xslr-ctc-dro-rm-aeb
-# make train-xslr-ctc-ceb
-# make train-xslr-ctc-dro-ceb
-# make train-xslr-ctc-dro-rm-ceb
-# make eval-xslr-ctc-aeb
-# make eval-xslr-ctc-dro-aeb
-# make eval-xslr-ctc-dro-rm-aeb
-# make eval-xslr-ctc-ceb
-# make eval-xslr-ctc-dro-ceb
-# make eval-xslr-ctc-dro-rm-ceb
+train-xslr-ctc-dro-rm-sceb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_RM_ARGS) $(SCEB_PARAMS)
 
+
+##
+# Evaluation for 6 experimental conditions
+###
+eval-xslr-ctc-aleb:
+	echo "TODO"
+
+eval-xslr-ctc-dro-aleb:
+	echo "TODO"
+
+eval-xslr-ctc-dro-rm-aleb:
+	echo "TODO"
+
+eval-xslr-ctc-sceb:
+	echo "TODO"
+
+eval-xslr-ctc-dro-sceb:
+	echo "TODO"
+
+eval-xslr-ctc-dro-rm-sceb:
+	echo "TODO"
+
+
+
+
+##
+# Cluster Management Tools
+###
 submit-target-to-cluster:
 	echo "#!/bin/bash" > slurm_job.sh
 	echo "cd `pwd`" >> slurm_job.sh
@@ -132,3 +130,6 @@ submit-target-to-cluster:
 
 show-jobs:
 	squeue --format="%.18i %.12P %70j %.8T %.10M %.9l %.6D %R" -u moussa
+
+activate-venv:
+	source ../../../tools/activate_python.sh 

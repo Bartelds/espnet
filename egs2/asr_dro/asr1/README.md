@@ -6,12 +6,15 @@ make preprocess
 make preprocess-groups
 ```
 
-## Train Baseline Systems
+## Train in each experiment condition
 ```
-make train-xlsr
-make train-mms
+make train-xslr-ctc-aleb
+make train-xslr-ctc-dro-aleb
+make train-xslr-ctc-dro-rm-aleb
+make train-xslr-ctc-sceb
+make train-xslr-ctc-dro-sceb
+make train-xslr-ctc-dro-rm-sceb
 ```
-
 
 ## Train DRO Systems
 ```
@@ -19,13 +22,10 @@ make train-xlsr-dro
 make train-mms-dro
 ```
 
-`make train-xlsr-dro` runs DRO with the original configs. 
-`make train-xlsr-dro2` runs DRO with running means and group size initialization.
-
 # Other utilities
 ## Submit jobs to cluster (see also cluster_info.mk)
 ```
-make submit-target-to-cluster TARGET=train-xlsr-dro
+make submit-target-to-cluster TARGET=train-xslr-ctc-aleb
 ```
 
 ## Inspect cluster jobs
