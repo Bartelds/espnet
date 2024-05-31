@@ -30,10 +30,10 @@ class DROCTCLoss(torch.nn.Module):
         if self.use_running_mean:
             self.mean_losses = []
 
-    def init_weights(self, file):
+    def init_weights(self, train_file, valid_file):
         if self.group_size_init:
             group_sizes = {}
-            with open(str(file) + '/category2numbatches', 'r') as f:
+            with open(str(train_file) + '/category2numbatches', 'r') as f:
                 for line in f:
                     line = line.strip().split()
                     group_sizes[line[0]] = int(line[1])
@@ -43,18 +43,13 @@ class DROCTCLoss(torch.nn.Module):
                     self.dro_q = torch.tensor(group_size_init_norm)
         
         self.utt2category = {}
-        with open(str(file) + '/utt2category', 'r') as f:
+        with open(str(train_file) + '/utt2category', 'r') as f:
             for line in f:
                 line = line.strip().split()
                 self.utt2category[line[0]] = line[1]
 
         # Also load mappings for test and dev
-        with open(str(file.parent) + '/dev_1h_lid/utt2category', 'r') as f:
-            for line in f:
-                line = line.strip().split()
-                self.utt2category[line[0]] = line[1]
-
-        with open(str(file.parent) + '/test_1h_lid/utt2category', 'r') as f:
+        with open(str(valid_file) + '/utt2category', 'r') as f:
             for line in f:
                 line = line.strip().split()
                 self.utt2category[line[0]] = line[1]

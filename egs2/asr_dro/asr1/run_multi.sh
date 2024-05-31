@@ -25,6 +25,7 @@ dumpdir=
 expdir=
 batch_type=
 asr_stats_dir=
+asr_tag="$(basename "${asr_config}" .yaml)_multilingual_${duration}"
 
 . utils/parse_options.sh || exit 1
 
@@ -46,7 +47,6 @@ train_dev=dev_${duration}${suffix}
 test_set="${train_dev} test_${duration}${suffix}"
 
 nlsyms_txt=data/local/nlsyms.txt
-asr_tag="$(basename "${asr_config}" .yaml)_multilingual_${duration}"
 
 local_data_opts="--duration ${duration} --lid ${lid} --only_lid ${only_lid}"
 local_data_opts+=" --multilingual true --nlsyms_txt ${nlsyms_txt}"

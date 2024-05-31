@@ -11,11 +11,6 @@ include cluster_info.mk
 # 	cd /nlp/scr/moussa/git/asr-dro/espnet/egs2/asr_dro/asr1
 # 	./run_multi.sh --asr_config conf/train_asr_dro.yaml --duration 1h --lid true --stage 5
 
-
-DUMP_DIR=/nlp/scr/ananjan/asrdro/dump
-EXP_DIR=/nlp/scr/ananjan/asrdro/exp_subset
-ASR_STATS_DIR=/nlp/scr/ananjan/asrdro/exp_subset
-
 DATA_SUBSET=1h
 # DUMP_DIR=outputs/dump
 # EXP_DIR=outputs/exp_subset
@@ -28,7 +23,8 @@ COMMON_ARGS=\
 	--dumpdir $(DUMP_DIR) \
 	--expdir $(EXP_DIR) \
 	--asr_stats_dir $(ASR_STATS_DIR) \
-	--batch_type duration_language
+	--asr_tag $(ASR_TAG) \
+	--batch_type language
 
 
 PREPROCESS_ARGS=\
@@ -102,6 +98,21 @@ train-mms-dro:
 		$(COMMON_ARGS) \
 		$(MMS_DRO_ARGS) \
 		--stage 11
+
+# eval commands
+
+# make train-xslr-ctc-aeb
+# make train-xslr-ctc-dro-aeb
+# make train-xslr-ctc-dro-rm-aeb
+# make train-xslr-ctc-ceb
+# make train-xslr-ctc-dro-ceb
+# make train-xslr-ctc-dro-rm-ceb
+# make eval-xslr-ctc-aeb
+# make eval-xslr-ctc-dro-aeb
+# make eval-xslr-ctc-dro-rm-aeb
+# make eval-xslr-ctc-ceb
+# make eval-xslr-ctc-dro-ceb
+# make eval-xslr-ctc-dro-rm-ceb
 
 submit-target-to-cluster:
 	echo "#!/bin/bash" > slurm_job.sh
