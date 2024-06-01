@@ -12,13 +12,26 @@ make preprocess-groups
 
 ## Train in each experiment condition
 See Also: "SLURM Cluster Utilities" below
+- Baseline Conditions
 ```
 make train-xslr-ctc-aleb
+make train-xslr-ctc-sceb
+```
+
+- DRO Conditions with dro_step_size=0.1
+```
 make train-xslr-ctc-dro-aleb
 make train-xslr-ctc-dro-rm-aleb
-make train-xslr-ctc-sceb
 make train-xslr-ctc-dro-sceb
 make train-xslr-ctc-dro-rm-sceb
+```
+
+- DRO Conditions with dro_step_size=0.01
+```
+make train-xslr-ctc-dro-aleb-hptune-001
+make train-xslr-ctc-dro-rm-aleb-hptune-001
+make train-xslr-ctc-dro-sceb-hptune-001
+make train-xslr-ctc-dro-rm-sceb-hptune-001
 ```
 
 ## Evaluate

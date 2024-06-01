@@ -20,7 +20,7 @@ COMMON_EVAL_ARGS=\
 	--exp_dir outputs/exp_subset/asr_train-$(subst eval-,,$@)/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained/ 
 
 EVAL_CMD=\
-	./local/score_macro.sh $(COMMON_EVAL_ARGS) > results/$@.txt
+	./local/score_macro.sh $(COMMON_EVAL_ARGS) > results/exp-001/$@.txt
 
 ##
 # Loss Functions
@@ -33,6 +33,12 @@ LOSS_CTC_DRO_ARGS=\
 
 LOSS_CTC_DRO_RM_ARGS=\
 	--asr_config conf/exp_001/train_asr_xlsr_dro_rm.yaml
+
+LOSS_CTC_DRO_HPTUNE_001_ARGS=\
+	--asr_config conf/exp_001/train_asr_xlsr_dro_hptune_001.yaml
+
+LOSS_CTC_DRO_RM_HPTUNE_001_ARGS=\
+	--asr_config conf/exp_001/train_asr_xlsr_dro_rm_hptune_001.yaml
 
 ##
 # Batch Sampling Methods
@@ -93,28 +99,43 @@ train-xslr-ctc-dro-rm-sceb:
 
 
 ##
+# Training for 4 hparam tunins conditions
+###
+train-xslr-ctc-dro-aleb-hptune-001:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_HPTUNE_001_ARGS) $(ALEB_PARAMS)
+
+train-xslr-ctc-dro-rm-aleb-hptune-001:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_RM_HPTUNE_001_ARGS) $(ALEB_PARAMS)
+
+train-xslr-ctc-dro-sceb-hptune-001:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_HPTUNE_001_ARGS) $(SCEB_PARAMS)
+
+train-xslr-ctc-dro-rm-sceb-hptune-001:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_RM_HPTUNE_001_ARGS) $(SCEB_PARAMS)
+
+
+##
 # Evaluation for 6 experimental conditions
 ###
+results/exp-001/:
+	mkdir -p results/exp-001/
 
-results/:
-	mkdir -p results
-
-eval-xslr-ctc-aleb: results/
+eval-xslr-ctc-aleb: results/exp-001/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-aleb: results/
+eval-xslr-ctc-dro-aleb: results/exp-001/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-rm-aleb: results/
+eval-xslr-ctc-dro-rm-aleb: results/exp-001/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-sceb: results/
+eval-xslr-ctc-sceb: results/exp-001/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-sceb: results/
+eval-xslr-ctc-dro-sceb: results/exp-001/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-rm-sceb: results/
+eval-xslr-ctc-dro-rm-sceb: results/exp-001/
 	$(EVAL_CMD)
 
 
