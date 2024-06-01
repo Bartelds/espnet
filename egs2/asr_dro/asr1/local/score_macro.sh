@@ -1,11 +1,17 @@
 #!/bin/bash
+# note: set USER_SCTK_INSTALL_DIR to a custom path as needed
 
+if [ $USER_SCTK_INSTALL_DIR]; then
+    INSTALL_DIR=$USER_SCTK_INSTALL_DIR
+else
+    INSTALL_DIR="../../../espnet/tools/installers/"
+fi
 # Usage: ./score_macro.sh --exp_dir [exp_dir]
 
 # Function to check if sclite is available in the custom installation directory
 check_sclite() {
     # Custom installation directory for SCTK
-    INSTALL_DIR="/afs/cs.stanford.edu/u/ananjan/asrdro/espnet/tools/installers/sctk"
+    # INSTALL_DIR="/afs/cs.stanford.edu/u/ananjan/asrdro/espnet/tools/installers/sctk"
     if [ ! -f "$INSTALL_DIR/bin/sclite" ]; then
         echo "sclite could not be found in $INSTALL_DIR. Installing SCTK..."
         install_sctk

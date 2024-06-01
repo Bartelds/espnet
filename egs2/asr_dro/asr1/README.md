@@ -1,5 +1,9 @@
 # ASR DRO
-Steps to reproduce
+
+# Results
+[results](results)
+
+# Steps to reproduce
 ## Preprocess Data
 ```
 make preprocess
@@ -7,6 +11,7 @@ make preprocess-groups
 ```
 
 ## Train in each experiment condition
+See Also: "SLURM Cluster Utilities" below
 ```
 make train-xslr-ctc-aleb
 make train-xslr-ctc-dro-aleb
@@ -16,13 +21,12 @@ make train-xslr-ctc-dro-sceb
 make train-xslr-ctc-dro-rm-sceb
 ```
 
-## Train DRO Systems
+## Evaluate
 ```
-make train-xlsr-dro
-make train-mms-dro
+make eval-all
 ```
 
-# Other utilities
+# SLURM Cluster Utilities
 ## Submit jobs to cluster (see also cluster_info.mk)
 ```
 make submit-target-to-cluster TARGET=train-xslr-ctc-aleb

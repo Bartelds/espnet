@@ -15,6 +15,13 @@ COMMON_TRAIN_ARGS=\
 	$(COMMON_ARGS) \
 	--stage 11 \
 	--asr_tag $@
+
+COMMON_EVAL_ARGS=\
+	--exp_dir outputs/exp_subset/asr_train-$(subst eval-,,$@)/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained/ 
+
+EVAL_CMD=\
+	./local/score_macro.sh $(COMMON_EVAL_ARGS) > results/$@.txt
+
 ##
 # Loss Functions
 ###
@@ -88,26 +95,37 @@ train-xslr-ctc-dro-rm-sceb:
 ##
 # Evaluation for 6 experimental conditions
 ###
-eval-xslr-ctc-aleb:
-	echo "TODO"
 
-eval-xslr-ctc-dro-aleb:
-	echo "TODO"
+results/:
+	mkdir -p results
 
-eval-xslr-ctc-dro-rm-aleb:
-	echo "TODO"
+eval-xslr-ctc-aleb: results/
+	$(EVAL_CMD)
 
-eval-xslr-ctc-sceb:
-	echo "TODO"
+eval-xslr-ctc-dro-aleb: results/
+	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-sceb:
-	echo "TODO"
+eval-xslr-ctc-dro-rm-aleb: results/
+	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-rm-sceb:
-	echo "TODO"
+eval-xslr-ctc-sceb: results/
+	$(EVAL_CMD)
+
+eval-xslr-ctc-dro-sceb: results/
+	$(EVAL_CMD)
+
+eval-xslr-ctc-dro-rm-sceb: results/
+	$(EVAL_CMD)
 
 
-
+eval-all: \
+	eval-xslr-ctc-aleb \
+	eval-xslr-ctc-dro-aleb \
+	eval-xslr-ctc-dro-rm-aleb \
+	eval-xslr-ctc-sceb \
+	eval-xslr-ctc-dro-sceb \
+	eval-xslr-ctc-dro-rm-sceb
+	echo "done"
 
 ##
 # Cluster Management Tools

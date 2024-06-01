@@ -10,6 +10,7 @@ SLURM_CLUSTER_EXCLUDE_NODES=
 DUMP_DIR=outputs/dump
 EXP_DIR=outputs/exp_subset
 ASR_STATS_DIR=outputs/exp_subset
+USER_SCTK_INSTALL_DIR=
 
 # DUMP_DIR=/nlp/scr/ananjan/asrdro/dump
 # EXP_DIR=/nlp/scr/ananjan/asrdro/exp_subset
