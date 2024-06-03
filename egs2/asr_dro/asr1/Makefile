@@ -115,7 +115,7 @@ train-xslr-ctc-dro-rm-sceb-hptune-001:
 
 
 ##
-# Evaluation for 6 experimental conditions
+# Evaluation for 10 experimental conditions
 ###
 results/exp-001/:
 	mkdir -p results/exp-001/
@@ -136,6 +136,20 @@ eval-xslr-ctc-dro-sceb: results/exp-001/
 	$(EVAL_CMD)
 
 eval-xslr-ctc-dro-rm-sceb: results/exp-001/
+	$(EVAL_CMD)
+
+
+
+eval-xslr-ctc-dro-aleb-hptune-001: results/exp-001/
+	$(EVAL_CMD)
+	
+eval-xslr-ctc-dro-rm-aleb-hptune-001: results/exp-001/
+	$(EVAL_CMD)
+
+eval-xslr-ctc-dro-sceb-hptune-001: results/exp-001/
+	$(EVAL_CMD)
+
+eval-xslr-ctc-dro-rm-sceb-hptune-001: results/exp-001/
 	$(EVAL_CMD)
 
 
