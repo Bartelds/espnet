@@ -1,0 +1,62 @@
+# input_size: 2048
+
+encoder: wav2vec2
+encoder_conf:
+    output_size: 1024
+    normalize_before: false
+    w2v_url: https://dl.fbaipublicfiles.com/fairseq/wav2vec/xlsr2_300m.pt
+    w2v_dir_path: ./downloads/wav2vec_pretrained_models
+# freeze_finetune_updates: 100000
+
+decoder: none
+
+model_conf:
+    ctc_weight: 1.0
+    # length_normalized_loss: false
+
+
+ctc_conf:
+    ctc_type: builtin
+
+unused_parameters: true
+
+# xls_r_300m
+frontend: default
+
+
+num_workers: 4
+batch_type: sorted
+batch_size: 8
+accum_grad: 4
+patience: none
+init: none
+best_model_criterion:
+-   - valid
+    - loss
+    - min
+keep_nbest_models: 5
+
+optim: adam
+optim_conf:
+    lr: 0.0001
+    weight_decay: 0.000001
+
+specaug: specaug
+specaug_conf:
+    apply_time_warp: true
+    time_warp_window: 5
+    time_warp_mode: bicubic
+    apply_freq_mask: true
+    freq_mask_width_range:
+    - 0
+    - 27
+    num_freq_mask: 2
+    apply_time_mask: true
+    time_mask_width_ratio_range:
+    - 0.
+    - 0.05
+    num_time_mask: 10
+
+
+num_iters_per_epoch: 1000 # number of iterations per epoch
+max_epoch: 30
