@@ -207,6 +207,23 @@ if __name__ == "__main__":
     parser.add_argument("--lid", type=str2bool, default=False)
     parser.add_argument("--only_lid", type=str2bool, default=False)
     parser.add_argument("--max_wav_len", type=float, default=20.0)
+    parser.add_argument("--specific_languages", type=bool, default=False)
+    parser.add_argument("--selected_languages", type=str, default="")
+    parser.add_argument("--datasets", type=str, default="") # which dataset to pull for each language
+
+    all_langs = True
+    if args.specific_languages:
+        all_langs = False
+        # build language dict
+        langs = args.selected_languages.split(",")
+        datasets = args.datasets.split(",")
+
+        dataset_map = {}
+        for lang, dataset in zip(langs, datasets):
+            if dataset not in dataset_map:
+                dataset_map[dataset] = []
+            
+            dataset_map[dataset].append(lang)
 
     args = parser.parse_args()
     assert args.duration in ["10min", "1h"], "we only "
@@ -245,9 +262,10 @@ if __name__ == "__main__":
         langs = os.listdir(os.path.join(args.source, dataset))
         for lang in langs:
             
-            # Skip all languages other than the required ones (sorry Moussa)
-            if lang not in ["ina", "mkd", "lao", "nan", "aze", "isl"]:
-                continue
+            # Skip all languages other than the required ones
+            if not all_langs:
+                if lang not in dataset_map[dataset]:
+                    continue
 
             reserve_flag = False
             if lang in RESERVE_LANG:

@@ -17,9 +17,9 @@ model_conf:
 
 ctc_conf:
     ctc_type: droctc
-    dro_group_count: 6
-    dro_step_size: 0.001
-    dro_q_epsilon: 1.e-10
+    dro_group_count: 20
+    dro_step_size: 0.1
+    dro_q_epsilon: 0.00001
     warmup_steps: 0
     use_running_mean: False
     running_mean_window: -1
@@ -49,7 +49,7 @@ best_model_criterion:
 -   - valid
     - loss
     - min
-keep_nbest_models: 5
+keep_nbest_models: 2
 
 optim: adam
 optim_conf:
@@ -73,5 +73,5 @@ specaug_conf:
     num_time_mask: 10
 
 
-num_iters_per_epoch: 1000 # number of iterations per epoch
+num_iters_per_epoch: 3000 # number of iterations per epoch
 max_epoch: 30

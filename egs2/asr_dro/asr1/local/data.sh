@@ -7,12 +7,13 @@
 . ./cmd.sh || exit 1;
 . ./db.sh || exit 1;
 
+# take comma separated language and dataset argument here, pass to data_prep.py
 # general configuration
 stage=0       # start from 0 if you need to start from data preparation
 stop_stage=100
 SECONDS=0
 nlsyms_txt=data/local/nlsyms.txt
-duration=10min # duration can be either 10min or 1h
+duration=1h # duration can be either 10min or 1h
 multilingual=true
 lid=false
 only_lid=false

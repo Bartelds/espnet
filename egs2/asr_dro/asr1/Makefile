@@ -23,7 +23,6 @@ COMMON_ARGS=\
 	--dumpdir $(DUMP_DIR) \
 	--expdir $(EXP_DIR) \
 	--asr_stats_dir $(ASR_STATS_DIR) \
-	--asr_tag $(ASR_TAG) \
 	--batch_type language
 
 
@@ -31,18 +30,27 @@ PREPROCESS_ARGS=\
 	--asr_config conf/train_asr.yaml
 
 XLSR_ARGS=\
+	--asr_tag train_asr_xlsr_duration \
 	--asr_config conf/train_asr_xlsr.yaml
 
 MMS_ARGS=\
+	--asr_tag train_asr_mms_duration \
 	--asr_config conf/train_asr_mms.yaml
 
 MMS_DRO_ARGS=\
-	--asr_config conf/train_asr_mms_dro.yaml
+	--asr_tag train_asr_mms_dro_1_duration \
+	--asr_config conf/train_asr_mms_dro_orig.yaml
+
+MMS_DRO2_ARGS=\
+	--asr_tag train_asr_mms_dro_01_language \
+	--asr_config conf/train_asr_mms_dro_mod.yaml
 
 XLSR_DRO_ARGS=\
+	--asr_tag train_asr_xlsr_dro_1_duration \
 	--asr_config conf/train_asr_xlsr_dro_orig.yaml
 
 XLSR_DRO2_ARGS=\
+	--asr_tag train_asr_xlsr_dro_01_duration \
 	--asr_config conf/train_asr_xlsr_dro_mod.yaml
 
 activate-venv:
@@ -57,16 +65,16 @@ preprocess:
 
 preprocess-groups:
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)$(SUFFIX)/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)$(SUFFIX)/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)$(SUFFIX)/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)$(SUFFIX)/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)$(SUFFIX)/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)$(SUFFIX)/utt2category 
 
 
 train-xlsr:
@@ -97,6 +105,12 @@ train-mms-dro:
 	./run_multi.sh \
 		$(COMMON_ARGS) \
 		$(MMS_DRO_ARGS) \
+		--stage 11
+
+train-mms-dro2:
+	./run_multi.sh \
+		$(COMMON_ARGS) \
+		$(MMS_DRO2_ARGS) \
 		--stage 11
 
 # eval commands
