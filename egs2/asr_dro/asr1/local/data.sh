@@ -17,6 +17,9 @@ duration=1h # duration can be either 10min or 1h
 multilingual=true
 lid=false
 only_lid=false
+specific_lang=false
+selected_languages=
+datasets=
 single_lang=eng # lang for single lang data preparation
                 # candidates: eng, deu, rus, pol, swe, jpn, cmn, sat, nob, xty
 
@@ -71,7 +74,10 @@ if [ ${stage} -le 2 ] && [ ${stop_stage} -ge 2 ]; then
             --duration ${duration} \
             --source ${MLSUPERB} \
             --lid ${lid} \
-            --only_lid ${only_lid}
+            --only_lid ${only_lid} \
+            --specific_languages ${specific_lang} \
+            --selected_languages ${selected_languages} \
+            --datasets ${datasets}
 
         for x in "train" "dev" "test"; do
             utils/utt2spk_to_spk2utt.pl \

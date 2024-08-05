@@ -211,6 +211,9 @@ if __name__ == "__main__":
     parser.add_argument("--selected_languages", type=str, default="")
     parser.add_argument("--datasets", type=str, default="") # which dataset to pull for each language
 
+    args = parser.parse_args()
+    assert args.duration in ["10min", "1h"], "we only "
+
     all_langs = True
     if args.specific_languages:
         all_langs = False
@@ -224,9 +227,6 @@ if __name__ == "__main__":
                 dataset_map[dataset] = []
             
             dataset_map[dataset].append(lang)
-
-    args = parser.parse_args()
-    assert args.duration in ["10min", "1h"], "we only "
 
     langs_info = {}
 
@@ -264,6 +264,9 @@ if __name__ == "__main__":
             
             # Skip all languages other than the required ones
             if not all_langs:
+                if dataset not in dataset_map:
+                    continue
+
                 if lang not in dataset_map[dataset]:
                     continue
 
