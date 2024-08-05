@@ -1,31 +1,48 @@
 # ASR DRO
-Steps to reproduce
+
+# Results
+[results](results)
+
+# Steps to reproduce
 ## Preprocess Data
 ```
 make preprocess
 make preprocess-groups
 ```
 
-## Train Baseline Systems
+## Train in each experiment condition
+See Also: "SLURM Cluster Utilities" below
+- Baseline Conditions
 ```
-make train-xlsr
-make train-mms
-```
-
-
-## Train DRO Systems
-```
-make train-xlsr-dro
-make train-mms-dro
+make train-xslr-ctc-aleb
+make train-xslr-ctc-sceb
 ```
 
-`make train-xlsr-dro` runs DRO with the original configs. 
-`make train-xlsr-dro2` runs DRO with running means and group size initialization.
+- DRO Conditions with dro_step_size=0.1
+```
+make train-xslr-ctc-dro-aleb
+make train-xslr-ctc-dro-rm-aleb
+make train-xslr-ctc-dro-sceb
+make train-xslr-ctc-dro-rm-sceb
+```
 
-# Other utilities
+- DRO Conditions with dro_step_size=0.01
+```
+make train-xslr-ctc-dro-aleb-hptune-001
+make train-xslr-ctc-dro-rm-aleb-hptune-001
+make train-xslr-ctc-dro-sceb-hptune-001
+make train-xslr-ctc-dro-rm-sceb-hptune-001
+```
+
+## Evaluate
+```
+make eval-all
+```
+
+# SLURM Cluster Utilities
 ## Submit jobs to cluster (see also cluster_info.mk)
 ```
-make submit-target-to-cluster TARGET=train-xlsr-dro
+make submit-target-to-cluster TARGET=train-xslr-ctc-aleb
 ```
 
 ## Inspect cluster jobs

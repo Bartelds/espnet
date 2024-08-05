@@ -42,7 +42,7 @@ best_model_criterion:
 -   - valid
     - loss
     - min
-keep_nbest_models: 2
+keep_nbest_models: 5
 
 optim: adam
 optim_conf:
@@ -66,5 +66,5 @@ specaug_conf:
     num_time_mask: 10
 
 
-num_iters_per_epoch: 3000 # number of iterations per epoch
+num_iters_per_epoch: 1000 # number of iterations per epoch
 max_epoch: 30
