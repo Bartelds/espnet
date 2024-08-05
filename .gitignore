@@ -109,6 +109,7 @@ tools/ffmpeg-release-*.tar.xz
 tools/Miniconda3-latest-*.sh
 tools/installers*
 
+egs2/asr_dro/asr1/cluster_info.mk
 egs2/ml_superb/asr1/local/plotter.py
 egs2/ml_superb/asr1/local/scatter_plotter.py
 egs2/asr_dro/asr1/conf/*
