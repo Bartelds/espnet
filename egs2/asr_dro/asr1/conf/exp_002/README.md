@@ -7,7 +7,14 @@
 
 
 
+[frontend, pre-encoder, encoder, decoder,  (linear, loss)]
 
+
+[s3plr, preenc, 2ltransformers, none, (linear, loss)]
+
+[s3plr, none, none, none, (linear, loss)]
+
+[none, none, fairseqwav2vec2, none, (linear, loss)]
 
 
 # TODO
@@ -93,3 +100,37 @@ omegaconf.errors.ConfigKeyError: Key 'multiple_train_files' not in 'AudioPretrai
 	reference_type=Optional[AudioPretrainingConfig]
 	object_type=AudioPretrainingConfig
 # Accounting: time=51 threads=1
+
+
+
+
+# 2024-06-24
+# Encoder/CTC
+- Overall
+  - Use tri-stage LR scheduler.
+- XLSR: [CNN, Transformer Encoder, Linear+CTC]
+  - freeze CNN for finetuning, train the rest
+  - (under-specified by paper. Martijn found this in fairserq code)
+    - https://github.com/facebookresearch/fairseq/blob/main/examples/wav2vec/xlsr/config/finetune.yaml
+    - see: feature_grad_mult
+- MMS: [CNN, Transformer Encoder, Linear+CTC]
+  - full finetuning
+# Encoder/Decoder
+- Whispers
+
+ freeze_finetune_updates: 10000
+
+
+
+
+ # 20240805
+ - Notes on Whispers / Huggingface
+ - Main components of interest: Trainer and TrainerArguments
+  - These are also specialixzed as Seq2seqTrainer and seq2secTrainerArgs
+  - Also need to look at data batching (e.g. audio length equalization across languages)
+  - Also need to look at data loader
+    - ensure that language ID is available in batch fields
+  - Also need to check that the Trainer is stateful (because we need need to maintain q vectors in a persistent way throughout the training session)
+- Notes on Whispers / ESPNET
+- There are some whisper components in ESPNEt (including, an encoder, a decoder, and examples of finetuning experiments.)
+- However it was not exacly clear how ESPNET was configured to run the cross entropy loss.
