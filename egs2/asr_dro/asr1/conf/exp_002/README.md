@@ -134,3 +134,25 @@ omegaconf.errors.ConfigKeyError: Key 'multiple_train_files' not in 'AudioPretrai
 - Notes on Whispers / ESPNET
 - There are some whisper components in ESPNEt (including, an encoder, a decoder, and examples of finetuning experiments.)
 - However it was not exacly clear how ESPNET was configured to run the cross entropy loss.
+
+
+# 20240807
+- Setup experiment artifacts for whisper (Makefile, yaml configs, and conditions with (SCEB, ALEB) x (NO-DRO, DRO)
+- Warnings after whisper installation in espnet
+- Observed issues:
+  - library incompatibilisty between (cuda, torch, torchaudio, omegaconfig, and espnet)
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+s3prl 0.4.15 requires omegaconf>=2.1.1, but you have omegaconf 2.0.6 which is incompatible.
+torchaudio 2.3.0 requires torch==2.3.0, but you have torch 2.0.1 which is incompatible.
+
+# TODO
+- resolve dependency issue
+- Implement DRO for cross entropy loss
+- Update to latest set of languages
+
+
+# error log when tried to update to torch 2.4
+ERROR: pip's dependency resolver does not currently take into account all the packages that are installed. This behaviour is the source of the following dependency conflicts.
+openai-whisper 20230308 requires triton==2.0.0, but you have triton 3.0.0 which is incompatible.
+s3prl 0.4.15 requires omegaconf>=2.1.1, but you have omegaconf 2.0.6 which is incompatible.
+torchaudio 2.3.0 requires torch==2.3.0, but you have torch 2.4.0 which is incompatible.
