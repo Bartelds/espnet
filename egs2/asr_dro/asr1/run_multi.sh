@@ -25,6 +25,9 @@ dumpdir=
 expdir=
 batch_type=
 asr_stats_dir=
+specific_lang=false
+selected_languages=
+datasets=
 asr_tag="$(basename "${asr_config}" .yaml)_multilingual_${duration}"
 
 . utils/parse_options.sh || exit 1
@@ -50,6 +53,8 @@ nlsyms_txt=data/local/nlsyms.txt
 
 local_data_opts="--duration ${duration} --lid ${lid} --only_lid ${only_lid}"
 local_data_opts+=" --multilingual true --nlsyms_txt ${nlsyms_txt}"
+local_data_opts+=" --specific_lang ${specific_lang} --selected_languages ${selected_languages}"
+local_data_opts+=" --datasets ${datasets}"
 
 ./asr.sh \
     --ngpu 1 \
