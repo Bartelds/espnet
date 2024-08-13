@@ -1,11 +1,11 @@
 .ONESHELL:
 
 include cluster_info.mk
-EXPERIMENT_ID=exp_002
+EXPERIMENT_ID=exp_003_whisper
 DATA_SUBSET=1h
-DUMP_DIR=outputs/002/dump
-EXP_DIR=outputs/002/exp_subset
-ASR_STATS_DIR=outputs/002/exp_subset
+DUMP_DIR=outputs/003/dump
+EXP_DIR=outputs/003/exp_subset
+ASR_STATS_DIR=outputs/003/exp_subset
 USER_SCTK_INSTALL_DIR=
 
 COMMON_ARGS=\
@@ -30,11 +30,11 @@ EVAL_CMD=\
 ##
 # Loss Functions
 ###
-LOSS_CTC_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr.yaml
+LOSS_ARGS=\
+	--asr_config conf/$(EXPERIMENT_ID)/train_whisper.yaml
 
-LOSS_CTC_DRO_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr_dro.yaml
+LOSS_DRO_ARGS=\
+	--asr_config conf/$(EXPERIMENT_ID)/train_whisper_dro.yaml
 
 ##
 # Batch Sampling Methods
@@ -49,7 +49,7 @@ ALEB_PARAMS=\
 # Preprocessing
 ###
 PREPROCESS_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr.yaml
+	--asr_config conf/$(EXPERIMENT_ID)/train_whisper.yaml
 
 preprocess:
 	./run_multi.sh \
@@ -73,48 +73,48 @@ preprocess-groups:
 
 
 ##
-# Training for 6 experimental conditions
+# Training for 4 experimental conditions
 ###
-train-xslr-ctc-aleb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(ALEB_PARAMS)
+train-whisper-aleb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_ARGS) $(ALEB_PARAMS)
 
-train-xslr-ctc-dro-aleb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(ALEB_PARAMS)
+train-whisper-dro-aleb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_DRO_ARGS) $(ALEB_PARAMS)
 
-train-xslr-ctc-sceb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(SCEB_PARAMS)
+train-whisper-sceb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_ARGS) $(SCEB_PARAMS)
 
-train-xslr-ctc-dro-sceb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(SCEB_PARAMS)
+train-whisper-dro-sceb:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_DRO_ARGS) $(SCEB_PARAMS)
 
 
 
 ##
-# Evaluation for 10 experimental conditions
+# Evaluation for 4 experimental conditions
 ###
 results/$(EXPERIMENT_ID)/:
 	mkdir -p results/$(EXPERIMENT_ID)/
 
-eval-xslr-ctc-aleb: results/$(EXPERIMENT_ID)/
+eval-whisper-aleb: results/$(EXPERIMENT_ID)/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-aleb: results/$(EXPERIMENT_ID)/
+eval-whisper-dro-aleb: results/$(EXPERIMENT_ID)/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-sceb: results/$(EXPERIMENT_ID)/
+eval-whisper-sceb: results/$(EXPERIMENT_ID)/
 	$(EVAL_CMD)
 
-eval-xslr-ctc-dro-sceb: results/$(EXPERIMENT_ID)/
+eval-whisper-dro-sceb: results/$(EXPERIMENT_ID)/
 	$(EVAL_CMD)
 
 
 
 
 eval-all: \
-	eval-xslr-ctc-aleb \
-	eval-xslr-ctc-dro-aleb \
-	eval-xslr-ctc-sceb \
-	eval-xslr-ctc-dro-sceb \
+	eval-whisper-aleb \
+	eval-whisper-dro-aleb \
+	eval-whisper-sceb \
+	eval-whisper-dro-sceb \
 	echo "done"
 
 include cluster-management.mk

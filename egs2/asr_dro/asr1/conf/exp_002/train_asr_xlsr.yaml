@@ -1,28 +1,46 @@
-# input_size: 2048
-
-encoder: wav2vec2
-encoder_conf:
-    output_size: 1024
-    normalize_before: false
-    w2v_url: https://dl.fbaipublicfiles.com/fairseq/wav2vec/xlsr2_300m.pt
-    w2v_dir_path: ./downloads/wav2vec_pretrained_models
-# freeze_finetune_updates: 100000
+encoder: identity
+# encoder_conf_0:
+#     output_size: 256
+#     attention_heads: 8
+#     linear_units: 1024
+#     num_blocks: 2
+#     dropout_rate: 0.1
+#     positional_dropout_rate: 0.1
+#     attention_dropout_rate: 0.1
+#     input_layer: conv2d2
+#     normalize_before: true
 
 decoder: none
 
 model_conf:
     ctc_weight: 1.0
-    # length_normalized_loss: false
-
 
 ctc_conf:
-    ctc_type: builtin
+    ctc_type: droctc
+    dro_group_count: 6
+    dro_step_size: 0.01
+    dro_q_epsilon: 0.00001
+    warmup_steps: 0
+    use_running_mean: False
+    running_mean_window: -1
+    group_size_init: False
 
 unused_parameters: true
 
-# xls_r_300m
-frontend: default
+frontend: s3prl
+frontend_conf:
+    frontend_conf:
+        upstream: xls_r_300m # Note: If the upstream is changed, please change the input_size in the preencoder.
+    download_dir: ./hub
+    multilayer_feature: False
+    dropout_rate: 0.1
+    positional_dropout_rate: 0.1
+    attention_dropout_rate: 0.1
 
+preencoder: linear
+preencoder_conf:
+    input_size: 1024  # Note: If the upstream is changed, please change this value accordingly.
+    output_size: 80
 
 num_workers: 4
 batch_type: sorted
