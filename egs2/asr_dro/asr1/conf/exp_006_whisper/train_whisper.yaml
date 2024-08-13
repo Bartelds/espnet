@@ -2,7 +2,7 @@ normalize: null
 
 encoder: whisper
 encoder_conf:
-    whisper_model: medium
+    whisper_model: base
     dropout_rate: 0.0
     use_specaug: true
     specaug_conf:
@@ -22,7 +22,7 @@ encoder_conf:
 
 decoder: whisper
 decoder_conf:
-    whisper_model: medium
+    whisper_model: base
     dropout_rate: 0.0
 
 model_conf:

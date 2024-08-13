@@ -1,12 +1,18 @@
 .ONESHELL:
 
 include cluster_info.mk
-EXPERIMENT_ID=exp_003_whisper
+EXPERIMENT_ID=exp_006_whisper
 DATA_SUBSET=1h
-DUMP_DIR=outputs/003/dump
-EXP_DIR=outputs/003/exp_subset
-ASR_STATS_DIR=outputs/003/exp_subset
 USER_SCTK_INSTALL_DIR=
+SPECIFIC_LANGUAGES=true
+SELECTED_LANGUAGES=afr,eng,spa,sah,nso,tgk,ast,ind,jav,tel,bre,som,isl,urd,kam
+DATASETS=nchlt,LAD,mls,commonvoice,nchlt,fleurs,fleurs,commonvoice,googlei18n_asr,fleurs,commonvoice,fleurs,fleurs,fleurs,fleurs
+
+DUMP_DIR=outputs/006/dump
+EXP_DIR=outputs/006/exp_subset
+ASR_STATS_DIR=outputs/006/exp_subset
+USER_SCTK_INSTALL_DIR=
+
 
 COMMON_ARGS=\
 	--duration $(DATA_SUBSET) \
@@ -15,6 +21,9 @@ COMMON_ARGS=\
 	--dumpdir $(DUMP_DIR) \
 	--expdir $(EXP_DIR) \
 	--asr_stats_dir $(ASR_STATS_DIR) \
+	--specific_lang $(SPECIFIC_LANGUAGES) \
+    --selected_languages $(SELECTED_LANGUAGES) \
+    --datasets $(DATASETS)
 
 COMMON_TRAIN_ARGS=\
 	$(COMMON_ARGS) \
