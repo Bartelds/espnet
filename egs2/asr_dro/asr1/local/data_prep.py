@@ -212,21 +212,23 @@ if __name__ == "__main__":
     parser.add_argument("--datasets", nargs="?", type=str, default="") # which dataset to pull for each language
 
     args = parser.parse_args()
-    assert args.duration in ["10min", "1h"], "we only "
+    assert args.duration in ["10min", "1h"]
 
     all_langs = True
+    sel_langs = []
     if args.specific_languages:
         all_langs = False
         # build language dict
-        langs = args.selected_languages.split(",")
+        sel_langs = args.selected_languages.split(",")
         datasets = args.datasets.split(",")
 
         dataset_map = {}
-        for lang, dataset in zip(langs, datasets):
-            if dataset not in dataset_map:
-                dataset_map[dataset] = []
-            
-            dataset_map[dataset].append(lang)
+        if datasets[0] != "skip":
+            for lang, dataset in zip(sel_langs, datasets):
+                if dataset not in dataset_map:
+                    dataset_map[dataset] = []
+                
+                dataset_map[dataset].append(lang)
 
     langs_info = {}
 
@@ -264,11 +266,15 @@ if __name__ == "__main__":
             
             # Skip all languages other than the required ones
             if not all_langs:
-                if dataset not in dataset_map:
-                    continue
+                if len(dataset_map) > 0:
+                    if dataset not in dataset_map:
+                        continue
 
-                if lang not in dataset_map[dataset]:
-                    continue
+                    if lang not in dataset_map[dataset]:
+                        continue
+                else:
+                    if lang not in sel_langs:
+                        continue
 
             reserve_flag = False
             if lang in RESERVE_LANG:

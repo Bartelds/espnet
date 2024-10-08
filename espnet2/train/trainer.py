@@ -822,7 +822,7 @@ class Trainer:
             if no_forward_run:
                 continue
 
-            retval = model(**batch)
+            retval = model(**batch, valid=True)
             if isinstance(retval, dict):
                 stats = retval["stats"]
                 weight = retval["weight"]

@@ -116,3 +116,4 @@ egs2/ml_superb/asr1/local/plotter.py
 egs2/ml_superb/asr1/local/scatter_plotter.py
 egs2/asr_dro/asr1/conf/*
 egs2/ml_superb/asr1/local/*.png
+egs2/asr_dro/asr1/results/*

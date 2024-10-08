@@ -128,6 +128,7 @@ class DurationLanguageBatchSampler(AbsSampler):
         # print(self.batch_list)
         # required to init Group DRO
         self.category2numbatches = category2numbatches
+        print(f"self.batch_list={self.batch_list}")
 
     def debug_prints(self):
         print(f"batch_size={self.batch_size}")

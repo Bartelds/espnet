@@ -1,12 +1,16 @@
 .ONESHELL:
 
 include cluster_info.mk
-EXPERIMENT_ID=exp_002
+EXPERIMENT_ID=exp_011
 DATA_SUBSET=1h
-DUMP_DIR=outputs/002/dump
-EXP_DIR=outputs/002/exp_subset
-ASR_STATS_DIR=outputs/002/exp_subset
 USER_SCTK_INSTALL_DIR=
+SPECIFIC_LANGUAGES=true
+SELECTED_LANGUAGES=yue, kor, nan, ast, afr, cnh
+DATASETS=commonvoice,fleurs,commonvoice,fleurs,fleurs,commonvoice
+
+DUMP_DIR=$(DUMP_DIR_BASE)_$(EXPERIMENT_ID)
+EXP_DIR=$(EXP_DIR_BASE)_$(EXPERIMENT_ID)
+ASR_STATS_DIR=$(ASR_STATS_DIR_BASE)_$(EXPERIMENT_ID)
 
 COMMON_ARGS=\
 	--duration $(DATA_SUBSET) \
@@ -15,6 +19,9 @@ COMMON_ARGS=\
 	--dumpdir $(DUMP_DIR) \
 	--expdir $(EXP_DIR) \
 	--asr_stats_dir $(ASR_STATS_DIR) \
+	--specific_lang $(SPECIFIC_LANGUAGES) \
+	--selected_languages $(SELECTED_LANGUAGES) \
+	--datasets $(DATASETS)
 
 COMMON_TRAIN_ARGS=\
 	$(COMMON_ARGS) \
@@ -22,7 +29,7 @@ COMMON_TRAIN_ARGS=\
 	--asr_tag $@
 
 COMMON_EVAL_ARGS=\
-	--exp_dir outputs/exp_subset/asr_train-$(subst eval-,,$@)/decode_asr_asr_model_valid.loss.best/test_1h_lid/score_cer/few_shot/trained/ 
+	--exp_dir $(EXP_DIR)/asr_train_$(subst eval_,,$@)/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained/ 
 
 EVAL_CMD=\
 	./local/score_macro.sh $(COMMON_EVAL_ARGS) > results/$(EXPERIMENT_ID)/$@.txt
@@ -30,11 +37,7 @@ EVAL_CMD=\
 ##
 # Loss Functions
 ###
-LOSS_CTC_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr.yaml
-
-LOSS_CTC_DRO_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr_dro.yaml
+# Hparam sweeps can be done here
 
 ##
 # Batch Sampling Methods
@@ -49,7 +52,7 @@ ALEB_PARAMS=\
 # Preprocessing
 ###
 PREPROCESS_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr.yaml
+	--asr_config conf/$(EXPERIMENT_ID)/train_asr.yaml
 
 preprocess:
 	./run_multi.sh \
@@ -59,34 +62,22 @@ preprocess:
 
 preprocess-groups:
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)$(SUFFIX)/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/dev_$(DATA_SUBSET)$(SUFFIX)/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)$(SUFFIX)/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/train_$(DATA_SUBSET)$(SUFFIX)/utt2category 
 
 	python scripts/dro_scripts/create_groups.py  \
-		--utt2spk-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2spk \
-		--out-utt2category-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)_lid/utt2category 
+		--utt2spk-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)$(SUFFIX)/utt2spk \
+		--out-utt2category-file $(DUMP_DIR)/raw/test_$(DATA_SUBSET)$(SUFFIX)/utt2category 
 
 
 
 ##
 # Training for 6 experimental conditions
 ###
-train-xslr-ctc-aleb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(ALEB_PARAMS)
-
-train-xslr-ctc-dro-aleb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(ALEB_PARAMS)
-
-train-xslr-ctc-sceb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(SCEB_PARAMS)
-
-train-xslr-ctc-dro-sceb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(SCEB_PARAMS)
-
 
 
 ##
@@ -94,28 +85,6 @@ train-xslr-ctc-dro-sceb:
 ###
 results/$(EXPERIMENT_ID)/:
 	mkdir -p results/$(EXPERIMENT_ID)/
-
-eval-xslr-ctc-aleb: results/$(EXPERIMENT_ID)/
-	$(EVAL_CMD)
-
-eval-xslr-ctc-dro-aleb: results/$(EXPERIMENT_ID)/
-	$(EVAL_CMD)
-
-eval-xslr-ctc-sceb: results/$(EXPERIMENT_ID)/
-	$(EVAL_CMD)
-
-eval-xslr-ctc-dro-sceb: results/$(EXPERIMENT_ID)/
-	$(EVAL_CMD)
-
-
-
-
-eval-all: \
-	eval-xslr-ctc-aleb \
-	eval-xslr-ctc-dro-aleb \
-	eval-xslr-ctc-sceb \
-	eval-xslr-ctc-dro-sceb \
-	echo "done"
 
 ##
 # Cluster Management Tools

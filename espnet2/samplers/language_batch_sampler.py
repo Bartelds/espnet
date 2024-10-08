@@ -106,6 +106,7 @@ class LanguageBatchSampler(AbsSampler):
                 self.batch_list.append(curr_ex)
         
         self.category2numbatches = category2numbatches
+        print(f"self.batch_list={self.batch_list}")
 
     def debug_prints(self):
         print(f"batch_size={self.batch_size}")
