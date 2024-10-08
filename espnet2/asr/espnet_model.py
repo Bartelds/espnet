@@ -248,8 +248,9 @@ class ESPnetASRModel(AbsESPnetModel):
 
         # 1. CTC branch
         if self.ctc_weight != 0.0:
+            valid = kwargs.get("valid", None)
             loss_ctc, cer_ctc = self._calc_ctc_loss(
-                encoder_out, encoder_out_lens, text, text_lengths, utt_id=utt_id
+                encoder_out, encoder_out_lens, text, text_lengths, utt_id=utt_id, valid=valid
             )
 
             # Collect CTC branch stats
@@ -583,10 +584,11 @@ class ESPnetASRModel(AbsESPnetModel):
         encoder_out_lens: torch.Tensor,
         ys_pad: torch.Tensor,
         ys_pad_lens: torch.Tensor,
-        utt_id: List[str] = None
+        utt_id: List[str] = None,
+        valid: bool = False
     ):
         # Calc CTC loss
-        loss_ctc = self.ctc(encoder_out, encoder_out_lens, ys_pad, ys_pad_lens, utt_id=utt_id)
+        loss_ctc = self.ctc(encoder_out, encoder_out_lens, ys_pad, ys_pad_lens, utt_id=utt_id, valid=valid)
 
         # Calc CER using CTC
         cer_ctc = None

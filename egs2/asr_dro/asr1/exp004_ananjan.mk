@@ -1,12 +1,12 @@
 .ONESHELL:
 
 include cluster_info.mk
-EXPERIMENT_ID=exp_003
+EXPERIMENT_ID=exp_004
 DATA_SUBSET=1h
 USER_SCTK_INSTALL_DIR=
 SPECIFIC_LANGUAGES=true
-SELECTED_LANGUAGES=hrv,afr,mkd,fin,eng,spa,sah,nso,nld,deu
-DATASETS=fleurs,nchlt,fleurs,fleurs,LAD,mls,commonvoice,nchlt,commonvoice,voxforge
+SELECTED_LANGUAGES=afr,eng,spa,sah,nso,tgk,ast,ind,jav,tel,bre,som,isl,urd,kam
+DATASETS=nchlt,LAD,mls,commonvoice,nchlt,fleurs,fleurs,commonvoice,googlei18n_asr,fleurs,commonvoice,fleurs,fleurs,fleurs,fleurs
 
 DUMP_DIR=$(DUMP_DIR_BASE)_$(EXPERIMENT_ID)
 EXP_DIR=$(EXP_DIR_BASE)_$(EXPERIMENT_ID)
@@ -38,8 +38,17 @@ EVAL_CMD=\
 # Loss Functions
 ###
 # Hparam sweeps can be done here
-LOSS_CTC_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr.yaml
+XLSR_LOSS_CTC_ARGS=\
+	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr_0.0005.yaml
+
+XLSR_LOSS_CTC2_ARGS=\
+	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr_1e-05.yaml
+
+MMS_LOSS_CTC_ARGS=\
+	--asr_config conf/$(EXPERIMENT_ID)/train_asr_mms_0.0005.yaml
+
+MMS_LOSS_CTC2_ARGS=\
+	--asr_config conf/$(EXPERIMENT_ID)/train_asr_mms_1e-05.yaml
 
 LOSS_CTC_DRO_ARGS=\
 	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr_dro.yaml
@@ -57,7 +66,7 @@ ALEB_PARAMS=\
 # Preprocessing
 ###
 PREPROCESS_ARGS=\
-	--asr_config conf/$(EXPERIMENT_ID)/train_asr_xlsr.yaml
+	--asr_config conf/$(EXPERIMENT_ID)/train_asr.yaml
 
 preprocess:
 	./run_multi.sh \
@@ -83,17 +92,35 @@ preprocess-groups:
 ##
 # Training for 6 experimental conditions
 ###
-train-xlsr-ctc-aleb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(ALEB_PARAMS)
+train-xlsr-ctc-aleb-5e-4:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(XLSR_LOSS_CTC_ARGS) $(ALEB_PARAMS)
+
+train-xlsr-ctc-aleb-1e-5:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(XLSR_LOSS_CTC2_ARGS) $(ALEB_PARAMS)
+
+train-mms-ctc-aleb-5e-4:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(MMS_LOSS_CTC_ARGS) $(ALEB_PARAMS)
+
+train-mms-ctc-aleb-1e-5:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(MMS_LOSS_CTC2_ARGS) $(ALEB_PARAMS)
 
 train-xlsr-ctc-dro-aleb:
 	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(ALEB_PARAMS)
 
-train-xlsr-ctc-sceb:
-	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_ARGS) $(SCEB_PARAMS)
+train-xlsr-ctc-sceb-5e-4:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(XLSR_LOSS_CTC_ARGS) $(SCEB_PARAMS)
+
+train-xlsr-ctc-sceb-1e-5:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(XLSR_LOSS_CTC2_ARGS) $(SCEB_PARAMS)
 
 train-xlsr-ctc-dro-sceb:
 	./run_multi.sh $(COMMON_TRAIN_ARGS) $(LOSS_CTC_DRO_ARGS) $(SCEB_PARAMS)
+
+train-mms-ctc-sceb-5e-4:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(MMS_LOSS_CTC_ARGS) $(SCEB_PARAMS)
+
+train-mms-ctc-sceb-1e-5:
+	./run_multi.sh $(COMMON_TRAIN_ARGS) $(MMS_LOSS_CTC2_ARGS) $(SCEB_PARAMS)
 
 
 
@@ -103,13 +130,19 @@ train-xlsr-ctc-dro-sceb:
 results/$(EXPERIMENT_ID)/:
 	mkdir -p results/$(EXPERIMENT_ID)/
 
-eval-xlsr-ctc-aleb: results/$(EXPERIMENT_ID)/
+eval-xlsr-ctc-aleb-1e-5: results/$(EXPERIMENT_ID)/
+	$(EVAL_CMD)
+
+eval-mms-ctc-aleb-5e-4: results/$(EXPERIMENT_ID)/
 	$(EVAL_CMD)
 
 eval-xlsr-ctc-dro-aleb: results/$(EXPERIMENT_ID)/
 	$(EVAL_CMD)
 
-eval-xlsr-ctc-sceb: results/$(EXPERIMENT_ID)/
+eval-xlsr-ctc-sceb-5e-4: results/$(EXPERIMENT_ID)/
+	$(EVAL_CMD)
+
+eval-mms-ctc-sceb-5e-4: results/$(EXPERIMENT_ID)/
 	$(EVAL_CMD)
 
 eval-xlsr-ctc-dro-sceb: results/$(EXPERIMENT_ID)/
@@ -119,10 +152,10 @@ eval-xlsr-ctc-dro-sceb: results/$(EXPERIMENT_ID)/
 
 
 eval-all: \
-	eval-xslr-ctc-aleb \
-	eval-xslr-ctc-dro-aleb \
-	eval-xslr-ctc-sceb \
-	eval-xslr-ctc-dro-sceb \
+	eval-xlsr-ctc-aleb \
+	eval-xlsr-ctc-dro-aleb \
+	eval-xlsr-ctc-sceb \
+	eval-xlsr-ctc-dro-sceb \
 	echo "done"
 
 ##

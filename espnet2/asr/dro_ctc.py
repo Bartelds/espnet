@@ -10,7 +10,7 @@ import pdb
 
 class DROCTCLoss(torch.nn.Module):
     def __init__(self, blank=0, reduction='mean', zero_infinity=False, dro_group_count=0, dro_step_size=0.01, dro_q_epsilon=1e-10, warmup_steps=0, use_running_mean=False,
-    running_mean_window=-1, group_size_init=False):
+    running_mean_window=-1, init_strategy="group"):
         super().__init__()
         self.blank = blank
         self.reduction = reduction
@@ -23,7 +23,7 @@ class DROCTCLoss(torch.nn.Module):
         self.warmup_steps = warmup_steps
         self.use_running_mean = use_running_mean
         self.running_mean_window = running_mean_window
-        self.group_size_init = group_size_init
+        self.init_strategy = init_strategy
         self.track_cnt = 0
         self.group_id_to_ix = {}
 
@@ -31,16 +31,29 @@ class DROCTCLoss(torch.nn.Module):
             self.mean_losses = []
 
     def init_weights(self, train_file, valid_file):
-        if self.group_size_init:
+        if self.init_strategy == "group":
             group_sizes = {}
             with open(str(train_file) + '/category2numbatches', 'r') as f:
                 for line in f:
                     line = line.strip().split()
                     group_sizes[line[0]] = int(line[1])
-                    group_size_init = [1/group_sizes[_] for _ in group_sizes]
-                    self.group_id_to_ix = {key:idx for idx,key in enumerate(list(group_sizes.keys()))}
-                    group_size_init_norm = [_/sum(group_size_init) for _ in group_size_init]
-                    self.dro_q = torch.tensor(group_size_init_norm)
+            group_size_init = [1/group_sizes[_] for _ in group_sizes]
+            self.group_id_to_ix = {key:idx for idx,key in enumerate(list(group_sizes.keys()))}
+            group_size_init_norm = [_/sum(group_size_init) for _ in group_size_init]
+            self.dro_q = torch.tensor(group_size_init_norm)
+        elif self.init_strategy == "oracle":
+            group_sizes = {
+                "ben": 0.1,
+                "bre": 0.2,
+                "cym": 0.1,
+                "lao": 0.9,
+                "pol": 0.1,
+                "spa": 0.1
+            }
+            group_size_init = [group_sizes[_] for _ in group_sizes]
+            self.group_id_to_ix = {key:idx for idx,key in enumerate(list(group_sizes.keys()))}
+            group_size_init_norm = [_/sum(group_size_init) for _ in group_size_init]
+            self.dro_q = torch.tensor(group_size_init_norm)
         
         self.utt2category = {}
         with open(str(train_file) + '/utt2category', 'r') as f:
@@ -54,7 +67,7 @@ class DROCTCLoss(torch.nn.Module):
                 line = line.strip().split()
                 self.utt2category[line[0]] = line[1]
 
-    def forward(self, log_probs: Tensor, targets: Tensor, input_lengths: Tensor, target_lengths: Tensor, utt_id: List[str]) -> Tensor:
+    def forward(self, log_probs: Tensor, targets: Tensor, input_lengths: Tensor, target_lengths: Tensor, utt_id: List[str], valid: bool = False) -> Tensor:
         log_probs = torch.transpose(log_probs, 0, 1)
 
         batch_lang_ids = [self.utt2category[_] for _ in utt_id] # TODO
@@ -75,12 +88,12 @@ class DROCTCLoss(torch.nn.Module):
         if self.track_cnt > self.warmup_steps:
             for q_ix in set(batch_lang_q_indices): # unique set of groups in batch
                 group_losses = torch.tensor([
-                    losses[i]/input_lengths[i] 
+                    losses[i]
                     for i in range(losses.shape[0])
                     if batch_lang_q_indices[i] == q_ix
                 ])
 
-                group_mean_loss = torch.mean(group_losses)
+                group_mean_loss = torch.sum(group_losses)
                 if self.use_running_mean:
                     if len(self.mean_losses) == self.running_mean_window:
                         self.mean_losses.pop(0)
@@ -89,14 +102,17 @@ class DROCTCLoss(torch.nn.Module):
                 else:
                     self.dro_q[q_ix] *= torch.exp(group_mean_loss * self.dro_step_size)   
 
-        self.normalize_dro_q()
+            self.normalize_dro_q()
+            
         dro_losses = torch.stack([
-            losses[ix] * self.dro_q[batch_lang_q_indices[ix]] * self.dro_group_count 
+            losses[ix] * self.dro_q[batch_lang_q_indices[ix]] 
+            # * self.dro_group_count
             for ix in range(losses.shape[0])
         ])
+        print(losses, dro_losses)
 
         self.track_cnt += 1
-        if self.track_cnt > self.warmup_steps:
+        if self.track_cnt > self.warmup_steps and not valid:
             return dro_losses
         else:
             return losses
