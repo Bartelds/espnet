@@ -72,15 +72,24 @@ class DROCTCLoss(torch.nn.Module):
             zero_infinity=self.zero_infinity
         )
 
+        # print stuff
+        for i in range(len(losses)):
+            lang_id = batch_lang_ids[i]
+            loss_value = losses[i]
+            input_length = input_lengths[i]
+            target_length = target_lengths[i]
+            print(f"Sample {i}: Language = {lang_id}, Loss = {loss_value}, Input Length = {input_length}, Target Length = {target_length}")
+
         if self.track_cnt > self.warmup_steps:
             for q_ix in set(batch_lang_q_indices): # unique set of groups in batch
                 group_losses = torch.tensor([
-                    losses[i]/input_lengths[i] 
+                    losses[i]
+                    # losses[i]/target_lengths[i] # changed from input_lengths[i]
                     for i in range(losses.shape[0])
                     if batch_lang_q_indices[i] == q_ix
                 ])
 
-                group_mean_loss = torch.mean(group_losses)
+                group_mean_loss = torch.sum(group_losses)
                 if self.use_running_mean:
                     if len(self.mean_losses) == self.running_mean_window:
                         self.mean_losses.pop(0)
@@ -91,7 +100,7 @@ class DROCTCLoss(torch.nn.Module):
 
         self.normalize_dro_q()
         dro_losses = torch.stack([
-            losses[ix] * self.dro_q[batch_lang_q_indices[ix]] * self.dro_group_count 
+            losses[ix] * self.dro_q[batch_lang_q_indices[ix]] 
             for ix in range(losses.shape[0])
         ])
 

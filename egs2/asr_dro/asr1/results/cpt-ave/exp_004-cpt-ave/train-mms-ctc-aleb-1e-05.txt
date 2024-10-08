@@ -1,0 +1,300 @@
+slurm submission log: 2024-08-12 17:40:48.263589
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=2
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train-mms-ctc-aleb-1e-05
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=16G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_004/train-mms-ctc-aleb-1e-05.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train-mms-ctc-aleb-1e-05'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8120992
+
+
+
+###############################
+
+###############################
+start time: 2024-08-12 20:56:17.088973
+machine: jagupard34.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train-mms-ctc-aleb-1e-05
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+./run_multi.sh --duration 1h --lid true --only_lid false --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --specific_lang true --selected_languages afr,eng,spa,sah,nso,tgk,ast,ind,jav,tel,bre,som,isl,urd,kam --datasets nchlt,LAD,mls,commonvoice,nchlt,fleurs,fleurs,commonvoice,googlei18n_asr,fleurs,commonvoice,fleurs,fleurs,fleurs,fleurs --stage 11 --asr_tag train-mms-ctc-aleb-1e-05 --asr_config conf/exp_004/train_asr_mms_1e-05.yaml --batch_type duration_language 
+2024-08-12T20:56:17 (asr.sh:284:main) ./asr.sh --ngpu 1 --stage 11 --stop_stage 13 --nj 32 --inference_nj 4 --gpu_inference true --lang multilingual_1h__lid --inference_asr_model valid.loss.ave.pth --local_data_opts --duration 1h --lid true --only_lid false --multilingual true --nlsyms_txt data/local/nlsyms.txt --specific_lang true --selected_languages afr,eng,spa,sah,nso,tgk,ast,ind,jav,tel,bre,som,isl,urd,kam --datasets nchlt,LAD,mls,commonvoice,nchlt,fleurs,fleurs,commonvoice,googlei18n_asr,fleurs,commonvoice,fleurs,fleurs,fleurs,fleurs --nlsyms_txt data/local/nlsyms.txt --use_lm false --token_type char --feats_type raw --feats_normalize utterance_mvn --asr_config conf/exp_004/train_asr_mms_1e-05.yaml --inference_config conf/decode_asr.yaml --train_set train_1h_lid --valid_set dev_1h_lid --test_sets dev_1h_lid test_1h_lid --asr_tag train-mms-ctc-aleb-1e-05 --asr_stats_dir exp/asr_stats_multilingual_1h --local_score_opts true false normal --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --batch_type duration_language
+2024-08-12T20:56:18 (asr.sh:322:main) Info: The valid_set 'dev_1h_lid' is included in the test_sets. '--eval_valid_set true' is set and 'dev_1h_lid' is removed from the test_sets
+2024-08-12T20:56:18 (asr.sh:566:main) Skipped stages:  6 7 8 9 14 15 16 
+2024-08-12T20:56:18 (asr.sh:1310:main) Stage 11: ASR Training: train_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/train_1h_lid, valid_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/dev_1h_lid
+2024-08-12T20:56:18 (asr.sh:1409:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/run.sh'. You can resume the process from stage 11 using this script
+2024-08-12T20:56:18 (asr.sh:1413:main) ASR training started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log'
+2024-08-12 20:56:22,509 (launch:94) INFO: /nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py --cmd 'run.pl --name /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log' --log /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log --ngpu 1 --num_nodes 1 --init_file_prefix /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/.dist_init_ --multiprocessing_distributed true -- python3 -m espnet2.bin.asr_train --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05 --batch_type duration_language --config conf/exp_004/train_asr_mms_1e-05.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/valid/text_shape.char
+2024-08-12 20:56:22,692 (launch:348) INFO: log file: /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log
+2024-08-13T03:34:24 (asr.sh:1483:main) Stage 12: Decoding: training_dir=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05
+2024-08-13T03:34:24 (asr.sh:1511:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/run.sh'. You can resume the process from stage 12 using this script
+2024-08-13T03:34:24 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/org/dev_1h_lid/logdir/asr_inference.*.log'
+2024-08-13T04:05:15 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/logdir/asr_inference.*.log'
+2024-08-13T04:40:21 (asr.sh:1623:main) Stage 13: Scoring
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-13T04:40:34 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/org/dev_1h_lid/score_cer/result.txt
+|      SPKR                   |      # Snt           # Wrd      |      Corr              Sub              Del              Ins              Err            S.Err      |
+|      Sum/Avg                |      1403            86327      |      83.6              7.6              8.7              4.3             20.7             97.0      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-13T04:40:43 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/org/dev_1h_lid/score_wer/result.txt
+|      SPKR                   |      # Snt           # Wrd      |      Corr              Sub              Del              Ins              Err            S.Err      |
+|      Sum/Avg                |      1403            14318      |      36.6             57.6              5.8              7.9             71.3             97.0      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-13T04:40:52 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/result.txt
+|      SPKR                   |     # Snt           # Wrd      |      Corr             Sub              Del              Ins             Err            S.Err      |
+|      Sum/Avg                |     1415            92657      |      83.3             7.6              9.2              4.3            21.0             97.5      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-13T04:41:00 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_wer/result.txt
+|      SPKR                   |     # Snt           # Wrd      |      Corr             Sub              Del              Ins             Err            S.Err      |
+|      Sum/Avg                |     1415            15390      |      35.4            58.8              5.8              8.0            72.6             97.6      |
+2024-08-13T04:41:00 (score.sh:31:main) Linguistic scoring started
+2024-08-13T04:41:00 (score.sh:32:main) local/score.sh true false normal /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05
+[warning] linguistic information not loading
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer...
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_wer...
+Parsing LID results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid...
+2024-08-13T04:41:01 (score.sh:75:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_lid/few_shot/trained/scores.txt
+Acc: 93.29%
+2024-08-13T04:41:02 (score.sh:97:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained/result.txt
+|       SPKR                    |      # Snt             # Wrd       |      Corr                Sub               Del                Ins               Err              S.Err       |
+|       Sum/Avg                 |      1415              92657       |      83.3                7.6               9.2                4.3              21.0               97.5       |
+<!-- Generated by scripts/utils/show_asr_result.sh -->
+# RESULTS
+## Environments
+- date: `Tue Aug 13 04:41:04 PDT 2024`
+- python version: `3.9.19 (main, May  6 2024, 19:43:03)  [GCC 11.2.0]`
+- espnet version: `espnet 202402`
+- pytorch version: `pytorch 2.1.0`
+- Git hash: `825accb575bef9be7a57f549589200babb711426`
+  - Commit date: `Mon Aug 5 09:07:11 2024 -0700`
+
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_valid.loss.ave/test_1h_lid|1415|15390|35.4|58.8|5.8|8.0|72.6|97.6|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_valid.loss.ave/test_1h_lid|1415|92657|83.3|7.6|9.2|4.3|21.0|97.5|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|1403|14318|36.6|57.6|5.8|7.9|71.3|97.0|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|1403|86327|83.6|7.6|8.7|4.3|20.7|97.0|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+2024-08-13T04:41:06 (asr.sh:1864:main) Successfully finished. [elapsed=27889s]
+###############################
+end time: 2024-08-13 04:41:10.707420
+elapsed time: 7:44:53.618447
+slurm submission log: 2024-08-13 20:27:47.228705
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=2
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train-mms-ctc-aleb-1e-05
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=16G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_004/train-mms-ctc-aleb-1e-05.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train-mms-ctc-aleb-1e-05'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8125468
+
+
+
+###############################
+
+###############################
+start time: 2024-08-13 20:27:50.582349
+machine: jagupard34.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train-mms-ctc-aleb-1e-05
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+./run_multi.sh --duration 1h --lid true --only_lid false --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --specific_lang true --selected_languages afr,eng,spa,sah,nso,tgk,ast,ind,jav,tel,bre,som,isl,urd,kam --datasets nchlt,LAD,mls,commonvoice,nchlt,fleurs,fleurs,commonvoice,googlei18n_asr,fleurs,commonvoice,fleurs,fleurs,fleurs,fleurs --stage 11 --asr_tag train-mms-ctc-aleb-1e-05 --asr_config conf/exp_004/train_asr_mms_1e-05.yaml --batch_type duration_language 
+2024-08-13T20:27:50 (asr.sh:284:main) ./asr.sh --ngpu 1 --stage 11 --stop_stage 13 --nj 32 --inference_nj 4 --gpu_inference true --lang multilingual_1h__lid --inference_asr_model valid.loss.ave.pth --local_data_opts --duration 1h --lid true --only_lid false --multilingual true --nlsyms_txt data/local/nlsyms.txt --specific_lang true --selected_languages afr,eng,spa,sah,nso,tgk,ast,ind,jav,tel,bre,som,isl,urd,kam --datasets nchlt,LAD,mls,commonvoice,nchlt,fleurs,fleurs,commonvoice,googlei18n_asr,fleurs,commonvoice,fleurs,fleurs,fleurs,fleurs --nlsyms_txt data/local/nlsyms.txt --use_lm false --token_type char --feats_type raw --feats_normalize utterance_mvn --asr_config conf/exp_004/train_asr_mms_1e-05.yaml --inference_config conf/decode_asr.yaml --train_set train_1h_lid --valid_set dev_1h_lid --test_sets dev_1h_lid test_1h_lid --asr_tag train-mms-ctc-aleb-1e-05 --asr_stats_dir exp/asr_stats_multilingual_1h --local_score_opts true false normal --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004 --batch_type duration_language
+2024-08-13T20:27:51 (asr.sh:322:main) Info: The valid_set 'dev_1h_lid' is included in the test_sets. '--eval_valid_set true' is set and 'dev_1h_lid' is removed from the test_sets
+2024-08-13T20:27:51 (asr.sh:566:main) Skipped stages:  6 7 8 9 14 15 16 
+2024-08-13T20:27:51 (asr.sh:1310:main) Stage 11: ASR Training: train_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/train_1h_lid, valid_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/dev_1h_lid
+2024-08-13T20:27:51 (asr.sh:1409:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/run.sh'. You can resume the process from stage 11 using this script
+2024-08-13T20:27:51 (asr.sh:1413:main) ASR training started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log'
+2024-08-13 20:27:52,167 (launch:94) INFO: /nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py --cmd 'run.pl --name /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log' --log /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log --ngpu 1 --num_nodes 1 --init_file_prefix /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/.dist_init_ --multiprocessing_distributed true -- python3 -m espnet2.bin.asr_train --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05 --batch_type duration_language --config conf/exp_004/train_asr_mms_1e-05.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_004/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/valid/text_shape.char
+2024-08-13 20:27:52,388 (launch:348) INFO: log file: /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/train.log
+2024-08-14T02:17:57 (asr.sh:1483:main) Stage 12: Decoding: training_dir=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05
+2024-08-14T02:17:57 (asr.sh:1511:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/run.sh'. You can resume the process from stage 12 using this script
+2024-08-14T02:17:57 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/org/dev_1h_lid/logdir/asr_inference.*.log'
+2024-08-14T02:50:19 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/logdir/asr_inference.*.log'
+2024-08-14T03:28:36 (asr.sh:1623:main) Stage 13: Scoring
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-14T03:28:48 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/org/dev_1h_lid/score_cer/result.txt
+|      SPKR                   |      # Snt           # Wrd      |      Corr              Sub              Del              Ins              Err            S.Err      |
+|      Sum/Avg                |      1403            86327      |      62.8             22.2             15.0              6.2             43.4             99.9      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-14T03:28:58 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/org/dev_1h_lid/score_wer/result.txt
+|      SPKR                   |      # Snt           # Wrd      |      Corr              Sub              Del              Ins              Err            S.Err      |
+|      Sum/Avg                |      1403            14318      |       7.8             80.9             11.3             12.3            104.5             99.9      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-14T03:29:09 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/result.txt
+|      SPKR                   |     # Snt           # Wrd      |      Corr             Sub              Del              Ins             Err            S.Err      |
+|      Sum/Avg                |     1415            92657      |      60.6            24.0             15.3              6.1            45.5             99.9      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-08-14T03:29:18 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_wer/result.txt
+|      SPKR                   |     # Snt           # Wrd      |      Corr             Sub              Del              Ins             Err            S.Err      |
+|      Sum/Avg                |     1415            15390      |       7.1            81.8             11.1             12.1           105.0             99.9      |
+2024-08-14T03:29:18 (score.sh:31:main) Linguistic scoring started
+2024-08-14T03:29:18 (score.sh:32:main) local/score.sh true false normal /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05
+[warning] linguistic information not loading
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer...
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_wer...
+Parsing LID results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid...
+2024-08-14T03:29:19 (score.sh:75:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_lid/few_shot/trained/scores.txt
+Acc: 70.53%
+2024-08-14T03:29:20 (score.sh:97:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained/result.txt
+|       SPKR                    |      # Snt             # Wrd       |      Corr                Sub               Del                Ins               Err              S.Err       |
+|       Sum/Avg                 |      1415              92657       |      60.6               24.0              15.3                6.1              45.5               99.9       |
+<!-- Generated by scripts/utils/show_asr_result.sh -->
+# RESULTS
+## Environments
+- date: `Wed Aug 14 03:29:23 PDT 2024`
+- python version: `3.9.19 (main, May  6 2024, 19:43:03)  [GCC 11.2.0]`
+- espnet version: `espnet 202402`
+- pytorch version: `pytorch 2.1.0`
+- Git hash: `825accb575bef9be7a57f549589200babb711426`
+  - Commit date: `Mon Aug 5 09:07:11 2024 -0700`
+
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_valid.loss.ave/test_1h_lid|1415|15390|7.1|81.8|11.1|12.1|105.0|99.9|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_valid.loss.ave/test_1h_lid|1415|92657|60.6|24.0|15.3|6.1|45.5|99.9|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_004/asr_train-mms-ctc-aleb-1e-05/decode_asr_asr_model_valid.loss.ave
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|1403|14318|7.8|80.9|11.3|12.3|104.5|99.9|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|1403|86327|62.8|22.2|15.0|6.2|43.4|99.9|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+2024-08-14T03:29:24 (asr.sh:1864:main) Successfully finished. [elapsed=25294s]
+###############################
+end time: 2024-08-14 03:29:31.941357
+elapsed time: 7:01:41.359008

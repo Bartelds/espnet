@@ -21,7 +21,7 @@ COMMON_TRAIN_ARGS=\
 	--asr_tag $@
 
 COMMON_EVAL_ARGS=\
-	--exp_dir outputs/exp_subset/asr_train-$(subst eval-,,$@)/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained/ 
+	--exp_dir outputs/exp_subset/asr_train-$(subst eval-,,$@)/decode_asr_asr_model_valid.loss.best/test_1h_lid/score_cer/few_shot/trained/ 
 
 EVAL_CMD=\
 	./local/score_macro.sh $(COMMON_EVAL_ARGS) > results/exp-001/$@.txt

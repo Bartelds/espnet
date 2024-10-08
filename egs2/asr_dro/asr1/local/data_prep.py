@@ -207,9 +207,9 @@ if __name__ == "__main__":
     parser.add_argument("--lid", type=str2bool, default=False)
     parser.add_argument("--only_lid", type=str2bool, default=False)
     parser.add_argument("--max_wav_len", type=float, default=20.0)
-    parser.add_argument("--specific_languages", type=bool, default=False)
-    parser.add_argument("--selected_languages", type=str, default="")
-    parser.add_argument("--datasets", type=str, default="") # which dataset to pull for each language
+    parser.add_argument("--specific_languages", type=str2bool, default=False)
+    parser.add_argument("--selected_languages", nargs="?", type=str, default="")
+    parser.add_argument("--datasets", nargs="?", type=str, default="") # which dataset to pull for each language
 
     args = parser.parse_args()
     assert args.duration in ["10min", "1h"], "we only "

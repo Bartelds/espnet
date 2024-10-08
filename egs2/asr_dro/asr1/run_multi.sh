@@ -64,7 +64,7 @@ local_data_opts+=" --datasets ${datasets}"
     --inference_nj ${inference_nj} \
     --gpu_inference ${gpu_inference} \
     --lang "multilingual_${duration}_${suffix}" \
-    --inference_asr_model valid.loss.ave.pth \
+    --inference_asr_model 30epoch.pth \
     --local_data_opts "${local_data_opts}" \
     --nlsyms_txt ${nlsyms_txt} \
     --use_lm false \

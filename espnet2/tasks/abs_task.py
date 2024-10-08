@@ -1484,6 +1484,9 @@ class AbsTask(ABC):
             # Don't give args to trainer.run() directly!!!
             # Instead of it, define "Options" object and build here.
             trainer_options = cls.trainer.build_options(args)
+            # print(f"cls: {cls}")
+            # print(f"trainer_options: {trainer_options}")
+            # print(f"distributed_option: {distributed_option}")
             cls.trainer.run(
                 model=model,
                 optimizers=optimizers,
