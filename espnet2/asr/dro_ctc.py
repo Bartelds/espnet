@@ -71,6 +71,7 @@ class DROCTCLoss(torch.nn.Module):
         log_probs = torch.transpose(log_probs, 0, 1)
 
         batch_lang_ids = [self.utt2category[_] for _ in utt_id] # TODO
+
         batch_lang_q_indices = []
         for lang_id in batch_lang_ids:
             if lang_id not in self.group_id_to_ix:
@@ -88,12 +89,13 @@ class DROCTCLoss(torch.nn.Module):
         # print stuff
         for i in range(len(losses)):
             lang_id = batch_lang_ids[i]
+            filename = utt_id[i]
             loss_value = losses[i]
             input_length = input_lengths[i]
             target_length = target_lengths[i]
-            print(f"Sample {i}: Language = {lang_id}, Loss = {loss_value}, Input Length = {input_length}, Target Length = {target_length}")
+            print(f"Sample {i}: Language = {lang_id}, Filename = {filename}, Loss = {loss_value}, Input Length = {input_length}, Target Length = {target_length}")
 
-        if self.track_cnt > self.warmup_steps:
+        if self.track_cnt >= self.warmup_steps:
             for q_ix in set(batch_lang_q_indices): # unique set of groups in batch
                 group_losses = torch.tensor([
                     losses[i]
@@ -117,7 +119,7 @@ class DROCTCLoss(torch.nn.Module):
             # * self.dro_group_count
             for ix in range(losses.shape[0])
         ])
-        print(losses, dro_losses)
+        # print(losses, dro_losses)
 
         self.track_cnt += 1
         if self.track_cnt > self.warmup_steps and not valid:
