@@ -1308,7 +1308,7 @@ if [ ${stage} -le 11 ] && [ ${stop_stage} -ge 11 ] && ! [[ " ${skip_stages} " =~
     _asr_train_dir="${data_feats}/${train_set}"
     _asr_valid_dir="${data_feats}/${valid_set}"
     log "Stage 11: ASR Training: train_set=${_asr_train_dir}, valid_set=${_asr_valid_dir}"
-
+    log "${asr_config}"
     _opts=
     if [ -n "${asr_config}" ]; then
         # To generate the config file: e.g.

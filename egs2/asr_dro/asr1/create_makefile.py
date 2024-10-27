@@ -2,10 +2,10 @@ LR = [1e-4]
 BATCHING = {"aleb":"ALEB"}
 MODELS = {'mms':'MMS'}
 # MODELS = {'mms':'MMS'}
-EXP='exp046'
+EXP='exp041'
 
 file = open(f'{EXP}_m.mk', 'r').read()
-# file += '\n\n'
+file += '\n\n'
 
 for lr in LR:
     for model in MODELS.keys():

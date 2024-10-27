@@ -1448,6 +1448,8 @@ class AbsTask(ABC):
                 plot_attention_iter_factory = None
 
             # 8. Start training
+            print(args)
+            print("Wandb", args.use_wandb)
             if args.use_wandb:
                 if wandb is None:
                     raise RuntimeError("Please install wandb")
