@@ -117,3 +117,7 @@ egs2/ml_superb/asr1/local/scatter_plotter.py
 egs2/asr_dro/asr1/conf/*
 egs2/ml_superb/asr1/local/*.png
 egs2/asr_dro/asr1/results/*
+egs2/asr_dro/asr1/create_makefile_dro.py
+egs2/asr_dro/asr1/create_makefile.py
+egs2/asr_dro/asr1/*.mk
+egs2/asr_dro/asr1/Makefile
