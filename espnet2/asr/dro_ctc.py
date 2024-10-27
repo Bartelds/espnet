@@ -68,6 +68,7 @@ class DROCTCLoss(torch.nn.Module):
                 self.utt2category[line[0]] = line[1]
 
     def forward(self, log_probs: Tensor, targets: Tensor, input_lengths: Tensor, target_lengths: Tensor, utt_id: List[str], valid: bool = False) -> Tensor:
+        # print("Inside Loss", valid)
         log_probs = torch.transpose(log_probs, 0, 1)
 
         batch_lang_ids = [self.utt2category[_] for _ in utt_id] # TODO
@@ -77,7 +78,8 @@ class DROCTCLoss(torch.nn.Module):
             if lang_id not in self.group_id_to_ix:
                 self.group_id_to_ix[lang_id] = len(self.group_id_to_ix)
             batch_lang_q_indices.append(self.group_id_to_ix[lang_id])
-        print(batch_lang_q_indices)
+        if not valid:
+            print(batch_lang_q_indices)
 
         losses = F.ctc_loss(
             log_probs, 
@@ -93,9 +95,12 @@ class DROCTCLoss(torch.nn.Module):
             loss_value = losses[i]
             input_length = input_lengths[i]
             target_length = target_lengths[i]
-            print(f"Sample {i}: Language = {lang_id}, Filename = {filename}, Loss = {loss_value}, Input Length = {input_length}, Target Length = {target_length}")
+            if valid:
+                print(f"Validation Sample {i}: Language = {lang_id}, Filename = {filename}, Loss = {loss_value}, Input Length = {input_length}, Target Length = {target_length}")
+            else:
+                print(f"Training Sample {i}: Language = {lang_id}, Filename = {filename}, Loss = {loss_value}, Input Length = {input_length}, Target Length = {target_length}")
 
-        if self.track_cnt >= self.warmup_steps:
+        if self.track_cnt >= self.warmup_steps and not valid:
             for q_ix in set(batch_lang_q_indices): # unique set of groups in batch
                 group_losses = torch.tensor([
                     losses[i]

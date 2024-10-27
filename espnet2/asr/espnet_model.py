@@ -249,6 +249,7 @@ class ESPnetASRModel(AbsESPnetModel):
         # 1. CTC branch
         if self.ctc_weight != 0.0:
             valid = kwargs.get("valid", None)
+            # print(valid)
             loss_ctc, cer_ctc = self._calc_ctc_loss(
                 encoder_out, encoder_out_lens, text, text_lengths, utt_id=utt_id, valid=valid
             )
@@ -588,6 +589,8 @@ class ESPnetASRModel(AbsESPnetModel):
         valid: bool = False
     ):
         # Calc CTC loss
+        # print("Inside ", valid)
+        # print(self.ctc)
         loss_ctc = self.ctc(encoder_out, encoder_out_lens, ys_pad, ys_pad_lens, utt_id=utt_id, valid=valid)
 
         # Calc CER using CTC

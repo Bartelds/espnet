@@ -74,10 +74,11 @@ from espnet2.utils.types import (
 from espnet2.utils.yaml_no_alias_safe_dump import yaml_no_alias_safe_dump
 from espnet.utils.cli_utils import get_commandline_args
 
-try:
-    import wandb
-except Exception:
-    wandb = None
+# try:
+#     import wandb
+# except Exception:
+#     wandb = None
+import wandb
 
 if V(torch.__version__) >= V("1.5.0"):
     from torch.multiprocessing.spawn import ProcessContext
@@ -183,6 +184,7 @@ class IteratorOptions:
     batch_size: int
     batch_bins: int
     batch_type: str
+    duration_batch_length: int
     max_cache_size: float
     max_cache_fd: int
     allow_multi_rates: bool
@@ -767,6 +769,11 @@ class AbsTask(ABC):
             default="folded",
             choices=list(BATCH_TYPES),
             help=_batch_type_help,
+        )
+        group.add_argument(
+            "--duration_batch_length",
+            type=int,
+            default=-1
         )
         group.add_argument(
             "--valid_batch_type",
@@ -1445,11 +1452,12 @@ class AbsTask(ABC):
                 if wandb is None:
                     raise RuntimeError("Please install wandb")
 
-                try:
-                    wandb.login()
-                except wandb.errors.UsageError:
-                    logging.info("wandb not configured! run `wandb login` to enable")
-                    args.use_wandb = False
+                # try:
+                wandb.login()
+                print('Logged into wandb')
+                # except wandb.errors.UsageError:
+                #     logging.info("wandb not configured! run `wandb login` to enable")
+                #     args.use_wandb = False
 
             if args.use_wandb:
                 if (
@@ -1516,6 +1524,7 @@ class AbsTask(ABC):
             batch_size = args.batch_size
             batch_bins = args.batch_bins
             batch_type = args.batch_type
+            duration_batch_length = args.duration_batch_length
             max_cache_size = args.max_cache_size
             max_cache_fd = args.max_cache_fd
             allow_multi_rates = args.allow_multi_rates
@@ -1553,6 +1562,7 @@ class AbsTask(ABC):
             num_batches = None
             num_iters_per_epoch = None
             train = False
+            duration_batch_length = args.duration_batch_length
 
         elif mode == "plot_att":
             preprocess_fn = cls.build_preprocess_fn(args, train=False)
@@ -1560,6 +1570,7 @@ class AbsTask(ABC):
             data_path_and_name_and_type = args.valid_data_path_and_name_and_type
             shape_files = args.valid_shape_file
             batch_type = "unsorted"
+            duration_batch_length = args.duration_batch_length
             batch_size = 1
             batch_bins = 0
             num_batches = args.num_att_plot
@@ -1589,6 +1600,7 @@ class AbsTask(ABC):
             distributed=distributed,
             num_iters_per_epoch=num_iters_per_epoch,
             train=train,
+            duration_batch_length=duration_batch_length
         )
 
     @classmethod
@@ -1708,6 +1720,7 @@ class AbsTask(ABC):
                 torch.distributed.get_world_size() if iter_options.distributed else 1
             ),
             utt2category_file=utt2category_file,
+            duration_batch_length=iter_options.duration_batch_length
         )
 
         if iter_options.batch_type in ["language", "duration_language"]:

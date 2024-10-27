@@ -192,7 +192,7 @@ class CTC(torch.nn.Module):
             )
             return loss
         elif self.ctc_type == "droctc":
-            loss = self.loss_fn(ys_hat, ys_pad, hlens, ys_lens, utt_id, valid=True).to(
+            loss = self.loss_fn(ys_hat, ys_pad, hlens, ys_lens, utt_id, valid=valid).to(
                 device=hs_pad.device, dtype=hs_pad.dtype
             )
             return loss

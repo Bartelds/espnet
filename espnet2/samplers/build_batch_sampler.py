@@ -86,6 +86,7 @@ def build_batch_sampler(
     fold_lengths: Sequence[int] = (),
     padding: bool = True,
     utt2category_file: Optional[str] = None,
+    duration_batch_length: int = -1
 ) -> AbsSampler:
     """Helper function to instantiate BatchSampler.
 
@@ -120,7 +121,7 @@ def build_batch_sampler(
 
     elif type == "duration_language":
         retval = DurationLanguageBatchSampler(
-            batch_size=batch_size, shape_files=shape_files, drop_last=drop_last, utt2category_file=utt2category_file,
+            batch_size=batch_size, shape_files=shape_files, drop_last=drop_last, utt2category_file=utt2category_file, duration_batch_length=duration_batch_length
         )
 
     elif type == "sorted":

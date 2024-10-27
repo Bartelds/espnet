@@ -26,6 +26,7 @@ class DurationLanguageBatchSampler(AbsSampler):
         shape_files: Union[Tuple[str, ...], List[str]],
         drop_last: bool = True,
         utt2category_file: Optional[str] = None,
+        duration_batch_length: int = -1
     ):
         print("utt2category_file", utt2category_file)
         assert batch_size > 0
@@ -73,9 +74,14 @@ class DurationLanguageBatchSampler(AbsSampler):
             category2len[category] = sum(lens)
 
         # try and match the batch_size of the longest audio language, like packing
-        target_dur = max([
-            (category2len[category]/len(category2utt[category]))*self.batch_size
-        ])
+        if duration_batch_length != -1:
+            target_dur = duration_batch_length
+            print("Target Duration ", target_dur)
+        else:
+            target_dur = max([
+                (category2len[category]/len(category2utt[category]))*self.batch_size
+            ])
+            print("Target Duration ", target_dur)
 
         category2numbatches = {_:0 for _ in category2len}
 
