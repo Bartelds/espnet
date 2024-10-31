@@ -275,6 +275,7 @@ class ASRTask(AbsTask):
             default=get_default_kwargs(CTC),
             help="The keyword arguments for CTC class.",
         )
+        
         group.add_argument(
             "--joint_net_conf",
             action=NestedDictAction,

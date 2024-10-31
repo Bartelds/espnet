@@ -30,6 +30,13 @@ class CTC(torch.nn.Module):
         dro_group_count: int = 0,
         dro_step_size: float = 0.01,
         dro_q_epsilon: float = 1e-10,
+        accumulation: bool = False,
+        scheduling: bool = False,
+        initial_step_size: float = -1.,
+        final_step_size: float = -1.,
+        max_epoch: int = -1,
+        num_iters_per_epoch: int = None,
+        laplace_smoothing: float = 0.,
         warmup_steps: int = 0,
         use_running_mean: bool = False,
         running_mean_window: int = -1,
@@ -85,7 +92,14 @@ class CTC(torch.nn.Module):
                 warmup_steps=warmup_steps,
                 use_running_mean=use_running_mean,
                 running_mean_window=running_mean_window,
-                init_strategy=init_strategy
+                init_strategy=init_strategy,
+                accumulation=accumulation,
+                scheduling=scheduling,
+                initial_step_size=initial_step_size,
+                final_step_size=final_step_size,
+                max_epoch=max_epoch,
+                num_iters_per_epoch=num_iters_per_epoch,
+                laplace_smoothing=laplace_smoothing
             )
 
         else:

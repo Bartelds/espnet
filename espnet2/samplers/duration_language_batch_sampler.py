@@ -6,6 +6,7 @@ from typeguard import typechecked
 from espnet2.fileio.read_text import read_2columns_text, load_num_sequence_text
 from espnet2.samplers.abs_sampler import AbsSampler
 import random
+from itertools import chain
 
 random.seed(42)
 
@@ -66,7 +67,7 @@ class DurationLanguageBatchSampler(AbsSampler):
         
         # sort utterances by length for each category
         for category in category2utt:
-            category2utt[category] = sorted(category2utt[category], key=lambda k:first_utt2shape[k])
+            category2utt[category] = sorted(category2utt[category], key=lambda k:first_utt2shape[k], reverse=True)
 
         category2len = {}
         for category in category2utt:
@@ -79,61 +80,95 @@ class DurationLanguageBatchSampler(AbsSampler):
             print("Target Duration ", target_dur)
         else:
             target_dur = max([
-                (category2len[category]/len(category2utt[category]))*self.batch_size
-            ])
+                (category2len[category]/len(category2utt[category]))*self.batch_size for category in category2len])
             print("Target Duration ", target_dur)
 
-        category2numbatches = {_:0 for _ in category2len}
+        self.category2numbatches = {_:0 for _ in category2len}
 
         self.batch_list = []
         # Maintain iterators for all categories
         # Pick random language and create batch until all iterators hit their end
 
-        def check_complete(it):
-            return sum(it.values()) == 0
+        # def check_complete(it):
+        #     return sum(it.values()) == 0
 
-        def get_nonempty(it, s):
-            # get next index for which iterator value is not 0
-            if len(it) == 1:
-                return s
-            it_keys = list(it.keys())
-            if it[it_keys[s]] != 0:
-                return s
-            k = s
-            while it[it_keys[k]] == 0:
-                k = (k+1)%len(it)
-                if k == s:
-                    return s
-            return k
+        # def get_nonempty(it, s):
+        #     # get next index for which iterator value is not 0
+        #     if len(it) == 1:
+        #         return s
+        #     it_keys = list(it.keys())
+        #     if it[it_keys[s]] != 0:
+        #         return s
+        #     k = s
+        #     while it[it_keys[k]] == 0:
+        #         k = (k+1)%len(it)
+        #         if k == s:
+        #             return s
+        #     return k
 
-        cat_iterators = {d:len(category2utt[d]) for d in category2utt}
-        cats = list(category2utt.keys())
-        while not check_complete(cat_iterators):
-            lang_index = get_nonempty(cat_iterators, random.randint(0, len(cats) - 1))
-            lang = cats[get_nonempty(cat_iterators, lang_index)]
-            category_keys = category2utt[lang]
-            # Apply max(, 1) to avoid 0-batches
-            # if self.drop_last and cat_iterators[lang] < self.batch_size:
-            #         # drop incomplete batches
-            #         cat_iterators[lang] = 0
-            # else:
-            # it at end -> selecting entries from the start
-            start = len(category_keys) - cat_iterators[lang]
-            decrement = 0
-            curr_dur = 0
-            curr_ex = []
-            while curr_dur < target_dur and decrement < cat_iterators[lang]:
-                curr_dur += first_utt2shape[category_keys[start + decrement]][0]
-                curr_ex.append(category_keys[start + decrement])
-                decrement += 1
+        # cat_iterators = {d:len(category2utt[d]) for d in category2utt}
+        # cats = list(category2utt.keys())
+        # while not check_complete(cat_iterators):
+        #     lang_index = get_nonempty(cat_iterators, random.randint(0, len(cats) - 1))
+        #     lang = cats[get_nonempty(cat_iterators, lang_index)]
+        #     category_keys = category2utt[lang]
+        #     # Apply max(, 1) to avoid 0-batches
+        #     # if self.drop_last and cat_iterators[lang] < self.batch_size:
+        #     #         # drop incomplete batches
+        #     #         cat_iterators[lang] = 0
+        #     # else:
+        #     # it at end -> selecting entries from the start
+        #     start = len(category_keys) - cat_iterators[lang]
+        #     decrement = 0
+        #     curr_dur = 0
+        #     curr_ex = []
+        #     while curr_dur < target_dur and decrement < cat_iterators[lang]:
+        #         curr_dur += first_utt2shape[category_keys[start + decrement]][0]
+        #         curr_ex.append(category_keys[start + decrement])
+        #         decrement += 1
 
-            cat_iterators[lang] -= decrement
-            self.batch_list.append(curr_ex)
-            category2numbatches[lang] += 1
+        #     cat_iterators[lang] -= decrement
+        #     self.batch_list.append(curr_ex)
+        #     category2numbatches[lang] += 1
+
+        # precompute packed batches
+        self.category2possiblebatches = [[] for _ in range(len(category2len))]
+        for idx, lang in enumerate(category2utt):
+            self.category2possiblebatches[idx] = [[]]
+            bucket_sizes = [0]
+
+            for sample in category2utt[lang]:
+                length = first_utt2shape[sample][0]
+                found = False
+                for i in range(len(bucket_sizes)):
+                    if bucket_sizes[i] + length <= target_dur:
+                        found = True
+                        self.category2possiblebatches[idx][i].append(sample)
+                        bucket_sizes[i] += length
+
+                if not found:
+                    self.category2possiblebatches[idx].append([sample])
+                    bucket_sizes.append(length)
+
+            self.category2numbatches[lang] = len(bucket_sizes)
+
+        # interleave batches better
+        for lang in self.category2possiblebatches:
+            random.shuffle(self.category2possiblebatches[idx])
+
+        self.batch_list = list(chain(*zip(*self.category2possiblebatches)))
+
+        chunk_size = len(self.category2numbatches)
+        chunks = [self.batch_list[i:i+chunk_size] for i in range(0,len(self.batch_list),chunk_size)]
+        for chunk in chunks:
+            random.shuffle(chunk)
+
+        self.batch_list = [item for chunk in chunks for item in chunk]
         
         # print(self.batch_list)
         # required to init Group DRO
-        self.category2numbatches = category2numbatches
+        # self.category2numbatches = category2numbatches
+        print(f"self.num_batches={[(_, len(self.category2possiblebatches[idx])) for idx, _ in enumerate(self.category2numbatches)]}")
         print(f"self.batch_list={self.batch_list}")
 
     def debug_prints(self):

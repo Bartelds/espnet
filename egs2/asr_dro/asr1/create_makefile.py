@@ -1,8 +1,8 @@
 LR = [1e-4]
 BATCHING = {"aleb":"ALEB"}
+# MODELS = {'xlsr':'XLSR'}
 MODELS = {'mms':'MMS'}
-# MODELS = {'mms':'MMS'}
-EXP='exp041'
+EXP='exp043'
 
 file = open(f'{EXP}_m.mk', 'r').read()
 file += '\n\n'
@@ -40,9 +40,9 @@ for lr in LR:
         for model in MODELS.keys():
             idx += 1
             if idx <= 0:
-                bash_file += f"nlprun -n train-{model}-ctc-{batching}-{lr} -g 1 -a asrdro -o results/{EXP}/train-{model}-ctc-{batching}-{lr}.txt --mail-user ananjan -d a6000 -p high 'source ../../../tools/activate_python.sh; make train_{model}_ctc_{batching}_{lr}'\n"
+                bash_file += f"nlprun -n train-{model}-ctc-{batching}-{lr} -g 1 -a asrdro -o results/{EXP}/train-{model}-ctc-{batching}-{lr}.txt --mail-user ananjan -d a6000 -p high 'source ../../../tools/activate_python.sh; make train_{model}_ctc_{batching}_{lr}' -p high\n"
             else:
-                bash_file += f"nlprun -n train-{model}-ctc-{batching}-{lr} -g 1 -a asrdro -o results/{EXP}/train-{model}-ctc-{batching}-{lr}.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_{model}_ctc_{batching}_{lr}'\n"
+                bash_file += f"nlprun -n train-{model}-ctc-{batching}-{lr} -g 1 -a asrdro -o results/{EXP}/train-{model}-ctc-{batching}-{lr}.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_{model}_ctc_{batching}_{lr}' -p high\n"
 
 with open('commands_auto.sh', 'w') as f:
     f.write(bash_file)
