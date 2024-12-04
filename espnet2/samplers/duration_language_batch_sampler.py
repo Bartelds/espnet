@@ -6,7 +6,7 @@ from typeguard import typechecked
 from espnet2.fileio.read_text import read_2columns_text, load_num_sequence_text
 from espnet2.samplers.abs_sampler import AbsSampler
 import random
-from itertools import chain
+from itertools import chain, zip_longest
 
 random.seed(42)
 
@@ -156,7 +156,13 @@ class DurationLanguageBatchSampler(AbsSampler):
         for lang in self.category2possiblebatches:
             random.shuffle(self.category2possiblebatches[idx])
 
-        self.batch_list = list(chain(*zip(*self.category2possiblebatches)))
+        # zip ensures that only the first N batches (where N is the minimum number of batches among all languages) are included for each language 
+        # self.batch_list = list(chain(*zip(*self.category2possiblebatches)))
+
+        # use this when training with unbalanced datasets (i.e., more than 1 hour per language)
+        self.batch_list = list(chain.from_iterable(zip_longest(*self.category2possiblebatches)))
+        # filter None values introduced as padding by zip_longest
+        self.batch_list = [batch for batch in self.batch_list if batch is not None]
 
         chunk_size = len(self.category2numbatches)
         chunks = [self.batch_list[i:i+chunk_size] for i in range(0,len(self.batch_list),chunk_size)]
