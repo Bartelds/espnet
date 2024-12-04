@@ -1258,6 +1258,10 @@ class AbsTask(ABC):
         torch.backends.cudnn.enabled = args.cudnn_enabled
         torch.backends.cudnn.benchmark = args.cudnn_benchmark
         torch.backends.cudnn.deterministic = args.cudnn_deterministic
+        print(f"### args.seed: {args.seed} ###")
+        print(f"### args.cudnn_enabled: {args.cudnn_enabled} ###")
+        print(f"### args.cudnn_benchmark: {args.cudnn_benchmark} ###")
+        print(f"### args.cudnn_deterministic: {args.cudnn_deterministic} ###")
         if args.detect_anomaly:
             logging.info("Invoking torch.autograd.set_detect_anomaly(True)")
             torch.autograd.set_detect_anomaly(args.detect_anomaly)

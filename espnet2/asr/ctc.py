@@ -35,7 +35,7 @@ class CTC(torch.nn.Module):
         initial_step_size: float = -1.,
         final_step_size: float = -1.,
         max_epoch: int = -1,
-        num_iters_per_epoch: int = None,
+        num_iters_per_epoch: Optional[int] = None,
         laplace_smoothing: float = 0.,
         warmup_steps: int = 0,
         use_running_mean: bool = False,
