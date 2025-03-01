@@ -1,249 +1,146 @@
-# ASR DRO
+# CTC-DRO: Robust Optimization for Reducing Language Disparities in Speech Recognition
+Code associated with the paper: CTC-DRO: Robust Optimization for Reducing Language Disparities in Speech Recognition.
 
-# Results
-[results](results)
+**Abstract:** Modern deep learning models often achieve high overall performance, but consistently fail on specific subgroups. Group distributionally robust optimization (group DRO) addresses this problem by minimizing the worst-group loss, but it fails when group losses misrepresent performance differences between groups. This is common in domains like speech, where the widely used connectionist temporal classification (CTC) loss scales with input length and varies with linguistic and acoustic properties, leading to spurious differences between group losses. We present CTC-DRO, which addresses the shortcomings of the group DRO objective by smoothing the group weight update to prevent overemphasis on consistently high-loss groups, while using input length-matched batching to mitigate CTC's scaling issues. We evaluate CTC-DRO on the task of multilingual automatic speech recognition (ASR) across five language sets from the ML-SUPERB 2.0 benchmark. CTC-DRO consistently outperforms group DRO and CTC-based baseline models, reducing the worst-language error by up to 65.9% and the average error by up to 47.7%. CTC-DRO can be applied to ASR with minimal computational costs, and offers the potential for reducing group disparities in other domains with similar challenges.
 
-# Steps to reproduce
-## Preprocess Data
+---
+
+## Citation
+
+```bibtex
+@misc{bartelds2025ctcdrorobustoptimizationreducing,
+      title={CTC-DRO: Robust Optimization for Reducing Language Disparities in Speech Recognition}, 
+      author={Martijn Bartelds and Ananjan Nandi and Moussa Koulako Bala Doumbouya and Dan Jurafsky and Tatsunori Hashimoto and Karen Livescu},
+      year={2025},
+      eprint={2502.01777},
+      archivePrefix={arXiv},
+      primaryClass={cs.LG},
+      url={https://arxiv.org/abs/2502.01777}, 
+}
 ```
+
+---
+
+## Requirements
+
+- Python 3.7+
+- PyTorch 1.10+
+- ESPnet
+- Transformers (for pre-trained models)
+- SCTK (for scoring)
+
+See `requirements.txt` for the full list of dependencies.
+
+---
+
+## Installation
+
+```bash
+git clone https://github.com/Bartelds/espnet.git
+cd egs2/asr_dro/asr1
+pip install -r requirements.txt
+```
+
+Note: Ensure that your [ESPnet installation](https://espnet.github.io/espnet/installation.html) is correctly configured before proceeding.
+
+---
+
+## Dataset
+
+This repository uses the [ML-SUPERB 2.0 dataset](https://github.com/espnet/espnet/tree/master/egs2/ml_superb/asr1).
+
+After downloading and extracting the dataset, update the dataset path in `db.sh`.
+
+---
+
+### Configuration
+
+Configuration files for model training and inference are located in the `conf/` directory. For example, `mms_example.yaml` contains the CTC-DRO related settings:
+```
+ctc_conf:
+    ctc_type: droctc
+    dro_group_count: 6
+    dro_step_size: 0.01
+    dro_q_epsilon: 1e-10
+    init_strategy: uniform
+    max_epoch: 40
+    num_iters_per_epoch: 1200
+    laplace_smoothing: 0.1
+```
+
+Other training hyperparameters (e.g., `accum_grad`, `batch_size`, `encoder_conf`, `optim_conf`, etc.) are also specified in these configuration files.
+
+---
+
+## Running experiments
+
+Experiments are controlled via Makefiles. An example can be found in `example.mk`.
+
+Below are example commands for pre-processing data, and training and evaluating models.
+
+### Pre-processing
+```bash
 make preprocess
 make preprocess-groups
 ```
 
-## Train in each experiment condition
-See Also: "SLURM Cluster Utilities" below
-- Baseline Conditions
-```
-make train-xslr-ctc-aleb
-make train-xslr-ctc-sceb
-```
+### Training
 
-- DRO Conditions with dro_step_size=0.1
-```
-make train-xslr-ctc-dro-aleb
-make train-xslr-ctc-dro-rm-aleb
-make train-xslr-ctc-dro-sceb
-make train-xslr-ctc-dro-rm-sceb
+Supported hyperparameter options include:
+- Step sizes: `0.001`, `0.0001`
+- Smoothing values: `0.1`, `0.5`, `1.0`
+
+To train MMS or XLS-R models with a given step-size and smoothing term, use:
+```bash
+make train_asr_<model>_aleb_dro_<step-size>_la_<smoothing>
 ```
 
-- DRO Conditions with dro_step_size=0.01
-```
-make train-xslr-ctc-dro-aleb-hptune-001
-make train-xslr-ctc-dro-rm-aleb-hptune-001
-make train-xslr-ctc-dro-sceb-hptune-001
-make train-xslr-ctc-dro-rm-sceb-hptune-001
+For example, to train models with a step-size of `0.001` and a smoothing term of `0.1`:
+```bash
+make train_asr_mms_aleb_dro_0.001_la_0.1
+make train_asr_xlsr_aleb_dro_0.001_la_0.1
 ```
 
-## Evaluate
-```
-make eval-all
-```
-
-# SLURM Cluster Utilities
-## Submit jobs to cluster (see also cluster_info.mk)
-```
-make submit-target-to-cluster TARGET=train-xslr-ctc-aleb
+Evaluation commands follow the same pattern:
+```bash
+make eval_asr_<model>_aleb_dro_<step-size>_la_<smoothing>
 ```
 
-## Inspect cluster jobs
-```
-make show-jobs
-```
-
-## Changes to DRO Organization
-1. In COMMON_ARGS inside the Makefile, set `batch_type` to `duration_language` to use duration-equalized batch sampling.`batch_type = language` replicates the previous sampler.
-2. Both of these samplers now dump a file internally containing information about the number of batches per group, which can be used to initialize the group DRO weights if required. 
-3. DROCTCLoss now has a `init_weights` function that loads the number of batches per group information, and also importantly the mapping from examples to their groups from disk. This makes our DRO implementation generalizable to arbitrary group assignments. The forward function in the loss now also passes the utt_ids of examples in the batch, which is used to recover their groups for computation.
-4. For Moussa: I know you do not like reading files inside the loss function, but this is no different from reading these files outside the loss function and passing their values to `init_weights`. This organization is made necessary by the current code structure, I would welcome you to find alternatives if you want:
-    i. The model and loss function is built before the data is loaded. Therefore, this information cannot be passed to `__init__` of the loss function.
-    ii. There is no easy way of passing group-wise batch counts directly from the batch sampler to the loss function. The batch_sampler *only* returns an iterator over the files that are supposed to be contained in a batch, which is then passed to the iterator factory and nothing else. 
-    iii. Because the batch_sampler dumps the batch count information indexed by the language names, whereas the old DRO implementation used the language id as the group, we need to get the groups from the utt_id and utt2category files now. There is no easy way of accessing the mapping from language id to language name, and I think my refactoring is more general than the previous version.
-5. New parameters in the DROCTCLoss:
-    i. `dro_q_epsilon`: the constant term added to keep DRO weights non-zero
-    ii. `warmup_steps`: if non-zero, the number of steps before DRO starts being used to return the losses
-    iii. `use_running_mean`: my running mean update idea for DRO
-    iv. `running_mean_window`: size of window for running mean computation
-    v. `group_size_init`: if False, DRO weights are initialized with equal values, otherwise, the group batch count information is used.
-
-
-# Multilingual SUPERB (ML-SUPERB) benchmark
-
-## Basic Information
-
-### Language coverage (143 languages)
-ML-SUPERB is designed to cover a wide range of languages, including both high-resource languages like English and endangered languages such as Totonac.
-
-### Tasks
-- Monolingual Track: monolingual speech recognition (ASR)
-- Multilingual Track: multilingual ASR, language identification (LID), joint multilingual ASR+LID
-
-### Dataset
-Dataset are extracted from various multilingual sources. All sources are with either Creative Commons, MIT, GNU, or Free-BSD licenses, which are available for both industrial and academic research, permissively.
-
-## Major usage guidelines
-
-### Data download/setup
-
-[Download link](https://drive.google.com/file/d/1QYjl-7vflle__3AfuosAC5VJGiBDvEqz/view?usp=drive_link)
-
-After download the dataset, please set the `MLSUPERB` to the data directory. The preparation will be automatically done in scripts for each tasks.
-
-### Self-supervised model setup
-
-ML-SUPERB utilizes [S3PRL](https://github.com/s3prl/s3prl) to support different self-supervised model, supporting both the current popular self-supervised models and customized models from users.
-
-#### Existng self-supervised model
-
-To use existing self-supervised model (e.g., models suppported by S3PRL), you can set the following configs for model training:
-
-- For model directly supported by S3PRL, you may set the following argument in the yaml-style config files located in `conf/tuning`:
-```
-frontend: s3prl
-frontend_conf:
-    frontend_conf:
-        upstream: hubert_large_ll60k
-    download_dir: ./hub
-    multilayer_feature: True
-```
-- For model from huggingface (still supported by S3PRL, such as HuBERT trained on specific languages), the config can be as:
-```
-frontend: s3prl
-frontend_conf:
-    frontend_conf:
-        upstream: hf_hubert_custom
-        path_or_url: <huggingface_id> # the huggingface ID (such as TencentGameMate/chinese-hubert-large)
-    download_dir: ./hub
-    multilayer_feature: True
+For example, to evaluate models with a step-size of `0.001` and a smoothing term of `0.1`:
+```bash
+make eval_asr_mms_aleb_dro_0.001_la_0.1
+make eval_asr_xlsr_aleb_dro_0.001_la_0.1
 ```
 
-**Note: If the upstream is changed, please change the input_size in the preencoder.**
+Evaluation results will be saved in the `results/EXPERIMENT_ID/` directory.
 
-#### Customized self-supervised model
+### Customization
 
-To test the SSL model in ML-SUPERB that are not directly support in S3PRL, please first follow the guidelines at https://s3prl.github.io/s3prl/contribute/upstream.html to add new upstream models.
-
-### Monolingual ASR
-
-General steps to run tasks in monolingual ASR track are as follows:
-- Step1: Following [downloading guide](https://github.com/espnet/espnet/blob/master/egs2/ml_superb/asr1/README.md#data-downloadsetup) to prepare the data
-- Step2: Adding the training configurations for the desired model at `conf/tuning` (check examples `conf/tuning/train_asr_s3prl_single.yaml` and `conf/tuning/train_asr_fbank_single.yaml`) **Note: only the frontend/learning rate can be changed for the benchmark.**
-- Step3: Training the model by calling
+You can customize the languages for training and evaluation by modifying the `SELECTED_LANGUAGES` and `DATASETS` variables in the Makefile:
 ```
-./run_mono.sh --asr_config <your_training_config>
+SELECTED_LANGUAGES=pol,spa,ces,ron,nan,cmn
+DATASETS=M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs
 ```
-- Step4: Results are at `exp/mono_<your_training_config>.log`
-
-### Multilingual ASR
-
-General steps to run tasks in multilingual ASR task are as follows:
-- Step1: Following [downloading guide](https://github.com/espnet/espnet/blob/master/egs2/ml_superb/asr1/README.md#data-downloadsetup) to prepare the data
-- Step2: Adding the training configurations for the desired model at `conf/tuning` (check examples `conf/tuning/train_asr_s3prl_{10min, 1h}.yaml` and `conf/tuning/train_asr_fbank_{10min, 1h}.yaml`) **Note: only the frontend/learning rate can be changed for the benchmark.**
-- Step3: Training the 10min/1h model by calling
+Modify the experiment settings in the Makefile:
 ```
-./run_multi.sh --asr_config <your_training_config> --duration {10min, 1h} --lid false --only_lid false
+EXPERIMENT_ID=exp_000  # Experiment identifier
+DATA_SUBSET=1h         # Data duration (10min or 1h)
 ```
 
+---
 
-### LID
-
-General steps to run tasks in LID trask are as follows:
-- Step1: Following [downloading guide](https://github.com/espnet/espnet/blob/master/egs2/ml_superb/asr1/README.md#data-downloadsetup) to prepare the data
-- Step2: Adding the training configurations for the desired model at `conf/tuning` (check examples `conf/tuning/train_asr_s3prl_{10min, 1h}.yaml` and `conf/tuning/train_asr_fbank_{10min, 1h}.yaml`) **Note: only the frontend/learning rate can be changed for the benchmark.**
-- Step3: Training the 10min/1h model by calling
+## Repository structure
 ```
-./run_multi.sh --asr_config <your_training_config> --duration {10min, 1h} --lid false --only_lid true
+├── conf/                       # YAML configuration files for training and inference (including CTC-DRO parameters)
+├── data/                       # Data preparation scripts and dataset directories
+├── dump/                       # Model dump directories
+├── exp/                        # Experiment outputs and logs
+├── local/                      # Local helper scripts (e.g., scoring)
+├── scripts/                    # Additional helper scripts
+├── Makefile                    # Top-level Makefile for experiment management
+├── example.mk                  # Experiment configuration (customize as needed)
+├── requirements.txt            # Python dependencies
+├── run_multi.sh                # Script that wraps the training pipeline
+├── db.sh                       # Dataset path configuration file
+└── README.md                   # Main README file
 ```
-
-
-### Multilingual ASR+LID
-
-General steps to run tasks in LID trask are as follows:
-- Step1: Following [downloading guide](https://github.com/espnet/espnet/blob/master/egs2/ml_superb/asr1/README.md#data-downloadsetup) to prepare the data
-- Step2: Adding the training configurations for the desired model at `conf/tuning` (check examples `conf/tuning/train_asr_s3prl_{10min, 1h}.yaml` and `conf/tuning/train_asr_fbank_{10min, 1h}.yaml`) **Note: only the frontend/learning rate can be changed for the benchmark.**
-- Step3: Training the 10min/1h model by calling
-```
-./run_multi.sh --asr_config <your_training_config> --duration {10min, 1h} --lid true --only_lid false
-```
-## Adapter usage guidelines
-### General steps to run ASR tasks are as follows:
-- Follow the preparation of MLSUPERB until finishing stage 10
-- Enabling the usage of adapter by setting asr_config to `conf/tuning/train_asr_s3prl_houlsby.yaml` or `conf/tuning/train_asr_s3prl_lora.yaml`
-- Pretrained model: https://huggingface.co/espnet/s3prl_adapter_model
-- For example,
-```
-./run_mono.sh --asr_config conf/tuning/train_asr_s3prl_houlsby.yaml
-```
-- For the configuration for adapter, you may set the following argument in the yaml-style config files located in `conf/tuning`:
-```
-# LoRA
-use_adapter: true
-adapter: lora
-save_strategy: adapter
-adapter_conf:
-    rank: 4
-    alpha: 4
-    dropout_rate: 0.1
-    target_modules:
-    - fc1
-    - fc2
-
-# Houlsby
-use_adapter: true
-adapter: houlsby
-save_strategy: required_grad_only
-adapter_conf:
-    bottleneck: 32
-    # target layers to insert adapters, Insert adapter to all layers if not specified
-    target_layers:
-    - 0
-    - 1
-```
-### Result: CER/PER
-Experiment Setup
-
-- SSL: HuBERT Base
-- optim: adam
-- Basically follow default settings of MLSUPERB
-
-#### eng1
-
-|Baseline|10min|1h|
-|---|---|---|
-|No Adapter|33.8|26.7|
-|Houlsby Adapter|31.0|23.6|
-
-#### deu1
-|Baseline|10min|1h|
-|---|---|---|
-|No Adapter|35.1|30.2|
-|Houlsby Adapter|33.7|27.7|
-
-#### jpn
-|Baseline|10min|1h|
-|---|---|---|
-|No Adapter|20.6|15.6|
-|Houlsby Adapter|15.3|11.9|
-
-
-## Credits
-
-We would like to thank the following resources:
-
-1. S.-w. Yang et al., “SUPERB: Speech Processing Universal PERformance Benchmark,” in Proc. Interspeech, 2021, pp. 1194–1198
-2. H.-S. Tsai et al., “SUPERB-SG: Enhanced speech processing universal performance benchmark for semantic and generative capabilities,” in Proc. ACL, 2022, pp. 8479–8492.
-3. V. Pratap et al., “MLS: A large-scale multilingual dataset for speech research,” Proc. Interspeech 2020, pp. 2757–2761, 2020.
-4. R. Ardila et al., “Common voice: A massively-multilingual speech corpus,” in Proc. LREC, 2020, pp. 4218–4222
-5. K. MacLean, “Voxforge,” Ken MacLean.[Online]. Available: http://www. voxforge. org/home.[Accessed by 2022], 2018.
-6. C. Wang et al., “Voxpopuli: A large-scale multilingual speech corpus for representation learning, semi-supervised learning and interpretation,” in Proc. ACL, 2021, pp. 993–1003.
-7. K. Sodimana et al., “A step-by-step process for building TTS voices using open source data and framework for Bangla, Javanese, Khmer, Nepali, Sinhala, and Sundanese,” in Proc. SLTU, 2018, pp. 66–70.
-8. O. Kjartansson et al., “Open-source high quality speech datasets for Basque, Catalan and Galician,” in Proc. SLTU, 2020, pp. 21–27
-9. F. He et al., “Open-source multi-speaker speech corpora for building Gujarati, Kannada, Malayalam, Marathi, Tamil and Telugu speech synthesis systems,” in Proc. LREC, 2020, pp. 6494–6503.
-10. G. Rehm and H. Uszkoreit, “Language technology support for Norwegian,” in The Norwegian Language in the Digital Age: Bokmalsversjon, 2012, pp. 52–70.
-11. A. Conneau et al., “FLEURS: Few-shot learning evaluation of universal representations of speech,” in Proc. SLT, 2023, pp. 798–805
-12. E. Barnard et al., “The NCHLT speech corpus of the south African languages,” 2014.
-13. T. Baumann, A. K ̈ohn, and F. Hennig, “The spoken wikipedia corpus collection: Harvesting, alignment and an application to hyperlistening,” LREC, vol. 53, pp. 303–329, 2019.
-14. J. Shi et al., “Leveraging end-to-end ASR for endangered language documentation: An empirical study on Yol ́oxochitl Mixtec,” in Proc. ACL, 2021, pp. 1134–1145.
-15. J. Shi et al., “Highland Puebla Nahuatl speech translation corpus for endangered language documentation,” in Proc. AmericaNLP, 2021, pp. 53–63.
-16. I. Solak, “M-AILAB speech dataset,” Imdat Solak.[Online]. Available: https://www.caito.de/2019/01/03/the-m-ailabs-speech-dataset/.[Accessed by 2022], 2018.
-17. D. A. Braude et al., “All together now: The living audio dataset.,” in Proc. Interspeech, 2019, pp. 1521–1525.
-18. N. J. De Vries et al., “A smartphone-based ASR data collection tool for under-resourced languages,” Speech communication, vol. 56, pp. 119–131, 2014.
