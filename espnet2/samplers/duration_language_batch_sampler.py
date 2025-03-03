@@ -7,6 +7,7 @@ from espnet2.fileio.read_text import read_2columns_text, load_num_sequence_text
 from espnet2.samplers.abs_sampler import AbsSampler
 import random
 from itertools import chain, zip_longest
+from itertools import chain, zip_longest
 
 random.seed(42)
 
