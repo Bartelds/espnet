@@ -31,22 +31,15 @@ class CTC(torch.nn.Module):
         dro_step_size: float = 0.01,
         dro_q_epsilon: float = 1e-10,
         accumulation: bool = False,
-        scheduling: bool = False,
-        initial_step_size: float = -1.,
-        final_step_size: float = -1.,
-        max_epoch: int = -1,
-        num_iters_per_epoch: int = None,
-        laplace_smoothing: float = 0.,
-        warmup_steps: int = 0,
-        use_running_mean: bool = False,
-        running_mean_window: int = -1,
-        init_strategy: str = "group",
+        smoothing: float = 0.,
+        normalize_grad: bool = True,
         reduce: bool = True,
         ignore_nan_grad: Optional[bool] = None,
         zero_infinity: bool = True,
         brctc_risk_strategy: str = "exp",
         brctc_group_strategy: str = "end",
         brctc_risk_factor: float = 0.0,
+        agg: str = "sum"
     ):
         super().__init__()
         eprojs = encoder_output_size
@@ -89,17 +82,10 @@ class CTC(torch.nn.Module):
                 dro_group_count=dro_group_count,
                 dro_step_size=dro_step_size,
                 dro_q_epsilon=dro_q_epsilon,
-                warmup_steps=warmup_steps,
-                use_running_mean=use_running_mean,
-                running_mean_window=running_mean_window,
-                init_strategy=init_strategy,
                 accumulation=accumulation,
-                scheduling=scheduling,
-                initial_step_size=initial_step_size,
-                final_step_size=final_step_size,
-                max_epoch=max_epoch,
-                num_iters_per_epoch=num_iters_per_epoch,
-                laplace_smoothing=laplace_smoothing
+                smoothing=smoothing,
+                normalize_grad=normalize_grad,
+                agg=agg
             )
 
         else:

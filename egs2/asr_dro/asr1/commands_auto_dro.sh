@@ -1,4 +1,10 @@
 !/bin/bash
 
-nlprun -n train_asr_mms_aleb_dro_0.0001 -g 1 -a asrdro -o results/exp049/train_asr_mms_aleb_dro_0.0001.txt --mail-user ananjan -m jagupard32 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.0001'
-nlprun -n train_asr_mms_aleb_dro_0.001 -g 1 -a asrdro -o results/exp049/train_asr_mms_aleb_dro_0.001.txt --mail-user ananjan -m jagupard32 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001'
+nlprun -n train_asr_mms_aleb_dro_0.001_la_0.1 -g 1 -a asrdro -o results/exp064/train_asr_mms_aleb_dro_0.001_la_0.1.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001_la_0.1'
+nlprun -n train_asr_mms_aleb_dro_0.001_la_0.5 -g 1 -a asrdro -o results/exp064/train_asr_mms_aleb_dro_0.001_la_0.5.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001_la_0.5'
+nlprun -n train_asr_mms_aleb_dro_0.001_la_1.0 -g 1 -a asrdro -o results/exp064/train_asr_mms_aleb_dro_0.001_la_1.0.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001_la_1.0'
+nlprun -n train_asr_mms_aleb_dro_0.0001_la_0.1 -g 1 -a asrdro -o results/exp064/train_asr_mms_aleb_dro_0.0001_la_0.1.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.0001_la_0.1'
+nlprun -n train_asr_mms_aleb_dro_0.0001_la_0.5 -g 1 -a asrdro -o results/exp064/train_asr_mms_aleb_dro_0.0001_la_0.5.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.0001_la_0.5'
+nlprun -n train_asr_mms_aleb_dro_0.0001_la_1.0 -g 1 -a asrdro -o results/exp064/train_asr_mms_aleb_dro_0.0001_la_1.0.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.0001_la_1.0'
+nlprun -n train-mms-ctc-aleb-0.0001 -g 1 -a asrdro -o results/exp064/train-mms-ctc-aleb-0.0001.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_mms_ctc_aleb_0.0001'
+nlprun -n train_asr_mms_aleb_dro_0.0001_base -g 1 -a asrdro -o results/exp064/train_asr_mms_aleb_dro_0.0001_base.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.0001_base'

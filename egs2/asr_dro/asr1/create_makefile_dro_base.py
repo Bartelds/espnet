@@ -1,10 +1,10 @@
 # STEP_SIZE = [0.1, 0.01, 0.001]
-STEP_SIZE = [0.0001, 0.001]
-SMOOTHING = [0.1, 0.5, 1.0]
+STEP_SIZE = [1e-4, 1e-3]
+SMOOTHING = [0.0]
 # STEP_SIZE = [0]
 BATCHING = {"aleb":"ALEB"}
-MODELS = {'mms':'MMS', 'xlsr':'XLSR'}
 # MODELS = {'mms':'MMS'}
+MODELS = {'mms':'MMS', 'xlsr':'XLSR'}
 SEED = [1,2]
 EXP='exp051'
 
@@ -17,7 +17,7 @@ for step_size in STEP_SIZE:
             for seed in SEED:
                 # file += f"{MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_GROUPINIT_ARGS= --asr_config conf/$(EXPERIMENT_ID)/train_asr_{model}_sceb_dro_{step_size}_groupinit.yaml\n\n"
                 # file += f"{MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_UNIFORMINIT_ARGS= --asr_config conf/$(EXPERIMENT_ID)/train_asr_{model}_sceb_dro_{step_size}_uniforminit.yaml\n\n"
-                file += f"{MODELS[model]}_LOSS_CTC_{float(step_size)}_LA_{float(smoothing)}_ALEB_ARGS_{seed}= --asr_config conf/$(EXPERIMENT_ID)/train_asr_{model}_aleb_dro_{step_size}_la_{smoothing}_{seed}.yaml\n\n"
+                file += f"{MODELS[model]}_LOSS_CTC_{float(step_size)}_BASE_ARGS_{seed}= --asr_config conf/$(EXPERIMENT_ID)/train_asr_{model}_aleb_dro_{step_size}_base_{seed}.yaml\n\n"
                 # file += f"{MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_GROUPINIT_RM_ARGS= --asr_config conf/$(EXPERIMENT_ID)/train_asr_{model}_sceb_dro_{step_size}_groupinit_rm.yaml\n\n"
                 # file += f"{MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_UNIFORMINIT_RM_ARGS= --asr_config conf/$(EXPERIMENT_ID)/train_asr_{model}_sceb_dro_{step_size}_uniforminit_rm.yaml\n\n"
                 # file += f"{MODELS[model]}_LOSS_CTC_{float(step_size)}_ALEB_RM_ARGS= --asr_config conf/$(EXPERIMENT_ID)/train_asr_{model}_aleb_dro_{step_size}_rm.yaml\n\n"
@@ -28,7 +28,7 @@ for step_size in STEP_SIZE:
             for seed in SEED:
                 # file += f"train_asr_{model}_sceb_dro_{step_size}_groupinit:\n\t./run_multi.sh $(COMMON_TRAIN_ARGS) $({MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_GROUPINIT_ARGS) $(SCEB_PARAMS)\n\n"
                 # file += f"train_asr_{model}_sceb_dro_{step_size}_uniforminit:\n\t./run_multi.sh $(COMMON_TRAIN_ARGS) $({MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_UNIFORMINIT_ARGS) $(SCEB_PARAMS)\n\n"
-                file += f"train_asr_{model}_aleb_dro_{step_size}_la_{smoothing}_{seed}:\n\t./run_multi.sh $(COMMON_TRAIN_ARGS) $({MODELS[model]}_LOSS_CTC_{float(step_size)}_LA_{float(smoothing)}_ALEB_ARGS_{seed}) $(ALEB_PARAMS)\n\n"
+                file += f"train_asr_{model}_aleb_dro_{step_size}_base_{seed}:\n\t./run_multi.sh $(COMMON_TRAIN_ARGS) $({MODELS[model]}_LOSS_CTC_{float(step_size)}_BASE_ARGS_{seed}) $(BASE_PARAMS)\n\n"
                 # file += f"train_asr_{model}_sceb_dro_{step_size}_groupinit_rm:\n\t./run_multi.sh $(COMMON_TRAIN_ARGS) $({MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_GROUPINIT_RM_ARGS) $(SCEB_PARAMS)\n\n"
                 # file += f"train_asr_{model}_sceb_dro_{step_size}_uniforminit_rm:\n\t./run_multi.sh $(COMMON_TRAIN_ARGS) $({MODELS[model]}_LOSS_CTC_{float(step_size)}_SCEB_UNIFORMINIT_RM_ARGS) $(SCEB_PARAMS)\n\n"
                 # file += f"train_asr_{model}_aleb_dro_{step_size}_rm:\n\t./run_multi.sh $(COMMON_TRAIN_ARGS) $({MODELS[model]}_LOSS_CTC_{float(step_size)}_ALEB_RM_ARGS) $(ALEB_PARAMS)\n\n"
@@ -39,7 +39,7 @@ for step_size in STEP_SIZE:
             for seed in SEED:
                 # file += f"eval_asr_{model}_sceb_dro_{step_size}_groupinit: results/$(EXPERIMENT_ID)/\n\t$(EVAL_CMD)\n\n"
                 # file += f"eval_asr_{model}_sceb_dro_{step_size}_uniforminit: results/$(EXPERIMENT_ID)/\n\t$(EVAL_CMD)\n\n"
-                file += f"eval_asr_{model}_aleb_dro_{step_size}_la_{smoothing}_{seed}: results/$(EXPERIMENT_ID)/\n\t$(EVAL_CMD)\n\n"
+                file += f"eval_asr_{model}_aleb_dro_{step_size}_base_{seed}: results/$(EXPERIMENT_ID)/\n\t$(EVAL_CMD)\n\n"
                 # file += f"eval_asr_{model}_sceb_dro_{step_size}_groupinit_rm: results/$(EXPERIMENT_ID)/\n\t$(EVAL_CMD)\n\n"
                 # file += f"eval_asr_{model}_sceb_dro_{step_size}_uniforminit_rm: results/$(EXPERIMENT_ID)/\n\t$(EVAL_CMD)\n\n"
                 # file += f"eval_asr_{model}_aleb_dro_{step_size}_rm: results/$(EXPERIMENT_ID)/\n\t$(EVAL_CMD)\n\n"
@@ -51,13 +51,13 @@ for step_size in STEP_SIZE:
             for seed in SEED:
                 # file += f"\tmake eval_asr_{model}_sceb_dro_{step_size}_groupinit /\n"
                 # file += f"\tmake eval_asr_{model}_sceb_dro_{step_size}_uniforminit /\n"
-                file += f"\tmake eval_asr_{model}_aleb_dro_{step_size}_la_{smoothing}_{seed} /\n"
+                file += f"\tmake eval_asr_{model}_aleb_dro_{step_size}_base_{seed} /\n"
                 # file += f"\tmake eval_asr_{model}_sceb_dro_{step_size}_groupinit_rm /\n"
                 # file += f"\tmake eval_asr_{model}_sceb_dro_{step_size}_uniforminit_rm /\n"
                 # file += f"\tmake eval_asr_{model}_aleb_dro_{step_size}_rm /\n"
 file += "\techo 'All done'\n\n"
 
-with open(f'{EXP}_auto_dro.mk', 'w') as f:
+with open(f'{EXP}_auto_dro_base.mk', 'w') as f:
     f.write(file)
 
 bash_file = "!/bin/bash\n\n"
@@ -70,10 +70,10 @@ for step_size in STEP_SIZE:
             for seed in SEED:
                 # bash_file += f"nlprun -n train_asr_{model}_sceb_dro_{step_size}_groupinit -g 1 -a asrdro -o results/exp-005/train_asr_{model}_sceb_dro_{step_size}_groupinit.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_{model}_sceb_dro_{step_size}_groupinit'\n"
                 # bash_file += f"nlprun -n train_asr_{model}_sceb_dro_{step_size}_uniforminit -g 1 -a asrdro -o results/exp-006/train_asr_{model}_sceb_dro_{step_size}_uniforminit.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_{model}_sceb_dro_{step_size}_uniforminit'\n"
-                bash_file += f"nlprun -n train_asr_{model}_aleb_dro_{step_size}_la_{smoothing}_{seed} -g 1 -a asrdro -o results/{EXP}/train_asr_{model}_aleb_dro_{step_size}_la_{smoothing}_{seed}.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_{model}_aleb_dro_{step_size}_la_{smoothing}_{seed}'\n"
+                bash_file += f"nlprun -n train_asr_{model}_aleb_dro_{step_size}_base_{seed} -g 1 -a asrdro -o results/{EXP}/train_asr_{model}_aleb_dro_{step_size}_base_{seed}.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_{model}_aleb_dro_{step_size}_base_{seed}' -p high\n"
                 # bash_file += f"nlprun -n train_asr_{model}_sceb_dro_{step_size}_groupinit_rm -g 1 -a asrdro -o results/exp-004/train_asr_{model}_sceb_dro_{step_size}_groupinit_rm.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_{model}_sceb_dro_{step_size}_groupinit_rm'\n"
                 # bash_file += f"nlprun -n train_asr_{model}_sceb_dro_{step_size}_uniforminit_rm -g 1 -a asrdro -o results/exp-004/train_asr_{model}_sceb_dro_{step_size}_uniforminit_rm.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_{model}_sceb_dro_{step_size}_uniforminit_rm'\n"
                 # bash_file += f"nlprun -n train_asr_{model}_aleb_dro_{step_size}_rm -g 1 -a asrdro -o results/exp-004/train_asr_{model}_aleb_dro_{step_size}_rm.txt --mail-user ananjan -d a6000 'source ../../../tools/activate_python.sh; make train_asr_{model}_aleb_dro_{step_size}_rm'\n"
 
-with open('commands_auto_dro.sh', 'w') as f:
+with open('commands_auto_dro_base.sh', 'w') as f:
     f.write(bash_file)

@@ -121,3 +121,7 @@ egs2/asr_dro/asr1/create_makefile_dro.py
 egs2/asr_dro/asr1/create_makefile.py
 egs2/asr_dro/asr1/*.mk
 egs2/asr_dro/asr1/Makefile
+egs2/asr_dro/asr1/local/get_valid*
+egs2/asr_dro/asr1/*.png
+egs2/asr_dro/asr1/commands_auto_dro_base.sh
+egs2/asr_dro/asr1/commands_auto_dro_ablation.sh

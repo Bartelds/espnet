@@ -56,14 +56,17 @@ def plot_data(data, save_dir):
     plt.figure(figsize=(10, 6))
     color_map = plt.get_cmap('rainbow')
     colors = color_map(np.linspace(0, 1, len(group_q_values)))
+    colors = ['gray', 'red', 'blue', 'green', 'orange', 'purple']
     
-    for i, (group, q_values) in enumerate(group_q_values.items()):
-        plt.plot(q_values, label=group, color=colors[i])
+    for i, group in enumerate(sorted(list(group_q_values))):
+        plt.plot(np.array(range(len(group_q_values[group]))) * (40 / len(group_q_values[group])), group_q_values[group], label=group, color=colors[i])
     
-    plt.xlabel('Iteration')
-    plt.ylabel('q Value')
-    plt.title('q Values Across Iterations')
-    plt.legend()
+    plt.xlabel('Epoch', fontsize = 20)
+    plt.ylabel('Group Weight', fontsize = 20)
+    # plt.title('q Values Across Iterations')
+    plt.yticks(np.arange(0,1.1,0.1), fontsize = 20)
+    plt.xticks(np.arange(0,44, 4), fontsize = 20)
+    plt.legend(fontsize = 20)
     plt.grid(True)
     plt.tight_layout()
     save_path = os.path.join(save_dir, f"q_values_{os.path.basename(save_dir)}.png")
