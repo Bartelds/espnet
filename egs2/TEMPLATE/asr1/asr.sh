@@ -38,8 +38,8 @@ num_nodes=1          # The number of nodes.
 nj=32                # The number of parallel jobs.
 inference_nj=32      # The number of parallel jobs in decoding.
 gpu_inference=false  # Whether to perform gpu decoding.
-dumpdir=/nlp/scr/ananjan/asrdro/dump         # Directory to dump features.
-expdir=/nlp/scr/ananjan/asrdro/exp           # Directory to save experiments.
+dumpdir=         # Directory to dump features.
+expdir=           # Directory to save experiments.
 python=python3       # Specify python to execute espnet commands.
 
 # Data preparation related
@@ -100,7 +100,7 @@ asr_exp=       # Specify the directory path for ASR experiment.
                # If this option is specified, asr_tag is ignored.
 asr_stats_dir= # Specify the directory path for ASR statistics.
 asr_config=    # Config for asr model training.
-batch_type=sorted # Previous value: sorted, Change this to language
+batch_type=language # Previous value: sorted, Change this to language
 asr_args=      # Arguments for asr model training, e.g., "--max_epoch 10".
                # Note that it will overwrite args in asr config.
 pretrained_model=              # Pretrained model to load
@@ -136,9 +136,9 @@ inference_tag=    # Suffix to the result dir for decoding.
 inference_config= # Config for decoding.
 inference_args=   # Arguments for decoding, e.g., "--lm_weight 0.1".
                   # Note that it will overwrite args in inference config.
-inference_lm=valid.loss.ave.pth       # Language model path for decoding.
+inference_lm=valid.loss.best.pth       # Language model path for decoding.
 inference_ngram=${ngram_num}gram.bin
-inference_asr_model=valid.acc.ave.pth # ASR model path for decoding.
+inference_asr_model=valid.loss.best.pth # ASR model path for decoding.
                                       # e.g.
                                       # inference_asr_model=train.loss.best.pth
                                       # inference_asr_model=3epoch.pth
@@ -1308,7 +1308,7 @@ if [ ${stage} -le 11 ] && [ ${stop_stage} -ge 11 ] && ! [[ " ${skip_stages} " =~
     _asr_train_dir="${data_feats}/${train_set}"
     _asr_valid_dir="${data_feats}/${valid_set}"
     log "Stage 11: ASR Training: train_set=${_asr_train_dir}, valid_set=${_asr_valid_dir}"
-
+    log "${asr_config}"
     _opts=
     if [ -n "${asr_config}" ]; then
         # To generate the config file: e.g.
@@ -1588,20 +1588,20 @@ if [ ${stage} -le 12 ] && [ ${stop_stage} -ge 12 ] && ! [[ " ${skip_stages} " =~
                 ${_opts} ${inference_args} || { cat $(grep -l -i error "${_logdir}"/asr_inference.*.log) ; exit 1; }
 
         # 3. Calculate and report RTF based on decoding logs
-        if [ ${asr_task} == "asr" ] && [ -z ${inference_bin_tag} ]; then
-            log "Calculating RTF & latency... log: '${_logdir}/calculate_rtf.log'"
-            rm -f "${_logdir}"/calculate_rtf.log
-            _fs=$(python3 -c "import humanfriendly as h;print(h.parse_size('${fs}'))")
-            _sample_shift=$(python3 -c "print(1 / ${_fs} * 1000)") # in ms
-            ${_cmd} JOB=1 "${_logdir}"/calculate_rtf.log \
-                pyscripts/utils/calculate_rtf.py \
-                    --log-dir ${_logdir} \
-                    --log-name "asr_inference" \
-                    --input-shift ${_sample_shift} \
-                    --start-times-marker "speech length" \
-                    --end-times-marker "best hypo" \
-                    --inf-num ${num_inf} || { cat "${_logdir}"/calculate_rtf.log; exit 1; }
-        fi
+        # if [ ${asr_task} == "asr" ] && [ -z ${inference_bin_tag} ]; then
+        #     log "Calculating RTF & latency... log: '${_logdir}/calculate_rtf.log'"
+        #     rm -f "${_logdir}"/calculate_rtf.log
+        #     _fs=$(python3 -c "import humanfriendly as h;print(h.parse_size('${fs}'))")
+        #     _sample_shift=$(python3 -c "print(1 / ${_fs} * 1000)") # in ms
+        #     ${_cmd} JOB=1 "${_logdir}"/calculate_rtf.log \
+        #         pyscripts/utils/calculate_rtf.py \
+        #             --log-dir ${_logdir} \
+        #             --log-name "asr_inference" \
+        #             --input-shift ${_sample_shift} \
+        #             --start-times-marker "speech length" \
+        #             --end-times-marker "best hypo" \
+        #             --inf-num ${num_inf} || { cat "${_logdir}"/calculate_rtf.log; exit 1; }
+        # fi
 
         # 4. Concatenates the output files from each jobs
         # shellcheck disable=SC2068
@@ -1615,7 +1615,6 @@ if [ ${stage} -le 12 ] && [ ${stop_stage} -ge 12 ] && ! [[ " ${skip_stages} " =~
                 fi
             done
         done
-
     done
 fi
 

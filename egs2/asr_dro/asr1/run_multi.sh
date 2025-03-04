@@ -21,6 +21,15 @@ lid=false # whether to add joint LID task in multiligual ASR
 inference_config=conf/decode_asr.yaml
 asr_config=conf/tuning/train_asr_fbank_${duration}.yaml
 
+dumpdir=
+expdir=
+batch_type=
+asr_stats_dir=
+specific_lang=false
+selected_languages=
+datasets=
+asr_tag="$(basename "${asr_config}" .yaml)_multilingual_${duration}"
+
 . utils/parse_options.sh || exit 1
 
 # Common configs for ML-SUPERB
@@ -39,12 +48,14 @@ fi
 train_set=train_${duration}${suffix}
 train_dev=dev_${duration}${suffix}
 test_set="${train_dev} test_${duration}${suffix}"
+# test_set="${train_dev} test_${duration}${suffix}"
 
 nlsyms_txt=data/local/nlsyms.txt
-asr_tag="$(basename "${asr_config}" .yaml)_multilingual_${duration}"
 
 local_data_opts="--duration ${duration} --lid ${lid} --only_lid ${only_lid}"
 local_data_opts+=" --multilingual true --nlsyms_txt ${nlsyms_txt}"
+local_data_opts+=" --specific_lang ${specific_lang} --selected_languages ${selected_languages}"
+local_data_opts+=" --datasets ${datasets}"
 
 ./asr.sh \
     --ngpu 1 \
@@ -54,7 +65,7 @@ local_data_opts+=" --multilingual true --nlsyms_txt ${nlsyms_txt}"
     --inference_nj ${inference_nj} \
     --gpu_inference ${gpu_inference} \
     --lang "multilingual_${duration}_${suffix}" \
-    --inference_asr_model valid.loss.ave.pth \
+    --inference_asr_model valid.loss.best.pth \
     --local_data_opts "${local_data_opts}" \
     --nlsyms_txt ${nlsyms_txt} \
     --use_lm false \
@@ -68,4 +79,8 @@ local_data_opts+=" --multilingual true --nlsyms_txt ${nlsyms_txt}"
     --test_sets "${test_set}" \
     --asr_tag "${asr_tag}" \
     --asr_stats_dir exp/asr_stats_multilingual_${duration} \
-    --local_score_opts "${lid} ${only_lid} normal"
+    --local_score_opts "${lid} ${only_lid} normal" \
+    --dumpdir "${dumpdir}" \
+    --expdir "${expdir}" \
+    --asr_stats_dir "${asr_stats_dir}" \
+    --batch_type "${batch_type}"

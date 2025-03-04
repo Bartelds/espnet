@@ -565,6 +565,7 @@ class Trainer:
                     break
 
             batch["utt_id"] = utt_id
+            # print(utt_id)
 
             batch = to_device(batch, "cuda" if ngpu > 0 else "cpu")
             if no_forward_run:
@@ -611,7 +612,8 @@ class Trainer:
                 **autocast_args,
             ):
                 with reporter.measure_time("forward_time"):
-                    retval = model(**batch)
+                    # print("Inside Train")
+                    retval = model(**batch, valid=False)
 
                     # Note(kamo):
                     # Supporting two patterns for the returned value from the model
@@ -820,8 +822,9 @@ class Trainer:
             batch = to_device(batch, "cuda" if ngpu > 0 else "cpu")
             if no_forward_run:
                 continue
-
-            retval = model(**batch)
+            
+            print("Inside Valid")
+            retval = model(**batch, valid=True)
             if isinstance(retval, dict):
                 stats = retval["stats"]
                 weight = retval["weight"]

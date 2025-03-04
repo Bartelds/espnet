@@ -1,0 +1,46 @@
+sclite could not be found in ../../../espnet/tools/installers/. Installing SCTK...
+SCTK is already installed in ../../../espnet/tools/installers/.
+Converting hyp.trn and ref.trn files...
+Converted files saved as outputs/exp_subset/asr_train-xslr-ctc-dro-rm-aleb/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained//hyp_mod.trn and outputs/exp_subset/asr_train-xslr-ctc-dro-rm-aleb/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained//ref_mod.trn
+Running sclite...
+Sclite results saved to outputs/exp_subset/asr_train-xslr-ctc-dro-rm-aleb/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained//result_mod.txt
+Summary Statistics:
+outputs/exp_subset/asr_train-xslr-ctc-dro-rm-aleb/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained//result_mod.txt
+|   SPKR                 |    # Snt      # Wrd    |    Corr         Sub          Del         Ins          Err       S.Err    |
+|   Sum/Avg              |     532       31586    |    86.7         7.9          5.4         3.3         16.6        88.9    |
+Cleaning results_mod.txt file...
+Cleaned outputs/exp_subset/asr_train-xslr-ctc-dro-rm-aleb/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained//result_mod.txt.
+Summary Statistics After Cleaning:
+|   SPKR                 |    # Snt      # Wrd    |    Corr         Sub          Del         Ins          Err       S.Err    |
+|   Sum/Avg              |     532       31586    |    86.7         7.9          5.4         3.3         16.6        88.9    |
+Computing SD across languages...
+           # Wrd  Weighted Err    Sum/Avg
+Language                                 
+aze       6387.0       83040.4  13.001472
+ina       5102.0       26192.3   5.133732
+isl       6026.0       83769.9  13.901411
+lao       6466.0      250398.5  38.725410
+mkd       6768.0       35360.8   5.224704
+nan        837.0       45299.3  54.121027
+Language
+aze    6387.0
+ina    5102.0
+isl    6026.0
+lao    6466.0
+mkd    6768.0
+nan     837.0
+Name: # Wrd, dtype: float64
+Language
+aze    13.001472
+ina     5.133732
+isl    13.901411
+lao    38.725410
+mkd     5.224704
+nan    54.121027
+Name: Sum/Avg, dtype: float64
+Micro Sum/Avg: 16.6
+Macro Sum/Avg: 21.7
+Standard Deviation Across Languages: 20.1
+Top 1 languages with highest dataset range:
+  Language Dataset_Max  Max Sum/Avg Dataset_Min  Min Sum/Avg  Range
+0      aze      fleurs         13.0      fleurs         13.0    0.0

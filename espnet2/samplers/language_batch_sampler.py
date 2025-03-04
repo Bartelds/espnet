@@ -26,9 +26,10 @@ class LanguageBatchSampler(AbsSampler):
         self,
         batch_size: int,
         key_file: str,
-        drop_last: bool = False,
+        drop_last: bool = True,
         utt2category_file: Optional[str] = None,
     ):
+        print("utt2category_file", utt2category_file)
         assert batch_size > 0
         self.batch_size = batch_size
         self.key_file = key_file
@@ -55,7 +56,7 @@ class LanguageBatchSampler(AbsSampler):
             for k, v in utt2category.items():
                 category2utt.setdefault(v, []).append(k)
         else:
-            category2utt["default_category"] = keys
+            raise Exception(f"utt2category File not Provided!")
 
         self.batch_list = []
         # Maintain iterators for all categories
@@ -66,6 +67,8 @@ class LanguageBatchSampler(AbsSampler):
 
         def get_nonempty(it, s):
             # get next index for which iterator value is not 0
+            if len(it) == 1:
+                return s
             it_keys = list(it.keys())
             if it[it_keys[s]] != 0:
                 return s
@@ -76,6 +79,7 @@ class LanguageBatchSampler(AbsSampler):
                     return s
             return k
 
+        category2numbatches = {_:0 for _ in category2utt}
         cat_iterators = {d:len(category2utt[d]) for d in category2utt}
         cats = list(category2utt.keys())
         while not check_complete(cat_iterators):
@@ -92,7 +96,21 @@ class LanguageBatchSampler(AbsSampler):
                 decrement = min(batch_size, cat_iterators[lang])
                 end = start + decrement
                 cat_iterators[lang] -= decrement
-                self.batch_list.append(category_keys[start:end])
+
+                curr_ex = category_keys[start:end]
+                if decrement < batch_size:
+                    # pad out batch
+                    curr_ex += [category_keys[start] for _ in range(batch_size - decrement)]
+
+                category2numbatches[lang] += 1
+                self.batch_list.append(curr_ex)
+        
+        self.category2numbatches = category2numbatches
+        print(f"self.batch_list={self.batch_list}")
+
+    def debug_prints(self):
+        print(f"batch_size={self.batch_size}")
+        print(f"self.batch_list={self.batch_list}")
 
     def __repr__(self):
         return (

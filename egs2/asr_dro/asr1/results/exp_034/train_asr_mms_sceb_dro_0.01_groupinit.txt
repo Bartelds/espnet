@@ -1,0 +1,191 @@
+slurm submission log: 2024-10-01 09:38:00.297196
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=4
+#SBATCH --exclude=jagupard36
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train_asr_mms_sceb_dro_0.01_groupinit
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=64G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_034/train_asr_mms_sceb_dro_0.01_groupinit.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train_asr_mms_sceb_dro_0.01_groupinit'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8706119
+
+
+
+###############################
+
+###############################
+start time: 2024-10-01 09:38:05.852885
+machine: jagupard35.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train_asr_mms_sceb_dro_0.01_groupinit
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+./run_multi.sh --duration 1h --lid true --only_lid false --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034 --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --stage 11 --asr_tag train_asr_mms_sceb_dro_0.01_groupinit --asr_config conf/exp_034/train_asr_mms_sceb_dro_0.01_groupinit.yaml --batch_type language 
+2024-10-01T09:38:05 (asr.sh:284:main) ./asr.sh --ngpu 1 --stage 11 --stop_stage 13 --nj 32 --inference_nj 4 --gpu_inference true --lang multilingual_1h__lid --inference_asr_model valid.loss.best.pth --local_data_opts --duration 1h --lid true --only_lid false --multilingual true --nlsyms_txt data/local/nlsyms.txt --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --nlsyms_txt data/local/nlsyms.txt --use_lm false --token_type char --feats_type raw --feats_normalize utterance_mvn --asr_config conf/exp_034/train_asr_mms_sceb_dro_0.01_groupinit.yaml --inference_config conf/decode_asr.yaml --train_set train_1h_lid --valid_set dev_1h_lid --test_sets dev_1h_lid test_1h_lid --asr_tag train_asr_mms_sceb_dro_0.01_groupinit --asr_stats_dir exp/asr_stats_multilingual_1h --local_score_opts true false normal --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034 --batch_type language
+2024-10-01T09:38:06 (asr.sh:322:main) Info: The valid_set 'dev_1h_lid' is included in the test_sets. '--eval_valid_set true' is set and 'dev_1h_lid' is removed from the test_sets
+2024-10-01T09:38:06 (asr.sh:566:main) Skipped stages:  6 7 8 9 14 15 16 
+2024-10-01T09:38:06 (asr.sh:1310:main) Stage 11: ASR Training: train_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034/raw/train_1h_lid, valid_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034/raw/dev_1h_lid
+2024-10-01T09:38:06 (asr.sh:1409:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/asr_train_asr_mms_sceb_dro_0.01_groupinit/run.sh'. You can resume the process from stage 11 using this script
+2024-10-01T09:38:06 (asr.sh:1413:main) ASR training started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/asr_train_asr_mms_sceb_dro_0.01_groupinit/train.log'
+2024-10-01 09:38:07,504 (launch:94) INFO: /nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py --cmd 'run.pl --name /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/asr_train_asr_mms_sceb_dro_0.01_groupinit/train.log' --log /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/asr_train_asr_mms_sceb_dro_0.01_groupinit/train.log --ngpu 1 --num_nodes 1 --init_file_prefix /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/asr_train_asr_mms_sceb_dro_0.01_groupinit/.dist_init_ --multiprocessing_distributed true -- python3 -m espnet2.bin.asr_train --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/asr_train_asr_mms_sceb_dro_0.01_groupinit --batch_type language --config conf/exp_034/train_asr_mms_sceb_dro_0.01_groupinit.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_034/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/valid/text_shape.char
+2024-10-01 09:38:08,801 (launch:348) INFO: log file: /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_034/asr_train_asr_mms_sceb_dro_0.01_groupinit/train.log
+slurm submission log: 2024-10-01 17:04:33.770718
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=4
+#SBATCH --exclude=jagupard36,jagupard35
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train_asr_mms_sceb_dro_0.01_groupinit
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=64G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_034/train_asr_mms_sceb_dro_0.01_groupinit.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train_asr_mms_sceb_dro_0.01_groupinit'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8707663
+
+
+
+###############################
+
+###############################
+start time: 2024-10-01 17:11:53.314789
+machine: jagupard34.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train_asr_mms_sceb_dro_0.01_groupinit
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+make: *** No rule to make target 'train_asr_mms_sceb_dro_0.01_groupinit'.  Stop.
+###############################
+end time: 2024-10-01 17:12:03.327495
+elapsed time: 0:00:10.012706
+slurm submission log: 2024-10-01 17:13:18.604583
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=4
+#SBATCH --exclude=jagupard36,jagupard35
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train_asr_mms_sceb_dro_0.01_groupinit
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=64G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_034/train_asr_mms_sceb_dro_0.01_groupinit.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train_asr_mms_sceb_dro_0.01_groupinit'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8707762
+
+
+
+###############################
+
+###############################
+start time: 2024-10-01 17:53:19.688299
+machine: jagupard33.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train_asr_mms_sceb_dro_0.01_groupinit
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+make: *** No rule to make target 'train_asr_mms_sceb_dro_0.01_groupinit'.  Stop.
+###############################
+end time: 2024-10-01 17:53:29.701458
+elapsed time: 0:00:10.013159

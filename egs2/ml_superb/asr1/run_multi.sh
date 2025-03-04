@@ -38,7 +38,7 @@ fi
 
 train_set=train_${duration}${suffix}
 train_dev=dev_${duration}${suffix}
-test_set="${train_dev} test_${duration}${suffix}"
+test_set=test_${duration}${suffix}
 
 nlsyms_txt=data/local/nlsyms.txt
 asr_tag="$(basename "${asr_config}" .yaml)_multilingual_${duration}"

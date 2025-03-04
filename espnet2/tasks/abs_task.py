@@ -74,10 +74,11 @@ from espnet2.utils.types import (
 from espnet2.utils.yaml_no_alias_safe_dump import yaml_no_alias_safe_dump
 from espnet.utils.cli_utils import get_commandline_args
 
-try:
-    import wandb
-except Exception:
-    wandb = None
+# try:
+#     import wandb
+# except Exception:
+#     wandb = None
+import wandb
 
 if V(torch.__version__) >= V("1.5.0"):
     from torch.multiprocessing.spawn import ProcessContext
@@ -183,6 +184,7 @@ class IteratorOptions:
     batch_size: int
     batch_bins: int
     batch_type: str
+    duration_batch_length: int
     max_cache_size: float
     max_cache_fd: int
     allow_multi_rates: bool
@@ -769,6 +771,11 @@ class AbsTask(ABC):
             help=_batch_type_help,
         )
         group.add_argument(
+            "--duration_batch_length",
+            type=int,
+            default=-1
+        )
+        group.add_argument(
             "--valid_batch_type",
             type=str_or_none,
             default=None,
@@ -1251,6 +1258,10 @@ class AbsTask(ABC):
         torch.backends.cudnn.enabled = args.cudnn_enabled
         torch.backends.cudnn.benchmark = args.cudnn_benchmark
         torch.backends.cudnn.deterministic = args.cudnn_deterministic
+        print(f"### args.seed: {args.seed} ###")
+        print(f"### args.cudnn_enabled: {args.cudnn_enabled} ###")
+        print(f"### args.cudnn_benchmark: {args.cudnn_benchmark} ###")
+        print(f"### args.cudnn_deterministic: {args.cudnn_deterministic} ###")
         if args.detect_anomaly:
             logging.info("Invoking torch.autograd.set_detect_anomaly(True)")
             torch.autograd.set_detect_anomaly(args.detect_anomaly)
@@ -1415,6 +1426,18 @@ class AbsTask(ABC):
                 distributed_option=distributed_option,
                 mode="valid",
             )
+
+            # at this stage, the category2numbatches file has been created
+            # init DROCTC with this
+            if args.batch_type in ["language", "duration_language"]:
+                if args.ctc_conf["ctc_type"] == 'droctc':
+                    # load both number of batches per group and the group mapping
+                    model.ctc.ctc_loss.init_weights(
+                    Path(args.train_data_path_and_name_and_type[0][0]).parent,
+                    Path(args.valid_data_path_and_name_and_type[0][0]).parent
+            )
+            
+
             if not args.use_matplotlib and args.num_att_plot != 0:
                 args.num_att_plot = 0
                 logging.info("--use_matplotlib false => Changing --num_att_plot to 0")
@@ -1429,15 +1452,18 @@ class AbsTask(ABC):
                 plot_attention_iter_factory = None
 
             # 8. Start training
+            print(args)
+            print("Wandb", args.use_wandb)
             if args.use_wandb:
                 if wandb is None:
                     raise RuntimeError("Please install wandb")
 
-                try:
-                    wandb.login()
-                except wandb.errors.UsageError:
-                    logging.info("wandb not configured! run `wandb login` to enable")
-                    args.use_wandb = False
+                # try:
+                wandb.login()
+                print('Logged into wandb')
+                # except wandb.errors.UsageError:
+                #     logging.info("wandb not configured! run `wandb login` to enable")
+                #     args.use_wandb = False
 
             if args.use_wandb:
                 if (
@@ -1472,6 +1498,9 @@ class AbsTask(ABC):
             # Don't give args to trainer.run() directly!!!
             # Instead of it, define "Options" object and build here.
             trainer_options = cls.trainer.build_options(args)
+            # print(f"cls: {cls}")
+            # print(f"trainer_options: {trainer_options}")
+            # print(f"distributed_option: {distributed_option}")
             cls.trainer.run(
                 model=model,
                 optimizers=optimizers,
@@ -1501,6 +1530,7 @@ class AbsTask(ABC):
             batch_size = args.batch_size
             batch_bins = args.batch_bins
             batch_type = args.batch_type
+            duration_batch_length = args.duration_batch_length
             max_cache_size = args.max_cache_size
             max_cache_fd = args.max_cache_fd
             allow_multi_rates = args.allow_multi_rates
@@ -1538,6 +1568,7 @@ class AbsTask(ABC):
             num_batches = None
             num_iters_per_epoch = None
             train = False
+            duration_batch_length = args.duration_batch_length
 
         elif mode == "plot_att":
             preprocess_fn = cls.build_preprocess_fn(args, train=False)
@@ -1545,6 +1576,7 @@ class AbsTask(ABC):
             data_path_and_name_and_type = args.valid_data_path_and_name_and_type
             shape_files = args.valid_shape_file
             batch_type = "unsorted"
+            duration_batch_length = args.duration_batch_length
             batch_size = 1
             batch_bins = 0
             num_batches = args.num_att_plot
@@ -1574,6 +1606,7 @@ class AbsTask(ABC):
             distributed=distributed,
             num_iters_per_epoch=num_iters_per_epoch,
             train=train,
+            duration_batch_length=duration_batch_length
         )
 
     @classmethod
@@ -1693,7 +1726,21 @@ class AbsTask(ABC):
                 torch.distributed.get_world_size() if iter_options.distributed else 1
             ),
             utt2category_file=utt2category_file,
+            duration_batch_length=iter_options.duration_batch_length
         )
+
+        if iter_options.batch_type in ["language", "duration_language"]:
+            # dump the category2num_batches file to read later
+            category2numbatches = batch_sampler.category2numbatches
+            with open(str(
+                Path(
+                    Path(iter_options.data_path_and_name_and_type[0][0]).parent,
+                    "category2numbatches",
+                )
+            ), 'w') as f:
+                print(Path(iter_options.data_path_and_name_and_type[0][0]).parent)
+                for category in category2numbatches:
+                    f.write(f'{category} {category2numbatches[category]}\n')
 
         batches = list(batch_sampler)
         if iter_options.num_batches is not None:

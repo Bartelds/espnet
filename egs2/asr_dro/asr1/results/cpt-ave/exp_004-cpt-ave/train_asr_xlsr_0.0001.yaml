@@ -1,0 +1,61 @@
+accum_grad: 4
+batch_size: 8
+batch_type: sorted
+best_model_criterion:
+- - valid
+  - loss
+  - min
+ctc_conf:
+  ctc_type: builtin
+decoder: none
+encoder: transformer
+encoder_conf:
+  attention_dropout_rate: 0.1
+  attention_heads: 8
+  dropout_rate: 0.1
+  input_layer: conv2d2
+  linear_units: 1024
+  normalize_before: true
+  num_blocks: 2
+  output_size: 256
+  positional_dropout_rate: 0.1
+freeze_param:
+- frontend.upstream
+frontend: s3prl
+frontend_conf:
+  download_dir: ./hub
+  frontend_conf:
+    upstream: xls_r_300m
+  multilayer_feature: true
+init: xavier_uniform
+keep_nbest_models: 5
+max_epoch: 30
+model_conf:
+  ctc_weight: 1.0
+num_iters_per_epoch: 2500
+num_workers: 4
+optim: adam
+optim_conf:
+  lr: 0.0001
+  weight_decay: 0.001
+patience: 5
+preencoder: linear
+preencoder_conf:
+  input_size: 1024
+  output_size: 80
+specaug: specaug
+specaug_conf:
+  apply_freq_mask: true
+  apply_time_mask: true
+  apply_time_warp: true
+  freq_mask_width_range:
+  - 0
+  - 27
+  num_freq_mask: 2
+  num_time_mask: 10
+  time_mask_width_ratio_range:
+  - 0.0
+  - 0.05
+  time_warp_mode: bicubic
+  time_warp_window: 5
+unused_parameters: true

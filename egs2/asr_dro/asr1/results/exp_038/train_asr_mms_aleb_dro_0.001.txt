@@ -1,0 +1,880 @@
+slurm submission log: 2024-10-03 21:47:48.402300
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=4
+#SBATCH --exclude=jagupard36,jagupard35
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train_asr_mms_aleb_dro_0.001
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=64G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_038/train_asr_mms_aleb_dro_0.001.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8717966
+
+
+
+###############################
+
+###############################
+start time: 2024-10-04 00:41:24.952365
+machine: jagupard33.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+./run_multi.sh --duration 1h --lid true --only_lid false --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039 --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --stage 11 --asr_tag train_asr_mms_aleb_dro_0.001 --asr_config conf/exp_039/train_asr_mms_aleb_dro_0.001.yaml --batch_type duration_language 
+2024-10-04T00:41:24 (asr.sh:284:main) ./asr.sh --ngpu 1 --stage 11 --stop_stage 13 --nj 32 --inference_nj 4 --gpu_inference true --lang multilingual_1h__lid --inference_asr_model 30epoch.pth --local_data_opts --duration 1h --lid true --only_lid false --multilingual true --nlsyms_txt data/local/nlsyms.txt --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --nlsyms_txt data/local/nlsyms.txt --use_lm false --token_type char --feats_type raw --feats_normalize utterance_mvn --asr_config conf/exp_039/train_asr_mms_aleb_dro_0.001.yaml --inference_config conf/decode_asr.yaml --train_set train_1h_lid --valid_set dev_1h_lid --test_sets dev_1h_lid test_1h_lid --asr_tag train_asr_mms_aleb_dro_0.001 --asr_stats_dir exp/asr_stats_multilingual_1h --local_score_opts true false normal --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039 --batch_type duration_language
+2024-10-04T00:41:25 (asr.sh:322:main) Info: The valid_set 'dev_1h_lid' is included in the test_sets. '--eval_valid_set true' is set and 'dev_1h_lid' is removed from the test_sets
+2024-10-04T00:41:25 (asr.sh:566:main) Skipped stages:  6 7 8 9 14 15 16 
+2024-10-04T00:41:25 (asr.sh:1310:main) Stage 11: ASR Training: train_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039/raw/train_1h_lid, valid_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039/raw/dev_1h_lid
+2024-10-04T00:41:25 (asr.sh:1409:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/run.sh'. You can resume the process from stage 11 using this script
+2024-10-04T00:41:25 (asr.sh:1413:main) ASR training started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/train.log'
+2024-10-04 00:41:25,860 (launch:94) INFO: /nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py --cmd 'run.pl --name /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/train.log' --log /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/train.log --ngpu 1 --num_nodes 1 --init_file_prefix /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/.dist_init_ --multiprocessing_distributed true -- python3 -m espnet2.bin.asr_train --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001 --batch_type duration_language --config conf/exp_039/train_asr_mms_aleb_dro_0.001.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_039/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/valid/text_shape.char
+2024-10-04 00:41:26,056 (launch:348) INFO: log file: /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/train.log
+2024-10-04T04:55:05 (asr.sh:1483:main) Stage 12: Decoding: training_dir=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001
+2024-10-04T04:55:05 (asr.sh:1511:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/run.sh'. You can resume the process from stage 12 using this script
+2024-10-04T04:55:05 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/org/dev_1h_lid/logdir/asr_inference.*.log'
+2024-10-04T05:05:36 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/logdir/asr_inference.*.log'
+2024-10-04T05:16:26 (asr.sh:1623:main) Stage 13: Scoring
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-04T05:16:36 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/org/dev_1h_lid/score_cer/result.txt
+|     SPKR                     |      # Snt          # Wrd      |      Corr             Sub              Del             Ins              Err           S.Err      |
+|     Sum/Avg                  |       651           29316      |      87.6             8.1              4.3             2.2             14.6            79.0      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-04T05:16:44 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/org/dev_1h_lid/score_wer/result.txt
+|     SPKR                     |      # Snt          # Wrd      |      Corr             Sub              Del             Ins              Err           S.Err      |
+|     Sum/Avg                  |       651            4590      |      63.3            31.7              4.9             2.6             39.3            79.0      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-04T05:16:51 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_cer/result.txt
+|     SPKR                     |     # Snt          # Wrd      |     Corr              Sub             Del             Ins             Err           S.Err      |
+|     Sum/Avg                  |      621           30328      |     87.9              7.8             4.3             1.7            13.8            79.2      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-04T05:16:59 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_wer/result.txt
+|     SPKR                     |     # Snt          # Wrd      |     Corr              Sub             Del             Ins             Err           S.Err      |
+|     Sum/Avg                  |      621            4690      |     65.0             30.1             4.9             2.4            37.4            79.2      |
+2024-10-04T05:16:59 (score.sh:31:main) Linguistic scoring started
+2024-10-04T05:16:59 (score.sh:32:main) local/score.sh true false normal /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001
+[warning] linguistic information not loading
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_cer...
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_wer...
+Parsing LID results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid...
+2024-10-04T05:17:00 (score.sh:75:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_lid/few_shot/trained/scores.txt
+Acc: 92.59%
+2024-10-04T05:17:00 (score.sh:97:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_cer/few_shot/trained/result.txt
+|      SPKR                      |      # Snt            # Wrd       |      Corr               Sub               Del               Ins               Err             S.Err       |
+|      Sum/Avg                   |       621             30328       |      87.9               7.8               4.3               1.7              13.8              79.2       |
+<!-- Generated by scripts/utils/show_asr_result.sh -->
+# RESULTS
+## Environments
+- date: `Fri Oct  4 05:17:01 PDT 2024`
+- python version: `3.9.19 (main, May  6 2024, 19:43:03)  [GCC 11.2.0]`
+- espnet version: `espnet 202402`
+- pytorch version: `pytorch 2.1.0`
+- Git hash: `825accb575bef9be7a57f549589200babb711426`
+  - Commit date: `Mon Aug 5 09:07:11 2024 -0700`
+
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_30epoch/test_1h_lid|621|4690|65.0|30.1|4.9|2.4|37.4|79.2|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_30epoch/test_1h_lid|621|30328|87.9|7.8|4.3|1.7|13.8|79.2|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_039/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|651|4590|63.3|31.7|4.9|2.6|39.3|79.0|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|651|29316|87.6|8.1|4.3|2.2|14.6|79.0|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+2024-10-04T05:17:02 (asr.sh:1864:main) Successfully finished. [elapsed=16538s]
+###############################
+end time: 2024-10-04 05:17:09.402773
+elapsed time: 4:35:44.450408
+slurm submission log: 2024-10-04 16:47:42.808255
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=4
+#SBATCH --exclude=jagupard36,jagupard35
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train_asr_mms_aleb_dro_0.001
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=64G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_038/train_asr_mms_aleb_dro_0.001.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8720561
+
+
+
+###############################
+
+slurm submission log: 2024-10-05 00:02:43.000161
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=4
+#SBATCH --exclude=jagupard36,jagupard35
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train_asr_mms_aleb_dro_0.001
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=64G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_038/train_asr_mms_aleb_dro_0.001.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8721584
+
+
+
+###############################
+
+###############################
+start time: 2024-10-05 00:03:11.423527
+machine: jagupard32.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+./run_multi.sh --duration 1h --lid true --only_lid false --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --stage 11 --asr_tag train_asr_mms_aleb_dro_0.001 --asr_config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --batch_type duration_language 
+2024-10-05T00:03:11 (asr.sh:284:main) ./asr.sh --ngpu 1 --stage 11 --stop_stage 13 --nj 32 --inference_nj 4 --gpu_inference true --lang multilingual_1h__lid --inference_asr_model 30epoch.pth --local_data_opts --duration 1h --lid true --only_lid false --multilingual true --nlsyms_txt data/local/nlsyms.txt --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --nlsyms_txt data/local/nlsyms.txt --use_lm false --token_type char --feats_type raw --feats_normalize utterance_mvn --asr_config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --inference_config conf/decode_asr.yaml --train_set train_1h_lid --valid_set dev_1h_lid --test_sets dev_1h_lid test_1h_lid --asr_tag train_asr_mms_aleb_dro_0.001 --asr_stats_dir exp/asr_stats_multilingual_1h --local_score_opts true false normal --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --batch_type duration_language
+2024-10-05T00:03:11 (asr.sh:322:main) Info: The valid_set 'dev_1h_lid' is included in the test_sets. '--eval_valid_set true' is set and 'dev_1h_lid' is removed from the test_sets
+2024-10-05T00:03:11 (asr.sh:566:main) Skipped stages:  6 7 8 9 14 15 16 
+2024-10-05T00:03:11 (asr.sh:1310:main) Stage 11: ASR Training: train_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid, valid_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid
+2024-10-05T00:03:11 (asr.sh:1409:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/run.sh'. You can resume the process from stage 11 using this script
+2024-10-05T00:03:11 (asr.sh:1413:main) ASR training started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log'
+2024-10-05 00:03:11,909 (launch:94) INFO: /nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py --cmd 'run.pl --name /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log' --log /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log --ngpu 1 --num_nodes 1 --init_file_prefix /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/.dist_init_ --multiprocessing_distributed true -- python3 -m espnet2.bin.asr_train --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001 --batch_type duration_language --config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/text_shape.char
+2024-10-05 00:03:12,058 (launch:348) INFO: log file: /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log
+run.pl: job failed, log is in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log
+Command '['run.pl', '--name', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log', '--gpu', '1', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log', 'python3', '-m', 'espnet2.bin.asr_train', '--use_preprocessor', 'true', '--bpemodel', 'none', '--token_type', 'char', '--token_list', 'data/multilingual_1h__lid_token_list/char/tokens.txt', '--non_linguistic_symbols', 'data/local/nlsyms.txt', '--cleaner', 'none', '--g2p', 'none', '--valid_data_path_and_name_and_type', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/wav.scp,speech,sound', '--valid_shape_file', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/speech_shape', '--resume', 'true', '--ignore_init_mismatch', 'false', '--fold_length', '80000', '--output_dir', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001', '--batch_type', 'duration_language', '--config', 'conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml', '--frontend_conf', 'fs=16k', '--train_data_path_and_name_and_type', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/wav.scp,speech,sound', '--train_shape_file', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/speech_shape', '--fold_length', '150', '--train_data_path_and_name_and_type', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/text,text,text', '--train_shape_file', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/text_shape.char', '--valid_data_path_and_name_and_type', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/text,text,text', '--valid_shape_file', '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/text_shape.char', '--ngpu', '1', '--multiprocessing_distributed', 'True']' returned non-zero exit status 1.
+Traceback (most recent call last):
+  File "/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py", line 384, in <module>
+    main()
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py", line 375, in main
+    raise RuntimeError(
+RuntimeError: 
+################### The last 1000 lines of /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log ###################
+# python3 -m espnet2.bin.asr_train --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001 --batch_type duration_language --config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/text_shape.char --ngpu 1 --multiprocessing_distributed True 
+# Started at Sat Oct  5 00:03:12 PDT 2024
+#
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/asr_train.py --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001 --batch_type duration_language --config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/text_shape.char --ngpu 1 --multiprocessing_distributed True
+[jagupard32] 2024-10-05 00:03:18,139 (asr:521) INFO: Vocabulary size: 2550
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/site-packages/s3prl/upstream/byol_s/byol_a/common.py:20: UserWarning: torchaudio._backend.set_audio_backend has been deprecated. With dispatcher enabled, this function is no-op. You can remove the function call.
+  torchaudio.set_audio_backend("sox_io")
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/site-packages/torch/_utils.py:831: UserWarning: TypedStorage is deprecated. It will be removed in the future and UntypedStorage will be the only storage class. This should only matter to you if you are using storages directly.  To access UntypedStorage directly, use tensor.untyped_storage() instead of tensor.storage()
+  return self.fget.__get__(instance, owner)()
+Some weights of Wav2Vec2Model were not initialized from the model checkpoint at facebook/mms-300m and are newly initialized: ['wav2vec2.encoder.pos_conv_embed.conv.parametrizations.weight.original0', 'wav2vec2.encoder.pos_conv_embed.conv.parametrizations.weight.original1']
+You should probably TRAIN this model on a down-stream task to be able to use it for predictions and inference.
+[jagupard32] 2024-10-05 00:03:21,566 (espnet_model:169) WARNING: Set decoder to none as ctc_weight==1.0
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.0.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.0.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.1.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.1.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.2.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.2.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.3.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.3.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.4.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.4.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.5.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.5.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,200 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.6.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_extractor.conv_layers.6.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_projection.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.feature_projection.projection.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.pos_conv_embed.conv.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.0.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.1.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.2.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,201 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.3.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.4.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.5.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.6.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,202 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.7.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.8.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.9.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.10.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.11.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,203 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.12.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.13.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.14.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.15.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.16.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,204 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.17.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.18.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.19.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.20.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,205 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.21.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.22.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.attention.k_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.attention.v_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.attention.q_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.attention.out_proj.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.feed_forward.intermediate_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.feed_forward.output_dense.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize frontend.upstream.upstream.model.encoder.layers.23.final_layer_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize preencoder.linear_out.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.embed.conv.0.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.embed.conv.2.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.embed.out.0.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.self_attn.linear_q.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.self_attn.linear_k.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.self_attn.linear_v.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.self_attn.linear_out.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.feed_forward.w_1.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.feed_forward.w_2.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.norm1.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.0.norm2.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.self_attn.linear_q.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.self_attn.linear_k.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.self_attn.linear_v.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.self_attn.linear_out.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.feed_forward.w_1.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.feed_forward.w_2.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.norm1.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.encoders.1.norm2.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize encoder.after_norm.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,206 (initialize:88) INFO: Initialize ctc.ctc_lo.bias to zeros
+[jagupard32] 2024-10-05 00:03:23,332 (s3prl:117) INFO: Pretrained S3PRL frontend model parameters reloaded!
+[jagupard32] 2024-10-05 00:03:23,853 (abs_task:1308) INFO: pytorch.version=2.1.0, cuda.available=True, cudnn.version=8902, cudnn.benchmark=False, cudnn.deterministic=True
+[jagupard32] 2024-10-05 00:03:23,857 (abs_task:1309) INFO: Model structure:
+ESPnetASRModel(
+  (frontend): S3prlFrontend(
+    (upstream): S3PRLUpstream(
+      (upstream): UpstreamExpert(
+        (model): Wav2Vec2Model(
+          (feature_extractor): Wav2Vec2FeatureEncoder(
+            (conv_layers): ModuleList(
+              (0): Wav2Vec2LayerNormConvLayer(
+                (conv): Conv1d(1, 512, kernel_size=(10,), stride=(5,))
+                (layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+                (activation): GELUActivation()
+              )
+              (1-4): 4 x Wav2Vec2LayerNormConvLayer(
+                (conv): Conv1d(512, 512, kernel_size=(3,), stride=(2,))
+                (layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+                (activation): GELUActivation()
+              )
+              (5-6): 2 x Wav2Vec2LayerNormConvLayer(
+                (conv): Conv1d(512, 512, kernel_size=(2,), stride=(2,))
+                (layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+                (activation): GELUActivation()
+              )
+            )
+          )
+          (feature_projection): Wav2Vec2FeatureProjection(
+            (layer_norm): LayerNorm((512,), eps=1e-05, elementwise_affine=True)
+            (projection): Linear(in_features=512, out_features=1024, bias=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+          )
+          (encoder): Wav2Vec2EncoderStableLayerNorm(
+            (pos_conv_embed): Wav2Vec2PositionalConvEmbedding(
+              (conv): ParametrizedConv1d(
+                1024, 1024, kernel_size=(128,), stride=(1,), padding=(64,), groups=16
+                (parametrizations): ModuleDict(
+                  (weight): ParametrizationList(
+                    (0): _WeightNorm()
+                  )
+                )
+              )
+              (padding): Wav2Vec2SamePadLayer()
+              (activation): GELUActivation()
+            )
+            (layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+            (dropout): Dropout(p=0.1, inplace=False)
+            (layers): ModuleList(
+              (0-23): 24 x Wav2Vec2EncoderLayerStableLayerNorm(
+                (attention): Wav2Vec2Attention(
+                  (k_proj): Linear(in_features=1024, out_features=1024, bias=True)
+                  (v_proj): Linear(in_features=1024, out_features=1024, bias=True)
+                  (q_proj): Linear(in_features=1024, out_features=1024, bias=True)
+                  (out_proj): Linear(in_features=1024, out_features=1024, bias=True)
+                )
+                (dropout): Dropout(p=0.1, inplace=False)
+                (layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+                (feed_forward): Wav2Vec2FeedForward(
+                  (intermediate_dropout): Dropout(p=0.0, inplace=False)
+                  (intermediate_dense): Linear(in_features=1024, out_features=4096, bias=True)
+                  (intermediate_act_fn): GELUActivation()
+                  (output_dense): Linear(in_features=4096, out_features=1024, bias=True)
+                  (output_dropout): Dropout(p=0.1, inplace=False)
+                )
+                (final_layer_norm): LayerNorm((1024,), eps=1e-05, elementwise_affine=True)
+              )
+            )
+          )
+        )
+      )
+    )
+    (featurizer): Featurizer()
+  )
+  (specaug): SpecAug(
+    (time_warp): TimeWarp(window=5, mode=bicubic)
+    (freq_mask): MaskAlongAxis(mask_width_range=[0, 27], num_mask=2, axis=freq)
+    (time_mask): MaskAlongAxisVariableMaxWidth(mask_width_ratio_range=[0.0, 0.05], num_mask=10, axis=time)
+  )
+  (normalize): UtteranceMVN(norm_means=True, norm_vars=False)
+  (preencoder): LinearProjection(
+    (linear_out): Linear(in_features=1024, out_features=80, bias=True)
+    (dropout): Dropout(p=0.0, inplace=False)
+  )
+  (encoder): TransformerEncoder(
+    (embed): Conv2dSubsampling2(
+      (conv): Sequential(
+        (0): Conv2d(1, 256, kernel_size=(3, 3), stride=(2, 2))
+        (1): ReLU()
+        (2): Conv2d(256, 256, kernel_size=(3, 3), stride=(1, 1))
+        (3): ReLU()
+      )
+      (out): Sequential(
+        (0): Linear(in_features=9472, out_features=256, bias=True)
+        (1): PositionalEncoding(
+          (dropout): Dropout(p=0.1, inplace=False)
+        )
+      )
+    )
+    (encoders): MultiSequential(
+      (0): EncoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=1024, bias=True)
+          (w_2): Linear(in_features=1024, out_features=256, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (activation): ReLU()
+        )
+        (norm1): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+      (1): EncoderLayer(
+        (self_attn): MultiHeadedAttention(
+          (linear_q): Linear(in_features=256, out_features=256, bias=True)
+          (linear_k): Linear(in_features=256, out_features=256, bias=True)
+          (linear_v): Linear(in_features=256, out_features=256, bias=True)
+          (linear_out): Linear(in_features=256, out_features=256, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+        )
+        (feed_forward): PositionwiseFeedForward(
+          (w_1): Linear(in_features=256, out_features=1024, bias=True)
+          (w_2): Linear(in_features=1024, out_features=256, bias=True)
+          (dropout): Dropout(p=0.1, inplace=False)
+          (activation): ReLU()
+        )
+        (norm1): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+        (norm2): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+        (dropout): Dropout(p=0.1, inplace=False)
+      )
+    )
+    (after_norm): LayerNorm((256,), eps=1e-12, elementwise_affine=True)
+  )
+  (criterion_att): LabelSmoothingLoss(
+    (criterion): KLDivLoss()
+  )
+  (ctc): CTC(
+    (ctc_lo): Linear(in_features=256, out_features=2550, bias=True)
+    (ctc_loss): DROCTCLoss()
+  )
+)
+
+Model summary:
+    Class Name: ESPnetASRModel
+    Total Number of model parameters: 320.77 M
+    Number of trainable parameters: 320.77 M (100.0%)
+    Size: 1.28 GB
+    Type: torch.float32
+[jagupard32] 2024-10-05 00:03:23,857 (abs_task:1312) INFO: Optimizer:
+Adam (
+Parameter Group 0
+    amsgrad: False
+    betas: (0.9, 0.999)
+    capturable: False
+    differentiable: False
+    eps: 1e-08
+    foreach: None
+    fused: None
+    lr: 0.0001
+    maximize: False
+    weight_decay: 1e-06
+)
+[jagupard32] 2024-10-05 00:03:23,857 (abs_task:1313) INFO: Scheduler: None
+[jagupard32] 2024-10-05 00:03:23,858 (abs_task:1322) INFO: Saving the configuration in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/config.yaml
+[jagupard32] 2024-10-05 00:03:23,902 (asr:493) INFO: Optional Data Names: ('text_spk2', 'text_spk3', 'text_spk4', 'prompt')
+[jagupard32] 2024-10-05 00:03:23,902 (abs_task:1694) WARNING: Reading /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/utt2category
+Traceback (most recent call last):
+  File "/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/runpy.py", line 197, in _run_module_as_main
+    return _run_code(code, main_globals, None,
+  File "/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/runpy.py", line 87, in _run_code
+    exec(code, run_globals)
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/asr_train.py", line 23, in <module>
+    main()
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/asr_train.py", line 19, in main
+    ASRTask.main(cmd=cmd)
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/tasks/abs_task.py", line 1157, in main
+    cls.main_worker(args)
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/tasks/abs_task.py", line 1408, in main_worker
+    train_iter_factory = cls.build_iter_factory(
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/tasks/abs_task.py", line 1640, in build_iter_factory
+    return cls.build_sequence_iter_factory(
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/tasks/abs_task.py", line 1698, in build_sequence_iter_factory
+    batch_sampler = build_batch_sampler(
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/samplers/build_batch_sampler.py", line 122, in build_batch_sampler
+    retval = DurationLanguageBatchSampler(
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/samplers/duration_language_batch_sampler.py", line 40, in __init__
+    utt2shapes = [
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/samplers/duration_language_batch_sampler.py", line 41, in <listcomp>
+    load_num_sequence_text(s, loader_type="csv_int") for s in shape_files
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/fileio/read_text.py", line 118, in load_num_sequence_text
+    d = read_2columns_text(path)
+  File "/juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/fileio/read_text.py", line 26, in read_2columns_text
+    with Path(path).open("r", encoding="utf-8") as f:
+  File "/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/pathlib.py", line 1252, in open
+    return io.open(self, mode, buffering, encoding, errors, newline,
+  File "/nlp/scr/bartelds/miniconda3/envs/asr-dro/lib/python3.9/pathlib.py", line 1120, in _opener
+    return self._accessor.open(self, flags, mode)
+FileNotFoundError: [Errno 2] No such file or directory: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/speech_shape'
+utt2category_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/utt2category
+# Accounting: time=12 threads=1
+# Ended (code 1) at Sat Oct  5 00:03:24 PDT 2024, elapsed time 12 seconds
+
+make: *** [exp040.mk:217: train_asr_mms_aleb_dro_0.001] Error 1
+###############################
+end time: 2024-10-05 00:03:31.446685
+elapsed time: 0:00:20.023158
+slurm submission log: 2024-10-05 00:05:57.022196
+created following sbatch script: 
+
+###############################
+
+#!/bin/bash
+
+#SBATCH --account=nlp
+#SBATCH --cpus-per-task=4
+#SBATCH --exclude=jagupard36,jagupard35
+#SBATCH --gres=gpu:a6000:1
+#SBATCH --job-name=train_asr_mms_aleb_dro_0.001
+#SBATCH --mail-type=ALL
+#SBATCH --mail-user=bartelds@stanford.edu
+#SBATCH --mem=64G
+#SBATCH --open-mode=append
+#SBATCH --output=results/exp_038/train_asr_mms_aleb_dro_0.001.txt
+#SBATCH --partition=jag-standard
+#SBATCH --time=14-0
+
+# activate your desired anaconda environment
+. /nlp/scr/bartelds/miniconda3/envs/asr-dro/etc/profile.d/conda.sh ; conda activate /nlp/scr/bartelds/miniconda3/envs/asr-dro
+
+# cd to working directory
+cd .
+
+# launch commands
+srun --unbuffered run_as_child_processes 'source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001'
+
+###############################
+
+submission to slurm complete!
+
+
+###############################
+slurm submission output
+
+Submitted batch job 8721599
+
+
+
+###############################
+
+###############################
+start time: 2024-10-05 00:15:54.106525
+machine: jagupard33.stanford.edu
+conda env: asr-dro
+###############################
+running following processes
+
+	source ../../../tools/activate_python.sh; make train_asr_mms_aleb_dro_0.001
+
+
+###############################
+command outputs: 
+
+
+/bin/sh: 1: source: not found
+./run_multi.sh --duration 1h --lid true --only_lid false --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --stage 11 --asr_tag train_asr_mms_aleb_dro_0.001 --asr_config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --batch_type duration_language 
+2024-10-05T00:15:54 (asr.sh:284:main) ./asr.sh --ngpu 1 --stage 11 --stop_stage 13 --nj 32 --inference_nj 4 --gpu_inference true --lang multilingual_1h__lid --inference_asr_model 30epoch.pth --local_data_opts --duration 1h --lid true --only_lid false --multilingual true --nlsyms_txt data/local/nlsyms.txt --specific_lang true --selected_languages pol,spa,ces,ron,nan,cmn --datasets M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs --nlsyms_txt data/local/nlsyms.txt --use_lm false --token_type char --feats_type raw --feats_normalize utterance_mvn --asr_config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --inference_config conf/decode_asr.yaml --train_set train_1h_lid --valid_set dev_1h_lid --test_sets dev_1h_lid test_1h_lid --asr_tag train_asr_mms_aleb_dro_0.001 --asr_stats_dir exp/asr_stats_multilingual_1h --local_score_opts true false normal --dumpdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040 --expdir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --asr_stats_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040 --batch_type duration_language
+2024-10-05T00:15:54 (asr.sh:322:main) Info: The valid_set 'dev_1h_lid' is included in the test_sets. '--eval_valid_set true' is set and 'dev_1h_lid' is removed from the test_sets
+2024-10-05T00:15:54 (asr.sh:566:main) Skipped stages:  6 7 8 9 14 15 16 
+2024-10-05T00:15:54 (asr.sh:1310:main) Stage 11: ASR Training: train_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid, valid_set=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid
+2024-10-05T00:15:54 (asr.sh:1409:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/run.sh'. You can resume the process from stage 11 using this script
+2024-10-05T00:15:54 (asr.sh:1413:main) ASR training started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log'
+2024-10-05 00:15:54,835 (launch:94) INFO: /nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/launch.py --cmd 'run.pl --name /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log' --log /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log --ngpu 1 --num_nodes 1 --init_file_prefix /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/.dist_init_ --multiprocessing_distributed true -- python3 -m espnet2.bin.asr_train --use_preprocessor true --bpemodel none --token_type char --token_list data/multilingual_1h__lid_token_list/char/tokens.txt --non_linguistic_symbols data/local/nlsyms.txt --cleaner none --g2p none --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/wav.scp,speech,sound --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/speech_shape --resume true --ignore_init_mismatch false --fold_length 80000 --output_dir /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001 --batch_type duration_language --config conf/exp_040/train_asr_mms_aleb_dro_0.001.yaml --frontend_conf fs=16k --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/wav.scp,speech,sound --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/speech_shape --fold_length 150 --train_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/train_1h_lid/text,text,text --train_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/train/text_shape.char --valid_data_path_and_name_and_type /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/dump/_exp_040/raw/dev_1h_lid/text,text,text --valid_shape_file /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/valid/text_shape.char
+2024-10-05 00:15:54,992 (launch:348) INFO: log file: /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/train.log
+2024-10-05T08:13:28 (asr.sh:1483:main) Stage 12: Decoding: training_dir=/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001
+2024-10-05T08:13:28 (asr.sh:1511:main) Generate '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/run.sh'. You can resume the process from stage 12 using this script
+2024-10-05T08:13:28 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/org/dev_1h_lid/logdir/asr_inference.*.log'
+2024-10-05T08:24:01 (asr.sh:1576:main) Decoding started... log: '/nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/logdir/asr_inference.*.log'
+2024-10-05T08:34:50 (asr.sh:1623:main) Stage 13: Scoring
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-05T08:34:59 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/org/dev_1h_lid/score_cer/result.txt
+|     SPKR                     |      # Snt          # Wrd      |      Corr             Sub              Del             Ins              Err           S.Err      |
+|     Sum/Avg                  |       651           29316      |      89.4             7.5              3.1             2.2             12.8            74.2      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-05T08:35:07 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/org/dev_1h_lid/score_wer/result.txt
+|     SPKR                     |      # Snt          # Wrd      |      Corr             Sub              Del             Ins              Err           S.Err      |
+|     Sum/Avg                  |       651            4590      |      68.4            28.5              3.1             3.0             34.6            74.2      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type char --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-05T08:35:14 (asr.sh:1713:main) Write cer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_cer/result.txt
+|     SPKR                     |     # Snt          # Wrd      |     Corr              Sub             Del             Ins             Err           S.Err      |
+|     Sum/Avg                  |      621           30328      |     89.7              7.3             3.0             1.8            12.1            75.5      |
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --cleaner none --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true
+/nlp/scr/bartelds/miniconda3/envs/asr-dro/bin/python3 /juice2/scr2/bartelds/git/asr-dro/espnet/espnet2/bin/tokenize_text.py -f 2- --input - --output - --token_type word --non_linguistic_symbols data/local/nlsyms.txt --remove_non_linguistic_symbols true --cleaner none
+2024-10-05T08:35:22 (asr.sh:1713:main) Write wer result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_wer/result.txt
+|     SPKR                     |     # Snt          # Wrd      |     Corr              Sub             Del             Ins             Err           S.Err      |
+|     Sum/Avg                  |      621            4690      |     71.2             25.9             2.9             3.2            32.0            75.5      |
+2024-10-05T08:35:22 (score.sh:31:main) Linguistic scoring started
+2024-10-05T08:35:22 (score.sh:32:main) local/score.sh true false normal /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001
+[warning] linguistic information not loading
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_cer...
+Parsing TER results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_wer...
+Parsing LID results in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid...
+2024-10-05T08:35:22 (score.sh:75:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_lid/few_shot/trained/scores.txt
+Acc: 97.10%
+2024-10-05T08:35:23 (score.sh:97:main) Write result in /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch/test_1h_lid/score_cer/few_shot/trained/result.txt
+|      SPKR                      |      # Snt            # Wrd       |      Corr               Sub               Del               Ins               Err             S.Err       |
+|      Sum/Avg                   |       621             30328       |      89.7               7.3               3.0               1.8              12.1              75.5       |
+<!-- Generated by scripts/utils/show_asr_result.sh -->
+# RESULTS
+## Environments
+- date: `Sat Oct  5 08:35:24 PDT 2024`
+- python version: `3.9.19 (main, May  6 2024, 19:43:03)  [GCC 11.2.0]`
+- espnet version: `espnet 202402`
+- pytorch version: `pytorch 2.1.0`
+- Git hash: `825accb575bef9be7a57f549589200babb711426`
+  - Commit date: `Mon Aug 5 09:07:11 2024 -0700`
+
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_30epoch/test_1h_lid|621|4690|71.2|25.9|2.9|3.2|32.0|75.5|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|decode_asr_asr_model_30epoch/test_1h_lid|621|30328|89.7|7.3|3.0|1.8|12.1|75.5|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+## /nlp/scr/bartelds/git/asr-dro/espnet/egs2/asr_dro/asr1/exp/_exp_040/asr_train_asr_mms_aleb_dro_0.001/decode_asr_asr_model_30epoch
+### WER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|651|4590|68.4|28.5|3.1|3.0|34.6|74.2|
+
+### CER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+|org/dev_1h_lid|651|29316|89.4|7.5|3.1|2.2|12.8|74.2|
+
+### TER
+
+|dataset|Snt|Wrd|Corr|Sub|Del|Ins|Err|S.Err|
+|---|---|---|---|---|---|---|---|---|
+2024-10-05T08:35:25 (asr.sh:1864:main) Successfully finished. [elapsed=29971s]
+###############################
+end time: 2024-10-05 08:35:31.850728
+elapsed time: 8:19:37.744203

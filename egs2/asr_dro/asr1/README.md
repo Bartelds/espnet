@@ -1,3 +1,71 @@
+# ASR DRO
+
+# Results
+[results](results)
+
+# Steps to reproduce
+## Preprocess Data
+```
+make preprocess
+make preprocess-groups
+```
+
+## Train in each experiment condition
+See Also: "SLURM Cluster Utilities" below
+- Baseline Conditions
+```
+make train-xslr-ctc-aleb
+make train-xslr-ctc-sceb
+```
+
+- DRO Conditions with dro_step_size=0.1
+```
+make train-xslr-ctc-dro-aleb
+make train-xslr-ctc-dro-rm-aleb
+make train-xslr-ctc-dro-sceb
+make train-xslr-ctc-dro-rm-sceb
+```
+
+- DRO Conditions with dro_step_size=0.01
+```
+make train-xslr-ctc-dro-aleb-hptune-001
+make train-xslr-ctc-dro-rm-aleb-hptune-001
+make train-xslr-ctc-dro-sceb-hptune-001
+make train-xslr-ctc-dro-rm-sceb-hptune-001
+```
+
+## Evaluate
+```
+make eval-all
+```
+
+# SLURM Cluster Utilities
+## Submit jobs to cluster (see also cluster_info.mk)
+```
+make submit-target-to-cluster TARGET=train-xslr-ctc-aleb
+```
+
+## Inspect cluster jobs
+```
+make show-jobs
+```
+
+## Changes to DRO Organization
+1. In COMMON_ARGS inside the Makefile, set `batch_type` to `duration_language` to use duration-equalized batch sampling.`batch_type = language` replicates the previous sampler.
+2. Both of these samplers now dump a file internally containing information about the number of batches per group, which can be used to initialize the group DRO weights if required. 
+3. DROCTCLoss now has a `init_weights` function that loads the number of batches per group information, and also importantly the mapping from examples to their groups from disk. This makes our DRO implementation generalizable to arbitrary group assignments. The forward function in the loss now also passes the utt_ids of examples in the batch, which is used to recover their groups for computation.
+4. For Moussa: I know you do not like reading files inside the loss function, but this is no different from reading these files outside the loss function and passing their values to `init_weights`. This organization is made necessary by the current code structure, I would welcome you to find alternatives if you want:
+    i. The model and loss function is built before the data is loaded. Therefore, this information cannot be passed to `__init__` of the loss function.
+    ii. There is no easy way of passing group-wise batch counts directly from the batch sampler to the loss function. The batch_sampler *only* returns an iterator over the files that are supposed to be contained in a batch, which is then passed to the iterator factory and nothing else. 
+    iii. Because the batch_sampler dumps the batch count information indexed by the language names, whereas the old DRO implementation used the language id as the group, we need to get the groups from the utt_id and utt2category files now. There is no easy way of accessing the mapping from language id to language name, and I think my refactoring is more general than the previous version.
+5. New parameters in the DROCTCLoss:
+    i. `dro_q_epsilon`: the constant term added to keep DRO weights non-zero
+    ii. `warmup_steps`: if non-zero, the number of steps before DRO starts being used to return the losses
+    iii. `use_running_mean`: my running mean update idea for DRO
+    iv. `running_mean_window`: size of window for running mean computation
+    v. `group_size_init`: if False, DRO weights are initialized with equal values, otherwise, the group batch count information is used.
+
+
 # Multilingual SUPERB (ML-SUPERB) benchmark
 
 ## Basic Information

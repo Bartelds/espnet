@@ -63,7 +63,7 @@ local_data_opts+=" --multilingual ${multilingual} --single_lang ${single_lang} -
     --inference_nj ${inference_nj} \
     --gpu_inference ${gpu_inference} \
     --lang ${lang} \
-    --inference_asr_model valid.loss.ave.pth \
+    --inference_asr_model valid.loss.best.pth \
     --local_data_opts "${local_data_opts}" \
     --nlsyms_txt ${nlsyms_txt} \
     --use_lm false \
