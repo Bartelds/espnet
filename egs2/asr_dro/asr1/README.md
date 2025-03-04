@@ -55,28 +55,54 @@ After downloading and extracting the dataset, update the dataset path in `db.sh`
 
 ### Configuration
 
-Configuration files for model training and inference are located in the `conf/` directory. For example, `mms_example.yaml` contains the CTC-DRO related settings:
+Configuration files for model training and inference are located in the `conf/` directory. We expect configs for different language subsets and settings to be organized in separate folders, for example, the configs for Experiment 1 may be stored inside `conf/exp001/`. We provide example configs for a non-DRO baseline (`mms_example_baseline.yaml` and `xlsr_example_baseline.yaml`), Group DRO (`mms_example_group_dro.yaml` and `xlsr_example_group_dro.yaml`) and CTC-DRO (`mms_example_ctc_dro.yaml` and `xlsr_example_ctc_dro.yaml`) for both XLS-R and MMS models.
+
+The CTC-DRO related settings are as follows:
 ```
 ctc_conf:
+    accumulation: true
+    agg: sum
     ctc_type: droctc
     dro_group_count: 6
-    dro_step_size: 0.01
-    dro_q_epsilon: 1e-10
-    init_strategy: uniform
+    dro_q_epsilon: 1.0e-10
+    dro_step_size: 0.0001
+    smoothing: 0.1
     max_epoch: 40
+    normalize_grad: true
     num_iters_per_epoch: 1200
-    laplace_smoothing: 0.1
 ```
+
+On the other hand, a Group DRO config looks like
+```
+ctc_conf:
+    accumulation: false
+    agg: mean
+    ctc_type: droctc
+    dro_group_count: 6
+    dro_q_epsilon: 1.0e-10
+    dro_step_size: 0.0001
+    smoothing: 0.0
+    max_epoch: 40
+    normalize_grad: false
+    num_iters_per_epoch: 1200
+```
+
 
 Other training hyperparameters (e.g., `accum_grad`, `batch_size`, `encoder_conf`, `optim_conf`, etc.) are also specified in these configuration files.
 
+Config files can also automatically be created for hyperparameter sweeps by changing the global variables at the top of `lr_sweep_baseline.py`, `lr_sweep_group_dro.py` and `lr_sweep_ctc_dro.py` and running these files.
+
+Supported hyperparameter options for CTC-DRO include the step size and smoothing hyperparameter. The learning rate for the baseline and step size for Group DRO can also be swept over using these files.
 ---
 
 ## Running experiments
 
-Experiments are controlled via Makefiles. An example can be found in `example.mk`.
+Experiments are controlled via Makefiles. 
+Before running any experiments, please populate `cluster_info.mk` with the `DUMP_DIR_BASE` (location of preprocessed data files, example: `scr/dump`), `EXP_DIR_BASE` (location to save models, example: `scr/exp`) and `ASR_STATS_DIR_BASE` (location containing statistics for the dataset, typically the same as `EXP_DIR_BASE`, example: `scr/exp`).
 
-Below are example commands for pre-processing data, and training and evaluating models.
+An example Makefile can be found in `exp001_m.mk`. To run experiments without DRO, `create_makefile_baseline.py` can be run after setting appropriate hyperparameters at the top of the file, which creates the Makefile `exp001_auto_baseline.mk`. Similarly, for experiments with Group DRO, `create_makefile_group_dro.py` creates `exp001_auto_group_dro.mk` and for experiments with CTC-DRO, `create_makefile_ctc_dro.py` creates `exp001_auto_ctc_dro.mk`. These files can then be included inside `Makefile` to run experiments.
+
+The commands for pre-processing data before training are:
 
 ### Pre-processing
 ```bash
@@ -90,7 +116,7 @@ Supported hyperparameter options include:
 - Step sizes: `0.001`, `0.0001`
 - Smoothing values: `0.1`, `0.5`, `1.0`
 
-To train MMS or XLS-R models with a given step-size and smoothing term, use:
+To train MMS or XLS-R models with CTC-DRO, a given step-size and smoothing term, use:
 ```bash
 make train_asr_<model>_aleb_dro_<step-size>_la_<smoothing>
 ```
@@ -110,6 +136,26 @@ For example, to evaluate models with a step-size of `0.001` and a smoothing term
 ```bash
 make eval_asr_mms_aleb_dro_0.001_la_0.1
 make eval_asr_xlsr_aleb_dro_0.001_la_0.1
+```
+
+To train MMS or XLS-R models with Group DRO, and a given step-size, use:
+```bash
+make train_asr_<model>_aleb_dro_<step-size>_base
+```
+
+To evaluate, 
+```bash
+make eval_asr_<model>_aleb_dro_<step-size>_base
+```
+
+To train MMS or XLS-R models without DRO, and a given learning rate, use:
+```bash
+make train_<model>_ctc_aleb_<learning_rate>
+```
+
+To evaluate, 
+```bash
+make eval_<model>_ctc_aleb_<learning_rate>
 ```
 
 Evaluation results will be saved in the `results/EXPERIMENT_ID/` directory.
