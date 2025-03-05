@@ -1,7 +1,7 @@
 # CTC-DRO: Robust Optimization for Reducing Language Disparities in Speech Recognition
 Code associated with the paper: CTC-DRO: Robust Optimization for Reducing Language Disparities in Speech Recognition.
 
-**Abstract:** Modern deep learning models often achieve high overall performance, but consistently fail on specific subgroups. Group distributionally robust optimization (group DRO) addresses this problem by minimizing the worst-group loss, but it fails when group losses misrepresent performance differences between groups. This is common in domains like speech, where the widely used connectionist temporal classification (CTC) loss scales with input length and varies with linguistic and acoustic properties, leading to spurious differences between group losses. We present CTC-DRO, which addresses the shortcomings of the group DRO objective by smoothing the group weight update to prevent overemphasis on consistently high-loss groups, while using input length-matched batching to mitigate CTC's scaling issues. We evaluate CTC-DRO on the task of multilingual automatic speech recognition (ASR) across five language sets from the ML-SUPERB 2.0 benchmark. CTC-DRO consistently outperforms group DRO and CTC-based baseline models, reducing the worst-language error by up to 65.9% and the average error by up to 47.7%. CTC-DRO can be applied to ASR with minimal computational costs, and offers the potential for reducing group disparities in other domains with similar challenges.
+**Abstract:** Modern deep learning models often achieve high overall performance, but consistently fail on specific subgroups. Group distributionally robust optimization (group DRO) addresses this problem by minimizing the worst-group loss, but it fails when group losses misrepresent performance differences between groups. This is common in domains like speech, where the widely used connectionist temporal classification (CTC) loss scales with input length and varies with linguistic and acoustic properties, leading to spurious differences between group losses. We present CTC-DRO, which addresses the shortcomings of the group DRO objective by smoothing the group weight update to prevent overemphasis on consistently high-loss groups, while using input length-matched batching to mitigate CTC's scaling issues. We evaluate CTC-DRO on the task of multilingual automatic speech recognition (ASR) across five language sets from the ML-SUPERB 2.0 benchmark. CTC-DRO consistently outperforms group DRO and CTC-based baseline models, reducing the worst-language error by up to 47.1% and the average error by up to 32.9%. CTC-DRO can be applied to ASR with minimal computational costs, and offers the potential for reducing group disparities in other domains with similar challenges.
 
 ---
 
@@ -23,13 +23,13 @@ Code associated with the paper: CTC-DRO: Robust Optimization for Reducing Langua
 
 ## Requirements
 
-- Python 3.7+
-- PyTorch 1.10+
+- Python 3.7 or higher
+- PyTorch 1.10 or higher
 - ESPnet
 - Transformers (for pre-trained models)
 - SCTK (for scoring)
 
-See `requirements.txt` for the full list of dependencies.
+For a complete list of dependencies, please refer to the `requirements.txt` file.
 
 ---
 
@@ -43,7 +43,7 @@ pip install -r requirements.txt
 
 Note: Ensure that your [ESPnet installation](https://espnet.github.io/espnet/installation.html) is correctly configured before proceeding.
 
-Finally, run
+Finally, activate the Python environment:
 ```bash
 source ../../../tools/activate_python.sh
 ```
@@ -54,16 +54,31 @@ source ../../../tools/activate_python.sh
 
 This repository uses the [ML-SUPERB 2.0 dataset](https://github.com/espnet/espnet/tree/master/egs2/ml_superb/asr1).
 
-After downloading and extracting the dataset, update the dataset path in `db.sh`.
+After downloading and extracting the dataset, update the dataset path (i.e., `ML-SUPERB` variable) in `db.sh`.
 
 ---
 
-### Configuration
+## Configuration
 
-Configuration files for model training and inference are located in the `conf/` directory. We expect configs for different language subsets and settings to be organized in separate folders, for example, the configs for Experiment 1 may be stored inside `conf/exp_001/`. We provide example configs for a non-DRO baseline (`mms_example_baseline.yaml` and `xlsr_example_baseline.yaml`), Group DRO (`mms_example_group_dro.yaml` and `xlsr_example_group_dro.yaml`) and CTC-DRO (`mms_example_ctc_dro.yaml` and `xlsr_example_ctc_dro.yaml`) for both XLS-R and MMS models. Please also copy `train_asr.yaml` inside this folder, it contains the config for preprocessing files.
+Configuration files for model training and inference are located in the `conf/` directory. We expect that configurations for different language subsets and experimental settings will be organized in separate subfolders. For example, the configuration files for Experiment 1 may be stored in `conf/exp_001/`.
 
-The CTC-DRO related settings are as follows:
-```
+Within the `conf/` directory, you will find example configuration files for the three training approaches:
+- **CTC baseline:**  
+  - `mms_example_baseline.yaml`  
+  - `xlsr_example_baseline.yaml`
+- **Group DRO:**  
+  - `mms_example_group_dro.yaml`  
+  - `xlsr_example_group_dro.yaml`
+- **CTC-DRO:**  
+  - `mms_example_ctc_dro.yaml`  
+  - `xlsr_example_ctc_dro.yaml`
+
+Additionally, please copy the `train_asr.yaml` file into each experiment folder as it contains the configuration for data preprocessing.
+
+Below are example configuration snippets:
+
+**CTC-DRO:**
+```yaml
 ctc_conf:
     accumulation: true
     agg: sum
@@ -75,8 +90,8 @@ ctc_conf:
     normalize_grad: true
 ```
 
-On the other hand, a Group DRO config looks like
-```
+**Group DRO:**
+```yaml
 ctc_conf:
     accumulation: false
     agg: mean
@@ -88,21 +103,23 @@ ctc_conf:
     normalize_grad: false
 ```
 
-
-Other training hyperparameters (e.g., `accum_grad`, `batch_size`, `encoder_conf`, `optim_conf`, etc.) are also specified in these configuration files.
-
-Config files can also automatically be created for hyperparameter sweeps by changing the global variables at the top of `lr_sweep_baseline.py`, `lr_sweep_group_dro.py` and `lr_sweep_ctc_dro.py` and running these files.
-
-Supported hyperparameter options for CTC-DRO include the step size and smoothing hyperparameter. The learning rate for the baseline and step size for Group DRO can also be swept over using these files.
+Other training hyperparameters (e.g., `accum_grad`, `batch_size`, `encoder_conf`, `optim_conf`, etc.) are defined within these configuration files. For hyperparameter sweeps, adjust the global variables at the top of `lr_sweep_baseline.py`, `lr_sweep_group_dro.py`, and `lr_sweep_ctc_dro.py`, and then run these scripts to automatically generate new configuration files.
 
 ---
 
 ## Running experiments
 
-Experiments are controlled via Makefiles. 
-Before running any experiments, please populate `cluster_info.mk` with the `DUMP_DIR_BASE` (location of preprocessed data files, example: `scr/dump`), `EXP_DIR_BASE` (location to save models, example: `scr/exp`) and `ASR_STATS_DIR_BASE` (location containing statistics for the dataset, typically the same as `EXP_DIR_BASE`, example: `scr/exp`).
+Experiments are controlled via Makefiles. Before running any experiments, populate `cluster_info.mk` with:
+- `DUMP_DIR_BASE`: Location of preprocessed data files (e.g., `scr/dump`)
+- `EXP_DIR_BASE`: Directory to save models (e.g., `scr/exp`)
+- `ASR_STATS_DIR_BASE`: Directory containing dataset statistics (typically the same as `EXP_DIR_BASE`)
 
-An example Makefile can be found in `exp001_m.mk`. To run experiments without DRO, `create_makefile_baseline.py` can be run after setting appropriate hyperparameters at the top of the file, which creates the Makefile `exp001_auto_baseline.mk`. Similarly, for experiments with Group DRO, `create_makefile_group_dro.py` creates `exp001_auto_group_dro.mk` and for experiments with CTC-DRO, `create_makefile_ctc_dro.py` creates `exp001_auto_ctc_dro.mk`. These files can then be included inside `Makefile` to run experiments.
+For each experiment, generate the appropriate Makefile:
+- **CTC baseline:** Run `create_makefile_baseline.py` to create `exp001_auto_baseline.mk`
+- **Group DRO:** Run `create_makefile_group_dro.py` to create `exp001_auto_group_dro.mk`
+- **CTC-DRO:** Run `create_makefile_ctc_dro.py` to create `exp001_auto_ctc_dro.mk`
+
+An example Makefile is provided as `exp001_m.mk`. Include the generated Makefile in the main `Makefile` to run experiments.
 
 The commands for pre-processing data before training are:
 
@@ -118,45 +135,33 @@ Supported hyperparameter options include:
 - Step sizes: `0.001`, `0.0001`
 - Smoothing values: `0.1`, `0.5`, `1.0`
 
-To train MMS or XLS-R models with CTC-DRO, a given step-size and smoothing term, use:
+To train MMS or XLS-R models with CTC-DRO:
 ```bash
-make train_asr_<model>_aleb_dro_<step-size>_la_<smoothing>
+make train_asr_mms_aleb_dro_<step-size>_la_<smoothing>
+make train_asr_xlsr_aleb_dro_<step-size>_la_<smoothing>
 ```
 
-For example, to train models with a step-size of `0.001` and a smoothing term of `0.1`:
+For example, with a step size of 0.001 and smoothing of 0.1:
 ```bash
 make train_asr_mms_aleb_dro_0.001_la_0.1
 make train_asr_xlsr_aleb_dro_0.001_la_0.1
 ```
 
-Evaluation commands follow the same pattern:
-```bash
-make eval_asr_<model>_aleb_dro_<step-size>_la_<smoothing>
-```
-
-For example, to evaluate models with a step-size of `0.001` and a smoothing term of `0.1`:
+To evaluate these models:
 ```bash
 make eval_asr_mms_aleb_dro_0.001_la_0.1
 make eval_asr_xlsr_aleb_dro_0.001_la_0.1
 ```
 
-To train MMS or XLS-R models with Group DRO, and a given step-size, use:
+To train and evaluate models with Group DRO:
 ```bash
 make train_asr_<model>_aleb_dro_<step-size>_base
-```
-
-To evaluate, 
-```bash
 make eval_asr_<model>_aleb_dro_<step-size>_base
 ```
 
-To train MMS or XLS-R models without DRO, and a given learning rate, use:
+To train and evaluate baseline models, specify the chosen learning rate:
 ```bash
 make train_<model>_ctc_aleb_<learning_rate>
-```
-
-To evaluate, 
-```bash
 make eval_<model>_ctc_aleb_<learning_rate>
 ```
 
@@ -164,31 +169,65 @@ Evaluation results will be saved in the `results/EXPERIMENT_ID/` directory.
 
 ### Customization
 
-You can customize the languages for training and evaluation by modifying the `SELECTED_LANGUAGES` and `DATASETS` variables in the Makefile:
-```
+You can customize the languages for training and evaluation by modifying the `SELECTED_LANGUAGES` and `DATASETS` variables in the Makefile.
+For example:
+```makefile
 SELECTED_LANGUAGES=pol,spa,ces,ron,nan,cmn
 DATASETS=M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs
 ```
 Modify the experiment settings in the Makefile:
-```
+```makefile
 EXPERIMENT_ID=exp_001  # Experiment identifier
 DATA_SUBSET=1h         # Data duration (10min or 1h)
 ```
 
 ---
 
-## Repository structure
-```
-├── conf/                       # YAML configuration files for training and inference (including CTC-DRO parameters)
-├── data/                       # Data preparation scripts and dataset directories
-├── dump/                       # Model dump directories
-├── exp/                        # Experiment outputs and logs
-├── local/                      # Local helper scripts (e.g., scoring)
-├── scripts/                    # Additional helper scripts
-├── Makefile                    # Top-level Makefile for experiment management
-├── example.mk                  # Experiment configuration (customize as needed)
-├── requirements.txt            # Python dependencies
-├── run_multi.sh                # Script that wraps the training pipeline
-├── db.sh                       # Dataset path configuration file
-└── README.md                   # Main README file
-```
+## Released models
+
+The following table lists the released models. Each model is available for download via Hugging Face.
+
+| Language Set      | Model Type | Method      | Download Link                                                             |
+|-------------------|------------|-------------|---------------------------------------------------------------------------|
+| Set 1             | MMS        | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_mms_set_1)        |
+| Set 1             | MMS        | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_mms_set_1)           |
+| Set 1             | MMS        | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_mms_set_1)             |
+| Set 1             | XLS-R      | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_xlsr_set_1)       |
+| Set 1             | XLS-R      | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_xlsr_set_1)          |
+| Set 1             | XLS-R      | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_xlsr_set_1)            |
+| Set 2             | MMS        | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_mms_set_2)        |
+| Set 2             | MMS        | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_mms_set_2)           |
+| Set 2             | MMS        | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_mms_set_2)             |
+| Set 2             | XLS-R      | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_xlsr_set_2)       |
+| Set 2             | XLS-R      | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_xlsr_set_2)          |
+| Set 2             | XLS-R      | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_xlsr_set_2)            |
+| Set 3             | MMS        | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_mms_set_3)        |
+| Set 3             | MMS        | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_mms_set_3)           |
+| Set 3             | MMS        | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_mms_set_3)             |
+| Set 3             | XLS-R      | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_xlsr_set_3)       |
+| Set 3             | XLS-R      | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_xlsr_set_3)          |
+| Set 3             | XLS-R      | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_xlsr_set_3)            |
+| Set 4             | MMS        | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_mms_set_4)        |
+| Set 4             | MMS        | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_mms_set_4)           |
+| Set 4             | MMS        | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_mms_set_4)             |
+| Set 4             | XLS-R      | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_xlsr_set_4)       |
+| Set 4             | XLS-R      | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_xlsr_set_4)          |
+| Set 4             | XLS-R      | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_xlsr_set_4)            |
+| Set 5             | MMS        | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_mms_set_5)        |
+| Set 5             | MMS        | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_mms_set_5)           |
+| Set 5             | MMS        | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_mms_set_5)             |
+| Set 5             | XLS-R      | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_xlsr_set_5)       |
+| Set 5             | XLS-R      | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_xlsr_set_5)          |
+| Set 5             | XLS-R      | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_xlsr_set_5)            |
+| Set 1 (all)       | MMS        | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_mms_set_1-extra)  |
+| Set 1 (all)       | MMS        | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_mms_set_1-extra)     |
+| Set 1 (all)       | MMS        | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_mms_set_1-extra)       |
+| Set 1 (all)       | XLS-R      | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_xlsr_set_1-extra) |
+| Set 1 (all)       | XLS-R      | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_xlsr_set_1-extra)    |
+| Set 1 (all)       | XLS-R      | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_xlsr_set_1-extra)      |
+| Set 2 (all)       | MMS        | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_mms_set_2-extra)  |
+| Set 2 (all)       | MMS        | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_mms_set_2-extra)     |
+| Set 2 (all)       | MMS        | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_mms_set_2-extra)       |
+| Set 2 (all)       | XLS-R      | Baseline    | [Download](https://huggingface.co/bartelds/ctc-baseline_xlsr_set_2-extra) |
+| Set 2 (all)       | XLS-R      | Group DRO   | [Download](https://huggingface.co/bartelds/group-dro_xlsr_set_2-extra)    |
+| Set 2 (all)       | XLS-R      | CTC-DRO     | [Download](https://huggingface.co/bartelds/ctc-dro_xlsr_set_2-extra)      |
