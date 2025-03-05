@@ -1,5 +1,4 @@
 #!/bin/bash
-# note: set USER_SCTK_INSTALL_DIR to a custom path as needed
 
 if [ $USER_SCTK_INSTALL_DIR]; then
     INSTALL_DIR=$USER_SCTK_INSTALL_DIR
@@ -10,14 +9,11 @@ fi
 
 # Function to check if sclite is available in the custom installation directory
 check_sclite() {
-    # Custom installation directory for SCTK
-    # INSTALL_DIR="/afs/cs.stanford.edu/u/ananjan/asrdro/espnet/tools/installers/sctk"
     if [ ! -f "$INSTALL_DIR/bin/sclite" ]; then
         echo "sclite could not be found in $INSTALL_DIR. Installing SCTK..."
         install_sctk
     else
         echo "sclite is already installed in $INSTALL_DIR."
-        # Add SCTK bin to PATH (consider adding this to your .bashrc or .profile for persistence)
         export PATH="$INSTALL_DIR/bin:$PATH"
     fi
 }
@@ -25,36 +21,29 @@ check_sclite() {
 # Function to install SCTK
 install_sctk() {
     if [ ! -d "$INSTALL_DIR" ]; then
-        # Create the directory and navigate to it
         mkdir -p "$INSTALL_DIR"
         cd "$INSTALL_DIR" || exit
         
-        # Clone the SCTK repository
         git clone https://github.com/usnistgov/SCTK.git .
         
-        # Build and install SCTK
         make config
         make all
         make check
         make install
         make doc
         
-        # Add SCTK bin to PATH for the current session
         export PATH="$INSTALL_DIR/bin:$PATH"
         echo "SCTK installed successfully in $INSTALL_DIR."
         
-        # Optionally add SCTK bin to PATH in .bashrc for persistence
-        # echo 'export PATH="$INSTALL_DIR/bin:$PATH"' >> "$HOME/.bashrc"
     else
         echo "SCTK is already installed in $INSTALL_DIR."
     fi
 }
 
-# Ensure the script adds SCTK to PATH and checks for sclite correctly
 check_sclite
 
-# Default values
-exp_dir="/nlp/scr/ananjan/asrdro/exp_subset_20/asr_train_asr_xlsr_dro_01_language/decode_asr_asr_model_valid.loss.ave/test_1h_lid/score_cer/few_shot/trained"
+# Put default exp_dir here
+exp_dir="/scr/exp001"
 
 # Parse command line arguments
 while [[ "$#" -gt 0 ]]; do
@@ -100,7 +89,6 @@ echo "Running sclite..."
 result_file="${exp_dir}/result_mod.txt"
 stat_file="${exp_dir}/stats.txt"
 sclite -r "${ref_mod}" trn -h "${hyp_mod}" trn -i rm -o all stdout > "${result_file}"
-# /nlp/scr/bartelds/git/espnet/egs2/ml_superb/asr1/sctk/bin/sclite -r "${ref_mod}" trn -h "${hyp_mod}" trn -i rm -o dtl stdout > "${stat_file}"
 echo "Sclite results saved to ${result_file}"
 
 # Extract and print summary statistics before cleaning
@@ -110,16 +98,12 @@ grep -e Avg -e SPKR -m 2 "${result_file}"
 
 echo "Cleaning results_mod.txt file..."
 RESULT_MOD_FILE="${exp_dir}/result_mod.txt"
-# Use sed to remove '*' and '+' characters from the file
 sed -i 's/[*+]/ /g' "$RESULT_MOD_FILE"
 echo "Cleaned ${RESULT_MOD_FILE}."
 
 # Extract and print summary statistics before cleaning
 echo "Summary Statistics After Cleaning:"
 grep -e Avg -e SPKR -m 2 "${result_file}"
-
-# echo "Plotting scores per language family..."
-# python local/multi_superb_score_details.py --result_file "${result_file}"
 
 echo "Computing SD across languages..."
 python local/multi_superb_score_sd.py --result_file "${result_file}"
