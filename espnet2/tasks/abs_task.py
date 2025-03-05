@@ -1429,12 +1429,11 @@ class AbsTask(ABC):
 
             # at this stage, the category2numbatches file has been created
             # init DROCTC with this
-            if args.batch_type in ["language", "duration_language"]:
-                if args.ctc_conf["ctc_type"] == 'droctc':
-                    # load both number of batches per group and the group mapping
-                    model.ctc.ctc_loss.init_weights(
-                    Path(args.train_data_path_and_name_and_type[0][0]).parent,
-                    Path(args.valid_data_path_and_name_and_type[0][0]).parent
+            if args.ctc_conf["ctc_type"] == 'droctc':
+                # load both number of batches per group and the group mapping
+                model.ctc.ctc_loss.init_weights(
+                Path(args.train_data_path_and_name_and_type[0][0]).parent,
+                Path(args.valid_data_path_and_name_and_type[0][0]).parent
             )
             
 

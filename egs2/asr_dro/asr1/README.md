@@ -43,6 +43,11 @@ pip install -r requirements.txt
 
 Note: Ensure that your [ESPnet installation](https://espnet.github.io/espnet/installation.html) is correctly configured before proceeding.
 
+Finally, run
+```bash
+source ../../../tools/activate_python.sh
+```
+
 ---
 
 ## Dataset
@@ -55,7 +60,7 @@ After downloading and extracting the dataset, update the dataset path in `db.sh`
 
 ### Configuration
 
-Configuration files for model training and inference are located in the `conf/` directory. We expect configs for different language subsets and settings to be organized in separate folders, for example, the configs for Experiment 1 may be stored inside `conf/exp001/`. We provide example configs for a non-DRO baseline (`mms_example_baseline.yaml` and `xlsr_example_baseline.yaml`), Group DRO (`mms_example_group_dro.yaml` and `xlsr_example_group_dro.yaml`) and CTC-DRO (`mms_example_ctc_dro.yaml` and `xlsr_example_ctc_dro.yaml`) for both XLS-R and MMS models.
+Configuration files for model training and inference are located in the `conf/` directory. We expect configs for different language subsets and settings to be organized in separate folders, for example, the configs for Experiment 1 may be stored inside `conf/exp_001/`. We provide example configs for a non-DRO baseline (`mms_example_baseline.yaml` and `xlsr_example_baseline.yaml`), Group DRO (`mms_example_group_dro.yaml` and `xlsr_example_group_dro.yaml`) and CTC-DRO (`mms_example_ctc_dro.yaml` and `xlsr_example_ctc_dro.yaml`) for both XLS-R and MMS models. Please also copy `train_asr.yaml` inside this folder, it contains the config for preprocessing files.
 
 The CTC-DRO related settings are as follows:
 ```
@@ -67,9 +72,7 @@ ctc_conf:
     dro_q_epsilon: 1.0e-10
     dro_step_size: 0.0001
     smoothing: 0.1
-    max_epoch: 40
     normalize_grad: true
-    num_iters_per_epoch: 1200
 ```
 
 On the other hand, a Group DRO config looks like
@@ -82,9 +85,7 @@ ctc_conf:
     dro_q_epsilon: 1.0e-10
     dro_step_size: 0.0001
     smoothing: 0.0
-    max_epoch: 40
     normalize_grad: false
-    num_iters_per_epoch: 1200
 ```
 
 
@@ -93,6 +94,7 @@ Other training hyperparameters (e.g., `accum_grad`, `batch_size`, `encoder_conf`
 Config files can also automatically be created for hyperparameter sweeps by changing the global variables at the top of `lr_sweep_baseline.py`, `lr_sweep_group_dro.py` and `lr_sweep_ctc_dro.py` and running these files.
 
 Supported hyperparameter options for CTC-DRO include the step size and smoothing hyperparameter. The learning rate for the baseline and step size for Group DRO can also be swept over using these files.
+
 ---
 
 ## Running experiments
@@ -169,7 +171,7 @@ DATASETS=M-AILABS,voxforge,commonvoice,fleurs,commonvoice,fleurs
 ```
 Modify the experiment settings in the Makefile:
 ```
-EXPERIMENT_ID=exp_000  # Experiment identifier
+EXPERIMENT_ID=exp_001  # Experiment identifier
 DATA_SUBSET=1h         # Data duration (10min or 1h)
 ```
 

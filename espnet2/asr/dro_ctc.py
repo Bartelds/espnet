@@ -66,7 +66,7 @@ class DROCTCLoss(torch.nn.Module):
         losses = F.ctc_loss(
             log_probs, 
             targets, input_lengths, target_lengths, 
-            self.blank, reduction='none', # TODO: what is expected by the caller?
+            self.blank, reduction='none',
             zero_infinity=self.zero_infinity
         )
 
@@ -144,6 +144,11 @@ class DROCTCLoss(torch.nn.Module):
                 losses[ix] * self.dro_q[batch_lang_q_indices[ix]] 
                 for ix in range(losses.shape[0])
             ])
+        
+        if not valid:
+            return dro_losses
+        else:
+            return losses
 
     def normalize_dro_q(self):
         self.dro_q += self.dro_q_epsilon # to prevent zero weights

@@ -13,7 +13,6 @@ def sweep_files(file_path):
             config['ctc_conf']['dro_step_size'] = ss
             config['ctc_conf']['dro_q_epsilon'] = 1e-10
             config['ctc_conf']['accumulation'] = True
-            config['ctc_conf']['max_epoch'] = 40
             config['ctc_conf']['smoothing'] = s
             config['ctc_conf']['agg'] = "sum"
             config['keep_nbest_models'] = 2

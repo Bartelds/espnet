@@ -25,9 +25,7 @@ ctc_conf:
     dro_q_epsilon: 1.0e-10
     dro_step_size: 0.0001
     smoothing: 0.1
-    max_epoch: 40
     normalize_grad: true
-    num_iters_per_epoch: 1200
 
 frontend: s3prl
 frontend_conf:

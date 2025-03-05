@@ -18,4 +18,4 @@ def sweep_files(file_path):
 
 if __name__=='__main__':
     sweep_files('mms_example_baseline')
-    sweep_files('xlsr_example_baseline')
+    # sweep_files('xlsr_example_baseline')
